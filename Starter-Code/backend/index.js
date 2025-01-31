@@ -1,22 +1,22 @@
 const express = require("express");
-const cors = require("cors");
 require("dotenv").config();
+const cors = require("cors");
+require("./models/db");
+
+//routers
 
 
 const app = express();
-const PORT = process.env.PORT;
 
-// Import Routers
-
-
-app.use(cors());
+//built-in middleware
 app.use(express.json());
+app.use(cors());
 
-// Routes Middleware
+// router middleware
 
 
-// Handles any other endpoints [unassigned - endpoints]
-app.use("*", (req, res) => res.status(404).json("NO content at this path"));
+const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
-  console.log(`Server listening at http://localhost:${PORT}`);
+  console.log(`server on ${PORT}`);
 });
