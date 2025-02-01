@@ -42,4 +42,28 @@ const getAllCategories = (req, res) => {
       });
     });
 };
-module.exports = { addCategory, getAllCategories };
+const deleteCategoryById = (req, res) => {
+  const id = req.params.id;
+  const query = `UPDATE category SET is_deleted=1 WHERE id=$1;`;
+  const data = [id];
+  pool
+    .query(query, data)
+    .then((result) => {
+      if (result.rowCount !== 0) {
+        res.status(200).json({
+          success: true,
+          message: `Categiries with id: ${id} deleted successfully`,
+        });
+      } else {
+        throw new Error("Error happened while deleting article");
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err,
+      });
+    });
+};
+module.exports = { addCategory, getAllCategories, deleteCategoryById };
