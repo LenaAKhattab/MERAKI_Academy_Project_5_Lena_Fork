@@ -28,6 +28,7 @@ const authorization = (permission) => {
         if (!res.headersSent) {
           return res.status(500).json({ message: "Server error", error: err.message });
         }
-
+      })
+    }}
 
 module.exports = authorization;
