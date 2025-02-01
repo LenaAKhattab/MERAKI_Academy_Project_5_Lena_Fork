@@ -22,4 +22,24 @@ const addCategory = async (req, res) => {
     });
 };
 
-module.exports = { addCategory };
+const getAllCategories = (req, res) => {
+  const query = `SELECT * FROM category WHERE is_deleted=0;`;
+
+  pool
+    .query(query)
+    .then((result) => {
+      res.status(200).json({
+        success: true,
+        message: "All the Categories",
+        Categories: result.rows,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: "Server error",
+        err: err.message,
+      });
+    });
+};
+module.exports = { addCategory, getAllCategories };
