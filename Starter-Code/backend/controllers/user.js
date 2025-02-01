@@ -75,8 +75,8 @@ const login = (req, res) => {
 };
 
 const createRequest = (req, res) => {
-  const userId = req.token.userId; // Getting user ID from the token
-  const userName = req.token.firstName; // Assuming userName comes from the token (or you can fetch it from req.body)
+  const userId = req.token.userId; 
+  const userName = req.token.firstName; 
   
   const { 
     category_id, 
