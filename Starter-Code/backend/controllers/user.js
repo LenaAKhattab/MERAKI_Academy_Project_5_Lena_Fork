@@ -167,6 +167,23 @@ const getRequestsById = (req, res) => {
       });
     });
 };
+//cancel request by id
+//get all orders 
+ //take order id 
+ // change status to canceled
+const cancelRequestById = (req,res)=>{
+  const{id} =req.params
+  pool.query(`UPDATE orders  SET status = 'canceled' WHERE id = ${id}`)
+  .then((result)=>{
+    res.json(result)
+  })
+  .catch((error)=>{
+    res.json(error)
+  })
+
+}
 
 
-module.exports = { login, register , createRequest, getRequestsById};
+
+
+module.exports = { login, register , createRequest, getRequestsById,cancelRequestById};
