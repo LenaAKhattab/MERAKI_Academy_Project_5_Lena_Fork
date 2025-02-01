@@ -8,7 +8,8 @@ const app = express();
 const userRouter = require("./routers/user");
 
 const categoryRouter = require("./routers/category");
-=======
+
+//=======
 
 
 
@@ -20,7 +21,8 @@ app.use(express.json());
 
 app.use("/user",userRouter)
 app.use("/category",categoryRouter)
-=======
+
+//=======
 
 
 // router middleware
