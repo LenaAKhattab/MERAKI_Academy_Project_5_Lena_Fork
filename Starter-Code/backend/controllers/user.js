@@ -37,9 +37,20 @@ const login = (req,res)=>{
     .then(async(result)=>{
         const isValid =  await bcrypt.compare(password,result.rows[0].password)
         if(isValid){
+            const payload = {
+                userId:result.rows[0].id,
+                firstName:result.rows[0].first_name,
+                
+            }
+            const options = {
+                expiresIn:"200m"
+            }
+            const token = await jwt.sign(payload,process.env.SECRET,options)
             res.status(201).json({
                 success:true,
-                message:"you are log in successfully"
+                message:"you are log in successfully",
+                result:result,
+                token:token
             })
         }
         res.status(403).json({
