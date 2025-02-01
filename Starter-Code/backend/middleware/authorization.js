@@ -1,5 +1,6 @@
 const pool = require("../models/db");
 
+
 const authorization = (permission) => {
   return function (req, res, next) {
     if (!req.token || !req.token.roleid) {
@@ -27,8 +28,6 @@ const authorization = (permission) => {
         if (!res.headersSent) {
           return res.status(500).json({ message: "Server error", error: err.message });
         }
-      });
-  };
-};
+
 
 module.exports = authorization;

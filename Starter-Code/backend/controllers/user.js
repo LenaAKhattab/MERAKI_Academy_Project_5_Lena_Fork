@@ -74,4 +74,99 @@ const login = (req, res) => {
     });
 };
 
-module.exports = { login, register };
+const createRequest = (req, res) => {
+  const userId = req.token.userId; // Getting user ID from the token
+  const userName = req.token.firstName; // Assuming userName comes from the token (or you can fetch it from req.body)
+  
+  const { 
+    category_id, 
+    collector_id, 
+    admin_id, 
+    predicted_price, 
+    last_price, 
+    description, 
+    status, 
+    weight, 
+    order_time, 
+    arrive_time, 
+    location 
+  } = req.body;
+
+  const query = `
+    INSERT INTO orders (
+      user_id, user_name, category_id, collector_id, admin_id, 
+      predicted_price, last_price, description, 
+      status, weight, order_time, arrive_time, location
+    ) 
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+    RETURNING *`;  
+
+  const values = [
+    userId, 
+    userName, 
+    category_id, 
+    collector_id, 
+    admin_id, 
+    predicted_price, 
+    last_price, 
+    description, 
+    status, 
+    weight, 
+    order_time, 
+    arrive_time, 
+    location
+  ];
+
+  pool.query(query, values)
+    .then(result => {
+      const newOrder = result.rows[0]; 
+      res.status(201).json({
+        message: "Order created successfully",
+        order: newOrder 
+      });
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).json({
+        message: "Failed to create order",
+        error: error.message
+      });
+    });
+};
+
+const getRequestsById = (req, res) => {
+  const userId = req.params.userId;
+
+  const query = `
+    SELECT * FROM orders WHERE user_id = $1
+  `;
+
+  const data = [userId];
+
+  pool.query(query, data)
+    .then(result => {
+      const orders = result.rows;
+
+      if (orders.length === 0) {
+        return res.status(200).json({
+          message: `No orders found for user ${userId}`,
+          orders: [] 
+        });
+      }
+
+      res.status(200).json({
+        message: `All orders for user ${userId}`,
+        orders: orders
+      });
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).json({
+        message: "Failed to retrieve orders",
+        error: error.message
+      });
+    });
+};
+
+
+module.exports = { login, register , createRequest, getRequestsById};
