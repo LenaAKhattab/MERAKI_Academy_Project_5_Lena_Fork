@@ -12,5 +12,8 @@ pool
     console.log(err);
   });
 
-module.exports = pool;
+module.exports = {
+  pool
+
+};
 
