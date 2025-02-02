@@ -8,9 +8,4 @@ AdminRouter.get("/getAllRequests", getAllRequests)
 AdminRouter.put("/AcceptRequest/:id",  AcceptRequest)
 AdminRouter.put("/chooseCollector/:id",  chooseCollector)
 
-
-
-AdminRouter.get("/getAllRequests",  getAllRequests)
-
-
 module.exports=AdminRouter
