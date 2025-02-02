@@ -186,9 +186,10 @@ const cancelRequestById = (req,res)=>{
   })
 
 
-module.exports = { login, register, createRequest, getRequestsById };
 
 }
+
+module.exports = { login, register, createRequest, getRequestsById };
 
 
 
