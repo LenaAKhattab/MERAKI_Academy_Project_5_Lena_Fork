@@ -177,4 +177,12 @@ console.log(userId);
     });
 };
 
+
+
 module.exports = { login, register, createRequest, getRequestsById };
+
+
+
+
+
+
