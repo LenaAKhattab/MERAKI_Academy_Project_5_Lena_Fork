@@ -15,6 +15,7 @@ CREATE TABLE roles (
   role_name VARCHAR(50) NOT NULL
 );
 
+
 CREATE TABLE category (
   id SERIAL PRIMARY KEY,
   category_name VARCHAR(255) NOT NULL,
@@ -30,14 +31,17 @@ CREATE TABLE category (
 
 
 
-CREATE TABLE requets (
+
+
+CREATE TABLE orders (
+
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
   role_id INTEGER REFERENCES roles(id) ON DELETE CASCADE,  
   category_id INTEGER REFERENCES category(id),
   collector_id INTEGER REFERENCES users(id),
   admin_id INTEGER REFERENCES users(id),
-  predicted_price INTEGER,
+  predicted_price DECIMAL (10,2),
   last_price INTEGER,
   description TEXT,
   status VARCHAR(20) DEFAULT 'pending',
@@ -49,12 +53,6 @@ CREATE TABLE requets (
   arrive_time TIMESTAMP,
   location VARCHAR(255)
 );
-
-
-
-
-
-
 
 CREATE TABLE role_permission (
   role_id INTEGER NOT NULL,
@@ -69,8 +67,9 @@ CREATE TABLE role_permission (
     REFERENCES permissions(id) 
     ON DELETE CASCADE
 );
+
 CREATE TABLE permissions (
   id SERIAL PRIMARY KEY,
   permission_name VARCHAR(255) NOT NULL,
   description TEXT
-);
+)
