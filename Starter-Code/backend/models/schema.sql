@@ -29,18 +29,26 @@ CREATE TABLE category (
 );
 
 
+
+
+
+
 CREATE TABLE orders (
+
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
   role_id INTEGER REFERENCES roles(id) ON DELETE CASCADE,  
   category_id INTEGER REFERENCES category(id),
   collector_id INTEGER REFERENCES users(id),
   admin_id INTEGER REFERENCES users(id),
-  predicted_price INTEGER,
+  predicted_price DECIMAL (10,2),
   last_price INTEGER,
   description TEXT,
   status VARCHAR(20) DEFAULT 'pending',
-  weight INTEGER,
+  weight DECIMAL (10,2) 
+  length DECIMAL (10,2)
+  width DECIMAL (10,2)
+  height DECIMAL (10,2)
   order_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   arrive_time TIMESTAMP,
   location VARCHAR(255)
