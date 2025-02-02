@@ -1,5 +1,4 @@
-/* const pool = require("../models/db");
-
+const pool = require("../models/db");
 
 const authorization = (permission) => {
   return function (req, res, next) {
@@ -28,6 +27,8 @@ const authorization = (permission) => {
         if (!res.headersSent) {
           return res.status(500).json({ message: "Server error", error: err.message });
         }
+      });
+  };
+};
 
-      }
-module.exports = authorization; */
+module.exports = authorization;
