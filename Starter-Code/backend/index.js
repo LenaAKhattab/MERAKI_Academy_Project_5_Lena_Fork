@@ -10,6 +10,8 @@ const categoryRouter = require("./routers/category");
 const AdminRouter=require("./routers/admin")
 const collectorRouter=require("./routers/collector")
 
+
+
 //built-in middleware
 app.use(cors());
 app.use(express.json());
