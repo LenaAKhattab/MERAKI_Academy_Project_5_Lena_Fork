@@ -1,4 +1,3 @@
-
 const bcrypt = require("bcrypt");
 const { pool } = require("../models/db");
 const jwt = require("jsonwebtoken");
@@ -47,7 +46,7 @@ const login = (req, res) => {
         const payload = {
           userId: result.rows[0].id,
           firstName: result.rows[0].first_name,
-          roleid: result.rows[0].role_id
+          roleid: result.rows[0].role_id,
         };
         const options = {
           expiresIn: "200m",
@@ -75,8 +74,10 @@ const login = (req, res) => {
 };
 
 const createRequest = (req, res) => {
-  const userId = req.token.userId; 
-  const userName = req.token.firstName; 
+
+  const userId = req.token.userId; // Getting user ID from the token
+  const userName = req.token.firstName; // Assuming userName comes from the token (or you can fetch it from req.body)
+
   
   const { 
     category_id, 
@@ -90,6 +91,7 @@ const createRequest = (req, res) => {
     order_time, 
     arrive_time, 
     location 
+
   } = req.body;
 
   const query = `
@@ -99,37 +101,38 @@ const createRequest = (req, res) => {
       status, weight, order_time, arrive_time, location
     ) 
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-    RETURNING *`;  
+    RETURNING *`;
 
   const values = [
-    userId, 
-    userName, 
-    category_id, 
-    collector_id, 
-    admin_id, 
-    predicted_price, 
-    last_price, 
-    description, 
-    status, 
-    weight, 
-    order_time, 
-    arrive_time, 
-    location
+    userId,
+    userName,
+    category_id,
+    collector_id,
+    admin_id,
+    predicted_price,
+    last_price,
+    description,
+    status,
+    weight,
+    order_time,
+    arrive_time,
+    location,
   ];
 
-  pool.query(query, values)
-    .then(result => {
-      const newOrder = result.rows[0]; 
+  pool
+    .query(query, values)
+    .then((result) => {
+      const newOrder = result.rows[0];
       res.status(201).json({
         message: "Order created successfully",
-        order: newOrder 
+        order: newOrder,
       });
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
       res.status(500).json({
         message: "Failed to create order",
-        error: error.message
+        error: error.message,
       });
     });
 };
@@ -143,27 +146,28 @@ const getRequestsById = (req, res) => {
 
   const data = [userId];
 
-  pool.query(query, data)
-    .then(result => {
+  pool
+    .query(query, data)
+    .then((result) => {
       const orders = result.rows;
 
       if (orders.length === 0) {
         return res.status(200).json({
           message: `No orders found for user ${userId}`,
-          orders: [] 
+          orders: [],
         });
       }
 
       res.status(200).json({
         message: `All orders for user ${userId}`,
-        orders: orders
+        orders: orders,
       });
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
       res.status(500).json({
         message: "Failed to retrieve orders",
-        error: error.message
+        error: error.message,
       });
     });
 };
@@ -181,9 +185,12 @@ const cancelRequestById = (req,res)=>{
     res.json(error)
   })
 
+
+module.exports = { login, register, createRequest, getRequestsById };
+
 }
 
 
 
 
-module.exports = { login, register , createRequest, getRequestsById,cancelRequestById};
+

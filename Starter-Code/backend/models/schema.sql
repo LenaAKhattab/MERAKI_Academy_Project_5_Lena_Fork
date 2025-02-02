@@ -15,6 +15,20 @@ CREATE TABLE roles (
   role_name VARCHAR(50) NOT NULL
 );
 
+
+CREATE TABLE category (
+  id SERIAL PRIMARY KEY,
+  category_name VARCHAR(255) NOT NULL,
+  description TEXT,
+  image VARCHAR(255),
+  price_per_kg  DECIMAL(10,2),
+  price_per_dimensions DECIMAL(10,2),
+  points_per_kg INTEGER,
+  is_deleted SMALLINT DEFAULT 0
+  
+);
+
+
 CREATE TABLE orders (
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
@@ -32,18 +46,6 @@ CREATE TABLE orders (
   location VARCHAR(255)
 );
 
-CREATE TABLE category (
-  id SERIAL PRIMARY KEY,
-  category_name VARCHAR(255) NOT NULL,
-  description TEXT,
-  image VARCHAR(255),
-  price/points-perkelo-dimension DECIMAL(10,2) NOT NULL
-  is_deleted SMALLINT DEFAULT 0
-  
-);
-
-
-
 CREATE TABLE role_permission (
   role_id INTEGER NOT NULL,
   permission_id INTEGER NOT NULL,
@@ -57,9 +59,9 @@ CREATE TABLE role_permission (
     REFERENCES permissions(id) 
     ON DELETE CASCADE
 );
+
 CREATE TABLE permissions (
   id SERIAL PRIMARY KEY,
   permission_name VARCHAR(255) NOT NULL,
   description TEXT
-);
-
+)
