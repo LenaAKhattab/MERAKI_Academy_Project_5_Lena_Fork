@@ -32,9 +32,9 @@ const AcceptRequest = (req, res) => {
   const { status } = req.body;
 
   if (status !== "accepted" && status !== "rejected") {
-    return res
-      .status(400)
-      .json({ message: "Invalid status value. Use 'accepted' or 'rejected'." });
+    return res.status(400).json({
+       message: "Invalid status value. Use 'accepted' or 'rejected'." 
+      });
   }
 
   const query = `
@@ -44,7 +44,7 @@ const AcceptRequest = (req, res) => {
         RETURNING *;
     `;
 
-  const values = [status, ordeSrId];
+  const values = [status, orderId];
 
   pool
     .query(query, values)
@@ -76,7 +76,7 @@ const chooseCollector = (req, res) => {
   const orderId = req.params.id;
   const { collector_id } = req.body;
 
-  if (![12, 13, 14].includes(collector_id)) {
+  if (![12, 13, 14,10].includes(collector_id)) {
     return res
       .status(400)
       .json({ message: "Invalid id value. Use '12', '13', or '14' only" });
