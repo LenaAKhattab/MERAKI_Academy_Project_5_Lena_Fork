@@ -55,7 +55,6 @@ const login = (req, res) => {
         res.status(201).json({
           success: true,
           message: "you are log in successfully",
-          result: result,
           token: token,
         });
       }
@@ -144,7 +143,8 @@ const createRequest = (req, res) => {
 };
 
 const getRequestsById = (req, res) => {
-  const userId = req.params.userId;
+  const userId = req.token.userId;
+console.log(userId);
 
   const query = `
     SELECT * FROM orders WHERE user_id = $1
@@ -160,7 +160,6 @@ const getRequestsById = (req, res) => {
       if (orders.length === 0) {
         return res.status(200).json({
           message: `No orders found for user ${userId}`,
-          orders: [],
         });
       }
 

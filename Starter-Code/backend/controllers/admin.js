@@ -1,4 +1,4 @@
-const pool = require("../models/db");
+const {pool} = require("../models/db");
 
 const getAllRequests = (req, res) => {
   pool
@@ -10,7 +10,6 @@ const getAllRequests = (req, res) => {
           message: "No orders yet",
         });
       }
-
       res.status(200).json({
         success: true,
         orders: result.rows,
