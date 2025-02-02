@@ -74,8 +74,8 @@ const login = (req, res) => {
 };
 
 const createRequest = (req, res) => {
-  const userId = req.token.userId; // Getting user ID from the token
-  const userName = req.token.firstName; // Assuming userName comes from the token (or you can fetch it from req.body)
+  const userId = req.token.userId; 
+  const userName = req.token.firstName; 
   
   const { 
     category_id, 
@@ -86,6 +86,8 @@ const createRequest = (req, res) => {
     description, 
     status, 
     weight, 
+    length,
+    width,
     order_time, 
     arrive_time, 
     location 
@@ -95,7 +97,8 @@ const createRequest = (req, res) => {
     INSERT INTO orders (
       user_id, user_name, category_id, collector_id, admin_id, 
       predicted_price, last_price, description, 
-      status, weight, order_time, arrive_time, location
+      status, weight,length,
+    width, order_time, arrive_time, location
     ) 
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
     RETURNING *`;  
@@ -111,6 +114,8 @@ const createRequest = (req, res) => {
     description, 
     status, 
     weight, 
+    length,
+    width,
     order_time, 
     arrive_time, 
     location
