@@ -13,7 +13,7 @@ const userRouter = express.Router();
 userRouter.post("/register", register);
 userRouter.post("/login", login);
 userRouter.post("/createRequestByuserId", authentication, createRequest);
-userRouter.get("/getRequestByuserId/:userId", getRequestsById);
+userRouter.get("/getRequestByuserId", authentication,getRequestsById);
 
 module.exports = userRouter;
 
