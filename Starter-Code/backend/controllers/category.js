@@ -1,9 +1,9 @@
 const { pool } = require("../models/db");
 
 const addCategory = async (req, res) => {
-  const { category_name, description, image } = req.body;
-  const query = `INSERT INTO category ( category_name, description, image) VALUES($1 , $2 , $3 ) returning *`;
-  const data = [category_name, description, image];
+  const { category_name, description, image ,points_per_kg,price_per_dimensions,price_per_kg} = req.body;
+  const query = `INSERT INTO category ( category_name, description, image,points_per_kg,price_per_dimensions,price_per_kg) VALUES($1 , $2 , $3,$4,$5,$6 ) returning *`;
+  const data = [category_name, description, image,points_per_kg,price_per_dimensions,price_per_kg];
   pool
     .query(query, data)
     .then((result) => {

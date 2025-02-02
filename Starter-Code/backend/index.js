@@ -7,27 +7,14 @@ const app = express();
 //routers
 const userRouter = require("./routers/user");
 const categoryRouter = require("./routers/category");
-
 const AdminRouter=require("./routers/admin")
-
-=======
-
-
-
-
-
-
 //built-in middleware
 app.use(cors());
 app.use(express.json());
 
 app.use("/user",userRouter)
 app.use("/category",categoryRouter)
-
 app.use("/admin", AdminRouter)
-=======
-
-
 
 // router middleware
 
