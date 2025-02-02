@@ -74,21 +74,24 @@ const login = (req, res) => {
 };
 
 const createRequest = (req, res) => {
+
   const userId = req.token.userId; // Getting user ID from the token
   const userName = req.token.firstName; // Assuming userName comes from the token (or you can fetch it from req.body)
 
-  const {
-    category_id,
-    collector_id,
-    admin_id,
-    predicted_price,
-    last_price,
-    description,
-    status,
-    weight,
-    order_time,
-    arrive_time,
-    location,
+  
+  const { 
+    category_id, 
+    collector_id, 
+    admin_id, 
+    predicted_price, 
+    last_price, 
+    description, 
+    status, 
+    weight, 
+    order_time, 
+    arrive_time, 
+    location 
+
   } = req.body;
 
   const query = `
@@ -168,5 +171,26 @@ const getRequestsById = (req, res) => {
       });
     });
 };
+//cancel request by id
+//get all orders 
+ //take order id 
+ // change status to canceled
+const cancelRequestById = (req,res)=>{
+  const{id} =req.params
+  pool.query(`UPDATE orders  SET status = 'canceled' WHERE id = ${id}`)
+  .then((result)=>{
+    res.json(result)
+  })
+  .catch((error)=>{
+    res.json(error)
+  })
+
 
 module.exports = { login, register, createRequest, getRequestsById };
+
+}
+
+
+
+
+

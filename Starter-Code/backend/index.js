@@ -8,6 +8,7 @@ const app = express();
 const userRouter = require("./routers/user");
 const categoryRouter = require("./routers/category");
 const AdminRouter=require("./routers/admin")
+
 //built-in middleware
 app.use(cors());
 app.use(express.json());
