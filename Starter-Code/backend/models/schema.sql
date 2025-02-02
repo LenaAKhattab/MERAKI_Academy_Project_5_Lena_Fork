@@ -21,12 +21,14 @@ CREATE TABLE category (
   description TEXT,
   image VARCHAR(255),
   price_per_kg  DECIMAL(10,2),
-  pricing_type VARCHAR(255) NOT NULL,
   price_per_dimensions DECIMAL(10,2),
   points_per_kg INTEGER,
   is_deleted SMALLINT DEFAULT 0
   
 );
+
+
+
 
 CREATE TABLE requets (
   id SERIAL PRIMARY KEY,
@@ -39,7 +41,10 @@ CREATE TABLE requets (
   last_price INTEGER,
   description TEXT,
   status VARCHAR(20) DEFAULT 'pending',
-  weight INTEGER,
+  weight DECIMAL (10,2) 
+  length DECIMAL (10,2)
+  width DECIMAL (10,2)
+  height DECIMAL (10,2)
   order_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   arrive_time TIMESTAMP,
   location VARCHAR(255)
