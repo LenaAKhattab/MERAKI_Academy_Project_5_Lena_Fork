@@ -74,7 +74,7 @@ const login = (req, res) => {
 
 const createRequest = (req, res) => {
   const userId = req.token.userId;
-  const { category_id, weight, height, length, width, description, location } =
+  const { category_id, weight, height, length, width, description} =
     req.body;
 
   const priceQuery = `
@@ -103,7 +103,7 @@ const createRequest = (req, res) => {
         console.log("c");
       }
       console.log("predicted_price:", predicted_price);
-      const requestQuery = `insert into orders (user_id,category_id,weight,height,length,width,description,location,predicted_price) values ($1,$2,$3,$4,$5,$6,$7,$8,$9) returning *`;
+      const requestQuery = `insert into requests (user_id,category_id,weight,height,length,width,description,predicted_price) values ($1,$2,$3,$4,$5,$6,$7,$8) returning *`;
       const values = [
         userId,
         category_id,
@@ -112,7 +112,6 @@ const createRequest = (req, res) => {
         length,
         width,
         description,
-        location,
         predicted_price,
       ];
       pool
@@ -121,14 +120,14 @@ const createRequest = (req, res) => {
           console.log("here");
           res.status(201).json({
             success: true,
-            message: "Order created successfully",
+            message: "request created successfully",
             order: result.rows,
           });
         })
         .catch((error) => {
           res.status(500).json({
             success: false,
-            message: "Failed to create order",
+            message: "Failed to create request",
             error: error.message,
           });
         });
