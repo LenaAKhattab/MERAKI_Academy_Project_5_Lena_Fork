@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const { pool } = require("../models/db");
 const jwt = require("jsonwebtoken");
+const { query } = require("express");
 const salt = 10;
 
 const register = async (req, res) => {
@@ -261,10 +262,60 @@ const updateRequestById = (req, res) => {
     });
 };
 
+
+const cancelOrderById = (req, res) => {
+  const { id } = req.params;
+  const checkTimeQuery = `select order_time from orders where id=$1`;
+
+  pool.query(checkTimeQuery, [id]).then((result) => {
+    // res.json(result.rows[0].order_time);
+    const orderTime = result.rows[0].order_time;
+    const nowTime = new Date();
+    const timeDiff = (nowTime - new Date(orderTime)) / (1000 * 60 * 60);
+    if (timeDiff > 24) {
+      return res
+        .status(400)
+        .json({ message: "Cannot cancel order after 24 hours" });
+    }
+    console.log("timeDiff:", timeDiff);
+
+    const cancelQuery = ` update orders SET status=$1 where id=$2 returning *`;
+    const resetRequestsStatusQuery = `update requests SET status=$1 ,order_id=Null where order_id=$2 returning *`;
+    pool
+      .query(cancelQuery, ["canceled", id])
+      .then((result) => {
+        pool
+          .query(resetRequestsStatusQuery, ["draft", id])
+          .then((result) => {
+            res
+              .status(200)
+              .json({ message: `Order ${id} has been canceled successfuly` });
+          })
+          .catch((error) => {
+            res.status(500).json({
+              message: "Server Error",
+              error: error.message,
+            });
+          });
+      })
+      .catch((error) => {
+        res.status(500).json({
+          message: "Server Error",
+          error: error.message,
+        });
+      });
+  });
+};
+
 module.exports = {
   login,
   register,
   createRequest,
   getRequestsById,
   updateRequestById,
+  cancelOrderById,
 };
+
+
+
+
