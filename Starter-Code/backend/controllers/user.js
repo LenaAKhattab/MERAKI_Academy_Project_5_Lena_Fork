@@ -306,6 +306,45 @@ const cancelOrderById = (req, res) => {
       });
   });
 };
+const getALLOrdersById = (req,res)=>{
+  const {id} =req.params
+  pool.query(`SELECT * FROM orders WHERE user_id = ${id}`)
+  .then((result)=>{
+    res.status(201).json({
+      success:true,
+      result : result.rows
+    })
+
+  })
+  .catch((error) => {
+    res.status(500).json({
+      success: false,
+      message: "server error",
+      error: error.message,
+    });
+  });
+
+}
+const getAssignOrderById = (req,res)=>{
+  const {id} =req.params
+  pool.query(`SELECT * FROM orders WHERE collector_id = ${id}`)
+  .then((result)=>{
+    res.status(201).json({
+      success:true,
+      result : result.rows
+    })
+
+  })
+  .catch((error) => {
+    res.status(500).json({
+      success: false,
+      message: "server error",
+      error: error.message,
+    });
+  });
+
+}
+
 
 module.exports = {
   login,
@@ -314,6 +353,8 @@ module.exports = {
   getRequestsById,
   updateRequestById,
   cancelOrderById,
+  getALLOrdersById,
+  getAssignOrderById 
 };
 
 
