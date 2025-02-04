@@ -157,12 +157,11 @@ const getRequestsById = (req, res) => {
     SELECT * FROM requests WHERE status=$1 AND user_id = $2
   `;
 
-  const data = [`draft`, userId];
+  const data = ["draft", userId];
 
   pool
     .query(query, data)
     .then((result) => {
-      
       let sumOfPredictedPrices = result.rows.reduce((sum, price) => {
         console.log(price.predicted_price);
         return sum + Number(price.predicted_price);
@@ -179,7 +178,7 @@ const getRequestsById = (req, res) => {
       res.status(200).json({
         message: `All orders for user ${userId}`,
         result: result.rows,
-        sumOfPredictedPrices:sumOfPredictedPrices
+        sumOfPredictedPrices: sumOfPredictedPrices,
       });
     })
     .catch((error) => {
