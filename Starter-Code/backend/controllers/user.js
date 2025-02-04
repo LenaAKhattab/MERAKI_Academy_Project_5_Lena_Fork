@@ -179,7 +179,76 @@ console.log(userId);
 
 
 
-module.exports = { login, register, createRequest, getRequestsById };
+const updateRequestById = (req, res) => {
+  const { id } = req.params; 
+  const user_id = req.token.userId; 
+  const { predicted_price, status, description, weight, length, width, height } = req.body;
+
+  const query = `
+    UPDATE requests 
+    SET 
+      predicted_price = COALESCE($1, predicted_price),
+      status = COALESCE($2, status),
+      description = COALESCE($3, description),
+      weight = COALESCE($4, weight),
+      "length" = COALESCE($5, "length"),
+      width = COALESCE($6, width),
+      height = COALESCE($7, height)
+    WHERE id = $8 AND user_id = $9 
+    RETURNING *;
+  `;
+
+  const data = [
+    predicted_price || null,
+    status || null,
+    description || null,
+    weight || null,
+    length || null,
+    width || null,
+    height || null,
+    id,
+    user_id
+  ];
+
+  console.log("Data:", data);
+
+  pool
+    .query(query, data)
+    .then((result) => {
+      console.log("Updated rows:", result.rows);
+
+      if (result.rows.length > 0) {
+        return res.status(200).json({
+          success: true,
+          message: `Request with ID ${id} updated successfully`,
+          result: result.rows[0],
+        });
+      } else {
+        return res.status(404).json({
+          success: false,
+          message: `No matching request found for ID ${id}`,
+        });
+      }
+    })
+    .catch((err) => {
+      console.error("Error updating request:", err);
+      if (!res.headersSent) {
+        return res.status(500).json({
+          success: false,
+          message: "Server error",
+          error: err.message,
+        });
+      }
+    });
+};
+
+
+
+
+
+
+
+module.exports = { login, register, createRequest, getRequestsById ,updateRequestById};
 
 
 
