@@ -28,39 +28,49 @@ CREATE TABLE category (
   
 );
 
-CREATE TABLE orders (
+CREATE TABLE requests (
+
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-  role_id INTEGER REFERENCES roles(id) ON DELETE CASCADE,  
+  order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
   category_id INTEGER REFERENCES category(id),
-  collector_id INTEGER REFERENCES users(id),
-  admin_id INTEGER REFERENCES users(id),
-  predicted_price DECIMAL (10,2),
-  last_price INTEGER,
   description TEXT,
-  status VARCHAR(20) DEFAULT 'pending',
+  status VARCHAR(20) DEFAULT 'draft', //it will be active once he checkout
   weight DECIMAL (10,2) 
   length DECIMAL (10,2)
   width DECIMAL (10,2)
   height DECIMAL (10,2)
-  order_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  arrive_time TIMESTAMP,
-  location VARCHAR(255)
+  predicted_price DECIMAL (10,2),
 );
 
+
+CREATE Table orders {
+  id SERIAL PRIMARY KEY,
+  request_id INTEGER REFERENCES requests(id) ON DELETE CASCADE,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  status VARCHAR(20) DEFAULT 'pending'
+  collector_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  last_price INTEGER
+  order_time TIMESTAMP 
+  location VARCHAR(255)
+  arrive_time TIMESTAMP
+  predicted_price DECIMAL (10,2)
+}
 CREATE TABLE role_permission (
   role_id INTEGER NOT NULL,
   permission_id INTEGER NOT NULL,
   PRIMARY KEY (role_id, permission_id),
   CONSTRAINT fk_role
-    FOREIGN KEY (role_id) 
-    REFERENCES roles(id) 
-    ON DELETE CASCADE,
+  FOREIGN KEY (role_id) 
+  REFERENCES roles(id) 
+  ON DELETE CASCADE,
   CONSTRAINT fk_permission
-    FOREIGN KEY (permission_id) 
-    REFERENCES permissions(id) 
-    ON DELETE CASCADE
+  FOREIGN KEY (permission_id) 
+  REFERENCES permissions(id) 
+  ON DELETE CASCADE
 );
+
+
 
 CREATE TABLE permissions (
   id SERIAL PRIMARY KEY,
