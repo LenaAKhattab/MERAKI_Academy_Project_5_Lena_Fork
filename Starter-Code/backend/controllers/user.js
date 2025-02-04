@@ -80,14 +80,20 @@ const createRequest = (req, res) => {
    select price_per_kg, price_per_dimensions, points_per_kg from category where id=$1
   `;
 
-  
   pool
     .query(priceQuery, [category_id])
     .then((result) => {
       const { price_per_kg, price_per_dimensions, points_per_kg } =
         result.rows[0];
-      console.log("price_per_kg;",price_per_kg, "price_per_dimensions:",price_per_dimensions, "points_per_kg:",points_per_kg);
-      
+      console.log(
+        "price_per_kg;",
+        price_per_kg,
+        "price_per_dimensions:",
+        price_per_dimensions,
+        "points_per_kg:",
+        points_per_kg
+      );
+
       let predicted_price = 0;
       if (price_per_kg && weight) {
         predicted_price = weight * price_per_kg;
@@ -151,14 +157,19 @@ const getRequestsById = (req, res) => {
     SELECT * FROM requests WHERE status=$1 AND user_id = $2
   `;
 
-  const data = [`draft`, userId];
+  const data = ["draft", userId];
 
   pool
     .query(query, data)
     .then((result) => {
-      const orders = result.rows;
+      let sumOfPredictedPrices = result.rows.reduce((sum, price) => {
+        console.log(price.predicted_price);
+        return sum + Number(price.predicted_price);
+      }, 0);
 
-      if (orders.length === 0) {
+      console.log(sumOfPredictedPrices);
+
+      if (result.rows.length === 0) {
         return res.status(200).json({
           message: `No orders found for user ${userId}`,
         });
@@ -166,7 +177,8 @@ const getRequestsById = (req, res) => {
 
       res.status(200).json({
         message: `All orders for user ${userId}`,
-        orders: orders,
+        result: result.rows,
+        sumOfPredictedPrices: sumOfPredictedPrices,
       });
     })
     .catch((error) => {
