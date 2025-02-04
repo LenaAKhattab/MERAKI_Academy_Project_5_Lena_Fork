@@ -1,13 +1,13 @@
 const { pool } = require("../models/db");
 
-const getAllRequests = (req, res) => {
+const getAllOrders = (req, res) => {
   pool
-    .query("SELECT * FROM orders WHERE is_deleted = 0")
+    .query("SELECT * FROM orders WHERE status='pending'")
     .then((result) => {
       if (!result.rows.length) {
         return res.status(200).json({
           success: true,
-          message: "No orders yet",
+          message: "No orders yet!",
         });
       }
       res.status(200).json({
@@ -134,4 +134,4 @@ const chooseCollector = (req, res) => {
     });
 };
 
-module.exports = { getAllRequests, AcceptRequest, chooseCollector };
+module.exports = {  getAllOrders, AcceptRequest, chooseCollector };
