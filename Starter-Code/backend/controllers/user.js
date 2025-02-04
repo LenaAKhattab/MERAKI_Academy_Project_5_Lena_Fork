@@ -74,18 +74,20 @@ const login = (req, res) => {
 
 const createRequest = (req, res) => {
   const userId = req.token.userId;
-  const { category_id, weight, height, length, width, description} =
-    req.body;
+  const { category_id, weight, height, length, width, description } = req.body;
 
   const priceQuery = `
    select price_per_kg, price_per_dimensions, points_per_kg from category where id=$1
   `;
+
+  
   pool
     .query(priceQuery, [category_id])
     .then((result) => {
       const { price_per_kg, price_per_dimensions, points_per_kg } =
         result.rows[0];
-      console.log(price_per_kg, price_per_dimensions, points_per_kg);
+      console.log("price_per_kg;",price_per_kg, "price_per_dimensions:",price_per_dimensions, "points_per_kg:",points_per_kg);
+      
       let predicted_price = 0;
       if (price_per_kg && weight) {
         predicted_price = weight * price_per_kg;
@@ -143,13 +145,13 @@ const createRequest = (req, res) => {
 
 const getRequestsById = (req, res) => {
   const userId = req.token.userId;
-console.log(userId);
+  console.log(userId);
 
   const query = `
-    SELECT * FROM orders WHERE user_id = $1
+    SELECT * FROM requests WHERE status=$1 AND user_id = $2
   `;
 
-  const data = [userId];
+  const data = [`draft`, userId];
 
   pool
     .query(query, data)
@@ -176,12 +178,18 @@ console.log(userId);
     });
 };
 
-
-
 const updateRequestById = (req, res) => {
-  const { id } = req.params; 
-  const user_id = req.token.userId; 
-  const { predicted_price, status, description, weight, length, width, height } = req.body;
+  const { id } = req.params;
+  const user_id = req.token.userId;
+  const {
+    predicted_price,
+    status,
+    description,
+    weight,
+    length,
+    width,
+    height,
+  } = req.body;
 
   const query = `
     UPDATE requests 
@@ -206,7 +214,7 @@ const updateRequestById = (req, res) => {
     width || null,
     height || null,
     id,
-    user_id
+    user_id,
   ];
 
   console.log("Data:", data);
@@ -241,16 +249,10 @@ const updateRequestById = (req, res) => {
     });
 };
 
-
-
-
-
-
-
-module.exports = { login, register, createRequest, getRequestsById ,updateRequestById};
-
-
-
-
-
-
+module.exports = {
+  login,
+  register,
+  createRequest,
+  getRequestsById,
+  updateRequestById,
+};

@@ -33,8 +33,8 @@ const AcceptRequest = (req, res) => {
 
   if (status !== "accepted" && status !== "rejected") {
     return res.status(400).json({
-       message: "Invalid status value. Use 'accepted' or 'rejected'." 
-      });
+      message: "Invalid status value. Use 'accepted' or 'rejected'.",
+    });
   }
 
   const query = `
@@ -76,7 +76,7 @@ const chooseCollector = (req, res) => {
   const orderId = req.params.id;
   const { collector_id } = req.body;
 
-  if (![12, 13, 14,].includes(collector_id)) {
+  if (![12, 13, 14].includes(collector_id)) {
     return res
       .status(400)
       .json({ message: "Invalid id value. Use '12', '13', or '14' only" });
@@ -134,4 +134,48 @@ const chooseCollector = (req, res) => {
     });
 };
 
-module.exports = {  getAllOrders, AcceptRequest, chooseCollector };
+const changeOrderStatusById = (req, res) => {
+  const orderId = req.params.id;
+  const { status } = req.body;
+
+  const validStatuses = ["pending", "approved", "completed", "cancelled"];
+  if (!validStatuses.includes(status)) {
+    return res.status(400).json({
+      message: `Invalid status value. Allowed values: ${validStatuses.join(
+        ", "
+      )}.`,
+    });
+  }
+
+  const query = `
+        UPDATE orders
+        SET status = $1
+        WHERE id = $2
+        RETURNING *;
+    `;
+
+  const values = [status, orderId];
+  pool
+    .query(query, values)
+    .then((result) => {
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Order not found.",
+        });
+      }
+      res.status(200).json({
+        success: true,
+        message: `Order ${orderId} status updated to '${status}'.`,
+        order: result.rows[0],
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({
+        success: false,
+        message: "Server error: " + error.message,
+      });
+    });
+};
+module.exports = { getAllOrders, AcceptRequest, chooseCollector ,changeOrderStatusById};
