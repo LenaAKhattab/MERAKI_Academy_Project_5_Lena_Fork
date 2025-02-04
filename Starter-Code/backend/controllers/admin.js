@@ -33,8 +33,8 @@ const AcceptRequest = (req, res) => {
 
   if (status !== "accepted" && status !== "rejected") {
     return res.status(400).json({
-       message: "Invalid status value. Use 'accepted' or 'rejected'." 
-      });
+      message: "Invalid status value. Use 'accepted' or 'rejected'.",
+    });
   }
 
   const query = `
@@ -76,7 +76,7 @@ const chooseCollector = (req, res) => {
   const orderId = req.params.id;
   const { collector_id } = req.body;
 
-  if (![12, 13, 14,].includes(collector_id)) {
+  if (![12, 13, 14].includes(collector_id)) {
     return res
       .status(400)
       .json({ message: "Invalid id value. Use '12', '13', or '14' only" });
@@ -134,9 +134,6 @@ const chooseCollector = (req, res) => {
     });
 };
 
-<<<<<<< Updated upstream
-module.exports = {  getAllOrders, AcceptRequest, chooseCollector };
-=======
 const changeOrderStatusById = (req, res) => {
   const orderId = req.params.id;
   const { status } = req.body;
@@ -181,10 +178,6 @@ const changeOrderStatusById = (req, res) => {
       });
     });
 };
-module.exports = {
-  getAllOrders,
-  AcceptRequest,
-  chooseCollector,
-  changeOrderStatusById,
-};
->>>>>>> Stashed changes
+
+module.exports = { getAllOrders, AcceptRequest, chooseCollector ,changeOrderStatusById};
+
