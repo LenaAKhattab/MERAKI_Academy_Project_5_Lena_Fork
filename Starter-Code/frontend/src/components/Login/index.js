@@ -74,7 +74,10 @@ Should update navigation path later
         <button>Login</button>
         <br />
       </form>
-      {status
+      {/* {status
+        ? message && <div className="SuccessMessage">{message}</div>
+        : message && <div className="ErrorMessage">{message}</div>} */}
+         {status
         ? message && <div className="SuccessMessage">{message}</div>
         : message && <div className="ErrorMessage">{message}</div>}
     </div>
