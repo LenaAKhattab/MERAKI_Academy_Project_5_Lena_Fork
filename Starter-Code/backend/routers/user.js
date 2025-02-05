@@ -9,7 +9,9 @@ const {
   updateRequestById,
   cancelOrderById,
   getALLOrdersById,
-  getAssignOrderById 
+  getAssignOrderById,
+  cancelRequestById,
+  assignOrderByCollectorId
 } = require("../controllers/user");
 const authentication = require("../middleware/authentication");
 const userRouter = express.Router();
@@ -20,8 +22,11 @@ userRouter.post("/createRequestByuserId", authentication, createRequest);
 userRouter.put("/updateRequestById/:id", authentication, updateRequestById);
 userRouter.get("/getRequestByuserId", authentication,getRequestsById);
 userRouter.put("/cancelOrderById/:id",cancelOrderById);
-userRouter.get("/getOrderById/:id", getALLOrdersById);//user
-userRouter.get("/getAssignById/:id", getAssignOrderById );//collector
+userRouter.get("/getOrderById", getALLOrdersById);//user
+userRouter.get("/getAssignById", getAssignOrderById );//collector
+userRouter.delete("/cancelRequestById/:id",cancelRequestById)
+userRouter.put("/assignOrderById/:id",assignOrderByCollectorId)//collector
+
 
 module.exports = userRouter;
 
