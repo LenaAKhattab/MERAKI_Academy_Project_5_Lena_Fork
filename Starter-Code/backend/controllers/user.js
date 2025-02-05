@@ -306,8 +306,8 @@ const cancelOrderById = (req, res) => {
   });
 };
 const getALLOrdersById = (req,res)=>{
-  const {id} =req.params
-  pool.query(`SELECT * FROM orders WHERE user_id = ${id}`)
+  const userId = req.token.userId;
+  pool.query(`SELECT * FROM orders WHERE user_id = ${userId}`)
   .then((result)=>{
     res.status(201).json({
       success:true,
@@ -325,8 +325,8 @@ const getALLOrdersById = (req,res)=>{
 
 }
 const getAssignOrderById = (req,res)=>{
-  const {id} =req.params
-  pool.query(`SELECT * FROM orders WHERE collector_id = ${id}`)
+  const userId = req.token.userId;
+  pool.query(`SELECT * FROM orders WHERE collector_id = ${userId}`)
   .then((result)=>{
     res.status(201).json({
       success:true,
@@ -342,6 +342,50 @@ const getAssignOrderById = (req,res)=>{
     });
   });
 
+}
+const cancelRequestById = (req,res)=>{
+  const {id} = req.params 
+  console.log(id);
+  pool.query(`DELETE FROM requests WHERE id = ${id} `)
+  .then((result)=>{
+    res.status(201).json({
+      success:true,
+      result:result,
+      message:"the request has been deleted"
+    })
+  })
+  .catch((error) => {
+    console.log(error);
+    
+    res.status(500).json({
+      success: false,
+      message: "server error",
+      error: error,
+    });
+  });
+}
+const assignOrderByCollectorId = (req,res)=>{
+  const {id} = req.params
+  const {collectorId} = req.body
+  console.log("vvvv",collectorId,id);
+  
+  pool.query(`
+    UPDATE orders
+    SET collector_id = ${collectorId}
+    WHERE id = ${id}`)
+  .then((result)=>{
+    res.status(201).json({
+      result:result
+    })
+  })
+  .catch((error) => {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "server error",
+      error: error,
+    })
+  });
 }
 
 
@@ -443,5 +487,7 @@ module.exports = {
   cancelOrderById,
   getALLOrdersById,
   getAssignOrderById,
+  cancelRequestById,
+  assignOrderByCollectorId,
   createOrder
 };
