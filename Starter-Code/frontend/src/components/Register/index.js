@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {useSelector} from "react-redux"
+import "./style.css";
+
+
 const Register = () => {
   const [first_name, setFirst_name] = useState("");
   const [last_name, setLast_name] = useState("");
@@ -10,15 +12,35 @@ const Register = () => {
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState(false);
 
-  const authIsLoggedIn = useSelector(
-    (reducers) => reducers.authReducer.isLoggedIn
-  );
-  // ========================================================
 
-  
+  // ========================================================
+  const register = (e) => {
+    e.preventDefault();
+    axios
+      .post("http://localhost:5000/user/register", {
+        first_name,
+        last_name,
+        email,
+        password,
+        phone_number,
+      })
+      .then((result) => {
+        console.log(result);
+        setStatus(true);
+        setMessage(result.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+        setStatus(false);
+        setMessage(error.response.data.message);
+      });
+  };
 
   return (
-    <div>
+    <div className="Form">
+      <form onSubmit={register}>
+      <br />
+      <p className="Title">Register Form</p>
       <input
         type="text"
         placeholder="First Name"
@@ -26,6 +48,7 @@ const Register = () => {
           setFirst_name(e.target.value);
         }}
       />
+      <br />
       <input
         type="text"
         placeholder="Last Name"
@@ -33,6 +56,7 @@ const Register = () => {
           setLast_name(e.target.value);
         }}
       />
+      <br />
       <input
         type="number"
         placeholder="Phone Number"
@@ -40,6 +64,7 @@ const Register = () => {
           setPhone_number(e.target.value);
         }}
       />
+      <br />
       <input
         type="email"
         placeholder="Email"
@@ -47,6 +72,7 @@ const Register = () => {
           setEmail(e.target.value);
         }}
       />
+      <br />
       <input
         type="password"
         placeholder="Password"
@@ -54,7 +80,12 @@ const Register = () => {
           setPassword(e.target.value);
         }}
       />
-      <button onClick={register}>Register</button>
+      <br />
+      <button >Register</button>
+      </form>
+      {status
+        ? message && <div className="SuccessMessage">{message}</div>
+        : message && <div className="ErrorMessage">{message}</div>}
     </div>
   );
 };
