@@ -1,41 +1,39 @@
 const bcrypt = require("bcrypt");
 const { pool } = require("../models/db");
 const jwt = require("jsonwebtoken");
-const { query } = require("express");
 const salt = 10;
 
 const register = async (req, res) => {
   const { first_name, last_name, email, password, role_id, phone_number } =
     req.body;
   const passwordHashed = await bcrypt.hash(password, salt);
-  const query = `INSERT INTO users (first_name,last_name,email,password,role_id,points,phone_number) VALUES($1 , $2 , $3 , $4,$5,$6,$7)`;
+  const query = `INSERT INTO users (first_name, last_name, email, password, role_id, phone_number) 
+                     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
+
   const data = [
     first_name,
     last_name,
-    email,
+    email.toLowerCase(),
     passwordHashed,
-    role_id,
-    0,
+    1,
     phone_number,
   ];
   pool
     .query(query, data)
     .then((result) => {
-      res.status(201).json({
+      res.status(200).json({
         success: true,
         message: "Account created successfully",
-        result: result,
       });
     })
-    .catch((error) => {
+    .catch((err) => {
       res.status(409).json({
         success: false,
         message: "The email already exists",
-        err: error,
+        err,
       });
     });
 };
-
 const login = (req, res) => {
   const { email, password } = req.body;
 
@@ -262,7 +260,6 @@ const updateRequestById = (req, res) => {
     });
 };
 
-
 const cancelOrderById = (req, res) => {
   const { id } = req.params;
   const checkTimeQuery = `select order_time from orders where id=$1`;
@@ -315,7 +312,3 @@ module.exports = {
   updateRequestById,
   cancelOrderById,
 };
-
-
-
-

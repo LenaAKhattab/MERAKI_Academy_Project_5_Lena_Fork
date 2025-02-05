@@ -1,5 +1,6 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
+import Register from "./components/Register";
 
 
 
@@ -8,6 +9,7 @@ import { Route, Routes } from "react-router-dom";
 const App = () => {
   return (
     <div >
+      <Register/>
       <Routes>
 
       </Routes>
