@@ -34,12 +34,55 @@ const register = async (req, res) => {
       });
     });
 };
+// const login = (req, res) => {
+//   const { email, password } = req.body;
+
+//   pool
+//     .query(`SELECT * FROM users WHERE email = '${email}'`)
+//     .then(async (result) => {
+//       const isValid = await bcrypt.compare(password, result.rows[0].password);
+//       if (isValid) {
+//         const payload = {
+//           userId: result.rows[0].id,
+//           firstName: result.rows[0].first_name,
+//           roleid: result.rows[0].role_id,
+//         };
+//         const options = {
+//           expiresIn: "200m",
+//         };
+//         const token = await jwt.sign(payload, process.env.SECRET, options);
+//         res.status(201).json({
+//           success: true,
+//           message: "you are log in successfully",
+//           token: token,
+//         });
+//       }
+//       res.status(403).json({
+//         success: false,
+//         message: "password or email is incorrect ",
+//       });
+//     })
+//     .catch((error) => {
+//       res.status(403).json({
+//         success: false,
+//         message: "password or email is incorrect ",
+//         err: error,
+//       });
+//     });
+// };
 const login = (req, res) => {
   const { email, password } = req.body;
 
   pool
     .query(`SELECT * FROM users WHERE email = '${email}'`)
     .then(async (result) => {
+      if (result.rows.length === 0) {
+        return res.status(403).json({
+          success: false,
+          message: "password or email is incorrect",
+        });
+      }
+
       const isValid = await bcrypt.compare(password, result.rows[0].password);
       if (isValid) {
         const payload = {
@@ -47,29 +90,30 @@ const login = (req, res) => {
           firstName: result.rows[0].first_name,
           roleid: result.rows[0].role_id,
         };
-        const options = {
-          expiresIn: "200m",
-        };
+        const options = { expiresIn: "200m" };
         const token = await jwt.sign(payload, process.env.SECRET, options);
-        res.status(201).json({
+        
+        return res.status(201).json({
           success: true,
-          message: "you are log in successfully",
+          message: "You are logged in successfully",
           token: token,
         });
       }
-      res.status(403).json({
+
+      return res.status(403).json({
         success: false,
-        message: "password or email is incorrect ",
+        message: "password or email is incorrect",
       });
     })
     .catch((error) => {
-      res.status(403).json({
+      return res.status(500).json({
         success: false,
-        message: "password or email is incorrect ",
-        err: error,
+        message: "Something went wrong",
+        error: error.message,
       });
     });
 };
+
 
 const createRequest = (req, res) => {
   const userId = req.token.userId;
