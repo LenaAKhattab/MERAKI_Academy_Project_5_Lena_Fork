@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { setCategories } from "../../redux/reducers/adminCategories";
+import { setCategories, addCategory } from "../../redux/reducers/adminCategories";
 import "./AdminCategory.css"; 
 
 const AdminCategory = () => {
@@ -11,6 +11,17 @@ const AdminCategory = () => {
   const [showModal, setShowModal] = useState(false);
 
   const getCategories = () => {
+    axios
+      .get("http://localhost:5000/category/getAllCategories")
+      .then((response) => {
+        dispatch(setCategories(response.data.Categories));
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  };
+
+  const addCategory = () => {
     axios
       .get("http://localhost:5000/category/getAllCategories")
       .then((response) => {
