@@ -13,7 +13,7 @@ const {
   cancelRequestById,
   assignOrderByCollectorId
 
-  getAssignOrderById ,
+,
   createOrder
 
 } = require("../controllers/user");
@@ -28,11 +28,11 @@ userRouter.get("/getRequestByuserId", authentication,getRequestsById);
 userRouter.put("/cancelOrderById/:id",cancelOrderById);
 
 userRouter.get("/getOrderById", getALLOrdersById);//user
-userRouter.get("/getAssignById", getAssignOrderById );//collector
+userRouter.get("/getAssignById",authentication, getAssignOrderById );//collector
 userRouter.delete("/cancelRequestById/:id",cancelRequestById)
 
 userRouter.get("/getOrderById/:id", getALLOrdersById);//user
-userRouter.get("/getAssignById/:id", getAssignOrderById );//collector
+// userRouter.get("/getAssignById/:id", getAssignOrderById );//collector
 userRouter.post("/createOrders", authentication, createOrder);
 
 

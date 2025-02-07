@@ -370,11 +370,11 @@ const getALLOrdersById = (req,res)=>{
 }
 const getAssignOrderById = (req,res)=>{
   const userId = req.token.userId;
-  pool.query(`SELECT * FROM orders WHERE collector_id = ${userId}`)
+  pool.query(`SELECT * FROM orders WHERE collector_id = $1`,[userId])
   .then((result)=>{
     res.status(201).json({
       success:true,
-      result : result.rows
+      orders : result.rows
     })
 
   })
