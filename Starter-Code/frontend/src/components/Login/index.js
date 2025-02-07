@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.css";
 import { useNavigate } from "react-router-dom";
 
 import { useSelector, useDispatch } from "react-redux";
-import { setLogin, setUserId } from "../redux/reducers/auth/index";
+import { setLogin, setUserId } from "../../redux/reducers/auth/index";
 import axios from "axios";
 
 // ==============================================
@@ -40,15 +40,15 @@ const Login = () => {
   };
   //=========================================
 
-//   TODO
-  /*
-Should update navigation path later 
-    useEffect(() => {
-      if (authIsLoggedIn) {
-        navigate("/");
-      }
-    });
-    */
+  //   TODO
+
+  // Should update navigation path later
+  useEffect(() => {
+    if (authIsLoggedIn) {
+      navigate("/admin");
+    }
+  });
+
   return (
     <div className="Form">
       <form onSubmit={login}>
@@ -77,7 +77,7 @@ Should update navigation path later
       {/* {status
         ? message && <div className="SuccessMessage">{message}</div>
         : message && <div className="ErrorMessage">{message}</div>} */}
-         {status
+      {status
         ? message && <div className="SuccessMessage">{message}</div>
         : message && <div className="ErrorMessage">{message}</div>}
     </div>
