@@ -2,7 +2,7 @@ const { pool } = require("../models/db");
 
 const getAllOrders = (req, res) => {
   pool
-    .query("SELECT * FROM orders WHERE status='pending'")
+    .query("SELECT * FROM orders")
     .then((result) => {
       if (!result.rows.length) {
         return res.status(200).json({
