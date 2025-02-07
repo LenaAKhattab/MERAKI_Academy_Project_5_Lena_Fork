@@ -15,7 +15,7 @@ const register = async (req, res) => {
     last_name,
     email.toLowerCase(),
     passwordHashed,
-    1,
+    2,
     phone_number,
   ];
   pool
