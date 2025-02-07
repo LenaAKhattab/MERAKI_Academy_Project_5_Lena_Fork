@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setOrders } from "../../redux/reducers/adminOrders";
 const AdminDash = () => {
   const [message, setMessage] = useState("");
-
+  const [collector_id, setCollector_id] = useState();
   const dispatch = useDispatch();
   // ================================================================
   const authToken = useSelector((reducers) => reducers.authReducer.token);
@@ -23,7 +23,18 @@ const AdminDash = () => {
         setMessage(error.response.data.message);
       });
   };
-
+  const assignOrderToCollector = (id) => {
+    axios
+      .put(`http://localhost:5000/admin/chooseCollector/${id}`, {
+        collector_id: Number(collector_id),
+      })
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   useEffect(() => {
     getAllOrders();
   }, []);
@@ -36,7 +47,20 @@ const AdminDash = () => {
           {order.status}
           <br />
           {order.collector_id}
-          collector_id
+          <input
+            placeholder="collectorId"
+            onChange={(e) => {
+              setCollector_id(e.target.value);
+            }}
+          />
+          <button
+            id={order.id}
+            onClick={(e) => {
+              assignOrderToCollector(e.target.id);
+            }}
+          >
+            assign
+          </button>
         </div>
       ))}
     </div>
