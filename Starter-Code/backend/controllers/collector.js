@@ -14,12 +14,7 @@ const updateOrdersDetailsById = (req, res) => {
     RETURNING *;
   `;
 
-  const data = [
-    last_price || null,
-    status || 'pending', 
-    id,
-    collector_id
-  ];
+  const data = [last_price || null, status || "pending", id, collector_id];
 
   console.log("Data:", data);
 
