@@ -3,10 +3,15 @@ import axios from "axios";
 
 import { useSelector, useDispatch } from "react-redux";
 
-import { setOrders } from "../../redux/reducers/adminOrders";
+import {
+  setOrders,
+  setCollector,
+  setOrderStatus,
+} from "../../redux/reducers/adminOrders";
 const AdminDash = () => {
   const [message, setMessage] = useState("");
   const [collector_id, setCollector_id] = useState();
+  const [status, setStatus] = useState();
   const dispatch = useDispatch();
   // ================================================================
   const authToken = useSelector((reducers) => reducers.authReducer.token);
@@ -29,7 +34,22 @@ const AdminDash = () => {
         collector_id: Number(collector_id),
       })
       .then((result) => {
+        dispatch(setCollector(result.data.order));
+
         console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const changeOrderStatusById = (id) => {
+    axios
+      .put(`http://localhost:5000/admin/changeOrderStatusById/${id}`, {
+        status: String(status),
+      })
+      .then((result) => {
+        console.log(result);
+        dispatch(setOrderStatus(result.data.order));
       })
       .catch((error) => {
         console.log(error);
@@ -47,6 +67,7 @@ const AdminDash = () => {
           {order.status}
           <br />
           {order.collector_id}
+
           <input
             placeholder="collectorId"
             onChange={(e) => {
@@ -60,6 +81,20 @@ const AdminDash = () => {
             }}
           >
             assign
+          </button>
+          <input
+            placeholder="status"
+            onChange={(e) => {
+              setStatus(e.target.value);
+            }}
+          />
+          <button
+            id={order.id}
+            onClick={(e) => {
+              changeOrderStatusById(e.target.id);
+            }}
+          >
+            change status
           </button>
         </div>
       ))}
