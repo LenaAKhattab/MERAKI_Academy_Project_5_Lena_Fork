@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { setCategories, addCategory, deleteCategory } from "../../redux/reducers/adminCategories";
-import { Trash2 } from "lucide-react"; 
+import { setCategories, addCategory, deleteCategory, updateCategory } from "../../redux/reducers/adminCategories";
+import { Trash2, Edit } from "lucide-react"; 
 import "./AdminCategory.css";
 
 const AdminCategory = () => {
@@ -10,6 +10,7 @@ const AdminCategory = () => {
   const categories = useSelector((state) => state.adminCategories.categories);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [newCategory, setNewCategory] = useState({
     category_name: "",
     description: "",
@@ -19,6 +20,7 @@ const AdminCategory = () => {
     points_per_kg: "",
   });
 
+  // get all categories
   const getCategories = () => {
     axios
       .get("http://localhost:5000/category/getAllCategories")
@@ -30,6 +32,7 @@ const AdminCategory = () => {
       });
   };
 
+  // Add new category
   const handleAddCategory = () => {
     axios
       .post("http://localhost:5000/category/addCategory", newCategory)
@@ -49,6 +52,7 @@ const AdminCategory = () => {
       });
   };
 
+  // Delete category
   const handleDeleteCategory = (categoryId) => {
     axios
       .delete(`http://localhost:5000/category/${categoryId}`)
@@ -60,6 +64,19 @@ const AdminCategory = () => {
       });
   };
 
+  // Update category
+  const handleUpdateCategory = () => {
+    axios
+      .put(`http://localhost:5000/category/${selectedCategory.id}`, selectedCategory)
+      .then((response) => {
+        dispatch(updateCategory({ id: selectedCategory.id, updatedData: response.data.updatedCategory }));
+        closeModal();
+      })
+      .catch((error) => {
+        console.error("Error updating category:", error);
+      });
+  };
+
   useEffect(() => {
     getCategories();
   }, []);
@@ -67,11 +84,18 @@ const AdminCategory = () => {
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
     setShowModal(true);
+    setIsEditing(false);
+  };
+
+  // edit mode
+  const handleEditClick = () => {
+    setIsEditing(true);
   };
 
   const closeModal = () => {
     setShowModal(false);
     setSelectedCategory(null);
+    setIsEditing(false);
   };
 
   return (
@@ -91,6 +115,13 @@ const AdminCategory = () => {
                   )}
                   <h3>{category.category_name}</h3>
                 </button>
+                <Edit
+                  className="edit-icon"
+                  size={24}
+                  color="blue"
+                  onClick={() => handleCategoryClick(category)}
+                  style={{ cursor: "pointer" }}
+                />
                 <Trash2
                   className="delete-icon"
                   size={24}
@@ -106,32 +137,48 @@ const AdminCategory = () => {
         )}
       </div>
 
+      {/*  Viewing and Editing */}
       {showModal && selectedCategory && (
         <div className="modal-overlay">
           <div className="modal-content">
             <span className="close-button" onClick={closeModal}>
               &times;
             </span>
-            <h3>{selectedCategory.category_name}</h3>
+            <h3>{isEditing ? "Edit Category" : selectedCategory.category_name}</h3>
             {selectedCategory.image ? (
               <img src={selectedCategory.image} alt={selectedCategory.category_name} className="modal-image" />
             ) : (
               <div className="placeholder-image">No Image Available</div>
             )}
-            <p>{selectedCategory.description}</p>
-            <p>
-              <strong>Price per KG:</strong> ${selectedCategory.price_per_kg}
-            </p>
-            <p>
-              <strong>Price per Dimensions:</strong> ${selectedCategory.price_per_dimensions}
-            </p>
-            <p>
-              <strong>Points per KG:</strong> {selectedCategory.points_per_kg}
-            </p>
+            
+            {isEditing ? (
+              <>
+                <input
+                  type="text"
+                  value={selectedCategory.category_name}
+                  onChange={(e) => setSelectedCategory({ ...selectedCategory, category_name: e.target.value })}
+                />
+                <input
+                  type="text"
+                  value={selectedCategory.description}
+                  onChange={(e) => setSelectedCategory({ ...selectedCategory, description: e.target.value })}
+                />
+                <button onClick={handleUpdateCategory}>Save Changes</button>
+              </>
+            ) : (
+              <>
+                <p>{selectedCategory.description}</p>
+                <p><strong>Price per KG:</strong> ${selectedCategory.price_per_kg}</p>
+                <p><strong>Price per Dimensions:</strong> ${selectedCategory.price_per_dimensions}</p>
+                <p><strong>Points per KG:</strong> {selectedCategory.points_per_kg}</p>
+                <button onClick={handleEditClick}>Edit</button>
+              </>
+            )}
           </div>
         </div>
       )}
 
+      {/* Add new category form */}
       <div className="addnew-category">
         <h3>Add New Category</h3>
         <input
