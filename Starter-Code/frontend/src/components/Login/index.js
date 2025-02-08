@@ -45,7 +45,7 @@ const Login = () => {
   // Should update navigation path later
   useEffect(() => {
     if (authIsLoggedIn) {
-      navigate("/admin");
+      navigate("/cart");
     }
   });
 

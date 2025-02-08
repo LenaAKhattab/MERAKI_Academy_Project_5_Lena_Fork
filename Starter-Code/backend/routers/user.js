@@ -11,9 +11,8 @@ const {
   getALLOrdersById,
   getAssignOrderById,
   cancelRequestById,
-  assignOrderByCollectorId
+  assignOrderByCollectorId,
 
-  getAssignOrderById ,
   createOrder
 
 } = require("../controllers/user");
