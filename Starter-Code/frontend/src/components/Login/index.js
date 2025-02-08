@@ -28,7 +28,7 @@ const Login = () => {
       .then((result) => {
         console.log(result);
         setMessage(result.data.message);
-        dispatch(setLogin(result.data.token));
+        dispatch(setLogin({ token: result.data.token, roleId: result.data.roleId })); 
         dispatch(setUserId(result.data.userId));
         setStatus(true);
       })
@@ -45,7 +45,7 @@ const Login = () => {
   // Should update navigation path later
   useEffect(() => {
     if (authIsLoggedIn) {
-      navigate("/admin");
+      navigate("/category");
     }
   });
 

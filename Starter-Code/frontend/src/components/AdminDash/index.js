@@ -57,7 +57,7 @@ const AdminDash = () => {
   };
   useEffect(() => {
     getAllOrders();
-  }, []);
+  }, [getAllOrders]);
   return (
     <div>
       {orders?.map((order, index) => (
