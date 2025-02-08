@@ -15,7 +15,7 @@ const register = async (req, res) => {
     last_name,
     email.toLowerCase(),
     passwordHashed,
-    1,
+    2,
     phone_number,
   ];
   pool
@@ -73,6 +73,7 @@ const register = async (req, res) => {
 const login = (req, res) => {
   const { email, password } = req.body;
 
+
   pool
     .query(`SELECT * FROM users WHERE email = '${email}'`)
     .then(async (result) => {
@@ -117,6 +118,7 @@ const login = (req, res) => {
 
 const createRequest = (req, res) => {
   const userId = req.token.userId;
+
   const { category_id, weight, height, length, width, description } = req.body;
 
   const priceQuery = `
@@ -347,6 +349,178 @@ const cancelOrderById = (req, res) => {
       });
   });
 };
+const getALLOrdersById = (req,res)=>{
+  const userId = req.token.userId;
+  pool.query(`SELECT * FROM orders WHERE user_id = ${userId}`)
+  .then((result)=>{
+    res.status(201).json({
+      success:true,
+      result : result.rows
+    })
+
+  })
+  .catch((error) => {
+    res.status(500).json({
+      success: false,
+      message: "server error",
+      error: error.message,
+    });
+  });
+
+}
+const getAssignOrderById = (req,res)=>{
+  const userId = req.token.userId;
+  pool.query(`SELECT * FROM orders WHERE collector_id = ${userId}`)
+  .then((result)=>{
+    res.status(201).json({
+      success:true,
+      result : result.rows
+    })
+
+  })
+  .catch((error) => {
+    res.status(500).json({
+      success: false,
+      message: "server error",
+      error: error.message,
+    });
+  });
+
+}
+const cancelRequestById = (req,res)=>{
+  const {id} = req.params 
+  console.log(id);
+  pool.query(`DELETE FROM requests WHERE id = ${id} `)
+  .then((result)=>{
+    res.status(201).json({
+      success:true,
+      result:result,
+      message:"the request has been deleted"
+    })
+  })
+  .catch((error) => {
+    console.log(error);
+    
+    res.status(500).json({
+      success: false,
+      message: "server error",
+      error: error,
+    });
+  });
+}
+const assignOrderByCollectorId = (req,res)=>{
+  const {id} = req.params
+  const {collectorId} = req.body
+  console.log("vvvv",collectorId,id);
+  
+  pool.query(`
+    UPDATE orders
+    SET collector_id = ${collectorId}
+    WHERE id = ${id}`)
+  .then((result)=>{
+    res.status(201).json({
+      result:result
+    })
+  })
+  .catch((error) => {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "server error",
+      error: error,
+    })
+  });
+}
+
+
+
+const createOrder = (req, res) => {
+  const userId = req.token.userId;
+  const { location } = req.body;
+
+  if (!location) {
+    return res.status(400).json({
+      success: false,
+      message: "Location is required"
+    });
+  }
+
+  const draftRequestsQuery = `
+    SELECT * FROM requests 
+    WHERE user_id = $1 AND status = 'draft'
+  `;
+  
+  pool
+    .query(draftRequestsQuery, [userId])
+    .then((draftRequestsResult) => {
+      if (draftRequestsResult.rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "No draft requests found"
+        });
+      }
+
+      // this step is to calculate the total predicted price from all draft requests(for the user)
+      let totalPredictedPrice = 0;
+      draftRequestsResult.rows.forEach((draftRequest) => {
+        const predictedPrice = parseFloat(draftRequest.predicted_price);
+        totalPredictedPrice += predictedPrice;
+      });
+
+      const orderQuery = `
+        INSERT INTO orders (user_id, location, predicted_price) 
+        VALUES ($1, $2, $3) 
+        RETURNING * 
+      `;
+      const orderData = [userId, location, totalPredictedPrice];
+
+      pool
+        .query(orderQuery, orderData)
+        .then((orderResult) => {
+          const order = orderResult.rows[0];
+
+          const updateRequestsQuery = `
+            UPDATE requests 
+            SET status = 'active', order_id = $1 
+            WHERE user_id = $2 AND status = 'draft'
+            RETURNING *
+          `;
+          const updateRequestsData = [order.id, userId];
+
+          pool
+            .query(updateRequestsQuery, updateRequestsData)
+            .then(() => {
+              return res.status(201).json({
+                success: true,
+                message: "Order created successfully",
+                order: order
+              });
+            })
+            .catch((error) => {
+              return res.status(500).json({
+                success: false,
+                message: "Error updating request status",
+                error: error.message
+              });
+            });
+        })
+        .catch((error) => {
+          return res.status(500).json({
+            success: false,
+            message: "Error creating order",
+            error: error.message
+          });
+        });
+    })
+    .catch((error) => {
+      return res.status(500).json({
+        success: false,
+        message: "Error retrieving draft requests",
+        error: error.message
+      });
+    });
+};
+
 
 module.exports = {
   login,
@@ -355,4 +529,9 @@ module.exports = {
   getRequestsById,
   updateRequestById,
   cancelOrderById,
+  getALLOrdersById,
+  getAssignOrderById,
+  cancelRequestById,
+  assignOrderByCollectorId,
+  createOrder
 };
