@@ -12,8 +12,7 @@ const {
   getAssignOrderById,
   cancelRequestById,
   assignOrderByCollectorId,
-
-  createOrder
+    createOrder
 
 } = require("../controllers/user");
 const authentication = require("../middleware/authentication");

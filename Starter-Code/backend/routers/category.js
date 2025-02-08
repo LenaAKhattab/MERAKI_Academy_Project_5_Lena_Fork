@@ -4,9 +4,9 @@ const { addCategory ,getAllCategories,deleteCategoryById,updateCategoryById} = r
 const authentication = require("../middleware/authentication");
 const categoryRouter = express.Router();
 
-categoryRouter.post("/addCategory" ,authentication, addCategory);
-categoryRouter.get("/getAllCategories" ,authentication, getAllCategories);
-categoryRouter.delete("/:id" ,authentication, deleteCategoryById);
-categoryRouter.put("/:id" ,authentication, updateCategoryById);
+categoryRouter.post("/addCategory" , addCategory);
+categoryRouter.get("/getAllCategories" , getAllCategories);
+categoryRouter.delete("/:id" , deleteCategoryById);
+categoryRouter.put("/:id" , updateCategoryById);
 
 module.exports = categoryRouter;
