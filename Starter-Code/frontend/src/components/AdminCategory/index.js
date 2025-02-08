@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { setCategories, addCategory } from "../../redux/reducers/adminCategories";
+import { setCategories, addCategory, deleteCategory } from "../../redux/reducers/adminCategories";
+import { Trash2 } from "lucide-react"; 
 import "./AdminCategory.css";
 
 const AdminCategory = () => {
@@ -30,12 +31,10 @@ const AdminCategory = () => {
   };
 
   const handleAddCategory = () => {
-    console.log(newCategory);
-    
     axios
       .post("http://localhost:5000/category/addCategory", newCategory)
       .then((response) => {
-        dispatch(addCategory(response.data.newCategory)); 
+        dispatch(addCategory(response.data.newCategory));
         setNewCategory({
           category_name: "",
           description: "",
@@ -47,6 +46,17 @@ const AdminCategory = () => {
       })
       .catch((error) => {
         console.error("Error adding category:", error);
+      });
+  };
+
+  const handleDeleteCategory = (categoryId) => {
+    axios
+      .delete(`http://localhost:5000/category/${categoryId}`)
+      .then(() => {
+        dispatch(deleteCategory(categoryId));
+      })
+      .catch((error) => {
+        console.error("Error deleting category:", error);
       });
   };
 
@@ -70,18 +80,27 @@ const AdminCategory = () => {
       <button onClick={getCategories}>Fetch Categories</button>
       <div className="categories-list">
         {categories.length > 0 ? (
-          categories.map((category, index) => (
+          categories.map((category, index) =>
             category ? (
-              <button key={category.id || index} className="category-button" onClick={() => handleCategoryClick(category)}>
-                {category.image ? (
-                  <img src={category.image} alt={category.category_name} className="category-image" />
-                ) : (
-                  <div className="placeholder-image">No Image</div> 
-                )}
-                <h3>{category.category_name}</h3>
-              </button>
+              <div key={category.id || index} className="category-item">
+                <button className="category-button" onClick={() => handleCategoryClick(category)}>
+                  {category.image ? (
+                    <img src={category.image} alt={category.category_name} className="category-image" />
+                  ) : (
+                    <div className="placeholder-image">No Image</div>
+                  )}
+                  <h3>{category.category_name}</h3>
+                </button>
+                <Trash2
+                  className="delete-icon"
+                  size={24}
+                  color="red"
+                  onClick={() => handleDeleteCategory(category.id)}
+                  style={{ cursor: "pointer" }}
+                />
+              </div>
             ) : null
-          ))
+          )
         ) : (
           <p>No categories available.</p>
         )}
@@ -90,17 +109,25 @@ const AdminCategory = () => {
       {showModal && selectedCategory && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <span className="close-button" onClick={closeModal}>&times;</span>
+            <span className="close-button" onClick={closeModal}>
+              &times;
+            </span>
             <h3>{selectedCategory.category_name}</h3>
             {selectedCategory.image ? (
               <img src={selectedCategory.image} alt={selectedCategory.category_name} className="modal-image" />
             ) : (
-              <div className="placeholder-image">No Image Available</div> 
+              <div className="placeholder-image">No Image Available</div>
             )}
             <p>{selectedCategory.description}</p>
-            <p><strong>Price per KG:</strong> ${selectedCategory.price_per_kg}</p>
-            <p><strong>Price per Dimensions:</strong> ${selectedCategory.price_per_dimensions}</p>
-            <p><strong>Points per KG:</strong> {selectedCategory.points_per_kg}</p>
+            <p>
+              <strong>Price per KG:</strong> ${selectedCategory.price_per_kg}
+            </p>
+            <p>
+              <strong>Price per Dimensions:</strong> ${selectedCategory.price_per_dimensions}
+            </p>
+            <p>
+              <strong>Points per KG:</strong> {selectedCategory.points_per_kg}
+            </p>
           </div>
         </div>
       )}

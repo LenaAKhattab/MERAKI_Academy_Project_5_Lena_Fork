@@ -7,7 +7,7 @@ import Login from "./components/Login";
 import AdminDash from "./components/AdminDash";
 import AdminCategory from "./components/AdminCategory";
 
-import CollectorDash from "./components/collectorDash";
+// import CollectorDash from "./components/collectorDash";
 
 
 
@@ -21,7 +21,7 @@ const App = () => {
 
       <Route path={"/category"} element={<AdminCategory />} />
 
-      <Route path={"/collector"} element={<CollectorDash />} />
+      {/* <Route path={"/collector"} element={<CollectorDash />} /> */}
     </Routes>
   );
 };

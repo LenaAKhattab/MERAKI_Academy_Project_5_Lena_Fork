@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 export const AdminCategorySlice = createSlice({
-  name: 'adminCategories',
+  name: "adminCategories",
   initialState: {
-    categories: [],  
+    categories: [],
   },
   reducers: {
     setCategories: (state, action) => {
@@ -12,10 +11,13 @@ export const AdminCategorySlice = createSlice({
     },
     addCategory: (state, action) => {
       state.categories.push(action.payload);
+    },
+    deleteCategory: (state, action) => {
+      state.categories = state.categories.filter(category => category.id !== action.payload);
     }
   }
 });
 
-export const { setCategories, addCategory } = AdminCategorySlice.actions;
+export const { setCategories, addCategory, deleteCategory } = AdminCategorySlice.actions;
 
 export default AdminCategorySlice.reducer;
