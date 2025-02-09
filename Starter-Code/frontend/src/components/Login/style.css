@@ -28,7 +28,7 @@
 }
 .text-center{
   color:white;
-  font-size: 18px;
+  font-size: 30px;
 }
 .LInput{
   color:white !important
@@ -56,6 +56,7 @@
   align-items: center;
   background: url('https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg') no-repeat center center fixed;
   background-size: cover;
+  
 }
 
 .blurred-container {
@@ -64,9 +65,12 @@
   border-radius: 15px;
   backdrop-filter: blur(100px); /* زيادة التأثير */
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
-  width: 45%;
-  max-height: 87%;
+  width: 35%;
+  max-height: 74%;
   transition: all 0.3s ease-in-out;
+  font-size: 20px;
+  
+  
 }
 
 @media (max-width: 768px) {
