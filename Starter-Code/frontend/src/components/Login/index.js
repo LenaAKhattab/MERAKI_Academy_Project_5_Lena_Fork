@@ -95,7 +95,7 @@ const Login = () => {
           </MDBTabs>
 
           <MDBTabsContent>
-            {/* تسجيل الدخول */}
+            {/* login */}
             <MDBTabsPane open={justifyActive === "tab1"}>
               <div className="text-center mb-3">
                 <p style={{ fontSize: "20px" }}>Sign in with:</p>
@@ -165,7 +165,7 @@ const Login = () => {
               </p>
             </MDBTabsPane>
 
-            {/* التسجيل */}
+            {/* register */}
             <MDBTabsPane open={justifyActive === "tab2"}>
               <div className="text-center mb-3">
                 <p style={{ fontSize: "20px" }}>Sign up with:</p>
