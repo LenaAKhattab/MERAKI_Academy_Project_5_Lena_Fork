@@ -12,6 +12,7 @@ import UserCategory from "./components/UserCategory";
 import OrderCreate from "./components/createOrder";
 import CollectorsDash from "./components/CollectorsDash";
 import  CurrentCategory  from "./components/UserCategory/CurrentCategory";
+import GetAllRequest from "./components/UserCategory/GetAllRequest";
 import SideNav from "./components/SideNav";
 
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
       <Route path={"/category"} element={<AdminCategory />} />
       <Route path="/categoriesPage" element={<UserCategory/>} />
       <Route path="/currentCategory" element={<CurrentCategory/>}/>
+      <Route path="/AllRequest" element= {<GetAllRequest/>}/>
       <Route path={"/collector"}  element={<CollectorsDash/>}/>
       <Route path={"/sideNav"} element={<SideNav  />}/>
     </Routes>
