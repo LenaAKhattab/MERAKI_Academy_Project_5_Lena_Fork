@@ -9,8 +9,14 @@ const GetAllRequest = () => {
     const categoryNameInKg = ["paper","plastic","wood","clothes","Iron","Copper","Glasses","paper","food"];
     const categoryNameInHight =["furniture"]
     const [requests,setRequests]=useState([])
+    const [udatedValue,setUpdated] =useState({})
     const state = useSelector((state)=>state)
     const token =  state.authReducer.token
+    const [isUpdateWidth,setIsUpdateWidth] = useState(false)
+    const [isUpdateHeight,setIsUpdateHeight] = useState(false)
+    const [isUpdateDes,setIsUpdateDes] = useState(false)
+    const [isUpdateLength,setIsUpdateLength] = useState(false)
+    const [isUpdateWeight,setIsUpdateWeight] = useState(false)
    const updateRequest=()=>{
 
     }
@@ -54,16 +60,17 @@ return (
             return <div>
                 <p>request:</p>
                 {ele.category_id == 23 ?<div>
-                <p>height:{ele.height} </p>
-                <p>length:{ele.length} </p>
-                <p>width:{ele.width}</p>
-                    </div>:<p>weight:{ele.weight}</p>}
+                <p>height:{!isUpdateHeight?ele.height:<input></input>} </p>
+                <p>length:{!isUpdateLength?ele.length:<input></input>} </p>
+                <p>width:{!isUpdateWidth?ele.width:<input></input>}</p>
+                    </div>:<p>weight:{!isUpdateWeight?ele.weight:<input></input>}</p>}
                 <div>
-                <p>Description: {ele.description}</p>
+                <p>Description: {!isUpdateDes?ele.description:<input></input>}</p>
                 <p>predicted_price: {ele.predicted_price}</p>
                 </div>
                 <div>
                     <button onClick={()=>{
+                        /* setIsUpdate(true) */
                         updateRequest()
                     }} >Update</button>
                     <button onClick={()=>{

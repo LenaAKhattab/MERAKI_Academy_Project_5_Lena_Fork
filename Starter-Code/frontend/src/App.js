@@ -17,16 +17,17 @@ import GetAllRequest from "./components/UserCategory/GetAllRequest";
 const App = () => {
   return (
     <>
+    <Login/>
 
     
     <Routes>
       <Route path={"/register"} element={<Register />} />
-      <Route path={"/login"} element={<Login />} />
+      <Route path={"/"} element={<Login />} />
       <Route path={"/admin"} element={<AdminDash />} />
       <Route path={"/cart" } element={<OrderCreate/>}/>
       <Route path={"/category"} element={<AdminCategory />} />
       <Route path="/categoriesPage" element={<UserCategory/>} />
-      {/* <Route path={"/collector"}  element={<CollectorsDash/>}/> */}
+       <Route path={"/collector"}  element={<CollectorsDash/>}/> 
       <Route path="/currentCategory" element={<CurrentCategory/>}/>
       <Route path="/AllRequest" element= {<GetAllRequest/>}/>
     </Routes>
