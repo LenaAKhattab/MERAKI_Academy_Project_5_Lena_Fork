@@ -11,6 +11,7 @@ import UserCategory from "./components/UserCategory";
 
 import OrderCreate from "./components/createOrder";
 import CollectorsDash from "./components/CollectorsDash";
+import SideNav from "./components/SideNav";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
       <Route path={"/category"} element={<AdminCategory />} />
       <Route path="/categoriesPage" element={<UserCategory/>} />
       <Route path={"/collector"}  element={<CollectorsDash/>}/>
+      <Route path={"/sideNav"} element={<SideNav  />}/>
     </Routes>
   );
 };
