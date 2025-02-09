@@ -42,10 +42,11 @@ const Login = () => {
 
   //   TODO
 
-  // Should update navigation path later
+  // Should update navigation path to the pasth you use to test
   useEffect(() => {
     if (authIsLoggedIn) {
-      navigate("/category");
+      navigate("/collector");
+
     }
   });
 

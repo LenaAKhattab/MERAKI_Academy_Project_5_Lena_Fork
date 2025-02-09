@@ -4,12 +4,13 @@ import adminOrdersReducer from "./adminOrders/index"
 import orderReducer from "./createOrder/index"; 
 import  AdminCategoryReducer from "./adminCategories";
 import userCategories from "./userCategory"
-
+import collectorOrdersReducer from "./collectorOrders";
 
 const store = configureStore({
   reducer: {
     authReducer: authReducer,
     adminOrdersReducer: adminOrdersReducer,
+    collectorOrdersReducer: collectorOrdersReducer,
     adminCategories: AdminCategoryReducer,
     order: orderReducer,
     userCategory:userCategories
@@ -18,4 +19,3 @@ const store = configureStore({
 });
 
 export default store;
-

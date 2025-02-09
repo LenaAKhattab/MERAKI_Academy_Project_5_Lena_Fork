@@ -5,12 +5,12 @@ import Login from "./components/Login";
 // import { RouterProvider } from "react-router-dom";
 // import { router } from "./Routers";
 import AdminDash from "./components/AdminDash";
-import OrderCreate from './components/createOrder'
-/* import CollectorDash from "./components/collectorDash"; */
 import AdminCategory from "./components/AdminCategory";
 import UserCategory from "./components/UserCategory";
 
 
+import OrderCreate from "./components/createOrder";
+import CollectorsDash from "./components/CollectorsDash";
 
 const App = () => {
   return (
@@ -19,12 +19,9 @@ const App = () => {
       <Route path={"/"} element={<Login />} />
       <Route path={"/admin"} element={<AdminDash />} />
       <Route path={"/cart" } element={<OrderCreate/>}/>
-     {/*  <Route path={"/collector"} element={<CollectorDash />} /> */}
       <Route path={"/category"} element={<AdminCategory />} />
       <Route path="/categoriesPage" element={<UserCategory/>} />
-
-
-      {/* <Route path={"/collector"} element={<CollectorDash />} /> */}
+      <Route path={"/collector"}  element={<CollectorsDash/>}/>
     </Routes>
   );
 };
