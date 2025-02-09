@@ -39,6 +39,9 @@ const Login = () => {
   const authIsLoggedIn = useSelector(
     (reducers) => reducers.authReducer.isLoggedIn
   );
+  const authRoleId = useSelector(
+    (reducers) => reducers.authReducer.roleId
+  );
   const dispatch = useDispatch();
 
   const login = (e) => {
@@ -60,10 +63,16 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (authIsLoggedIn) {
-      navigate("/collector");
+    if (authIsLoggedIn&&authRoleId==="1") {
+      navigate("/sideNav");
     }
-  }, [authIsLoggedIn, navigate]);
+    /*
+     if (authIsLoggedIn&&authRoleId==="2") {
+       navigate("/");
+       change to user dash
+    }
+       */
+  }, []);
 
   return (
     <div className="full-page">
