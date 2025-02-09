@@ -98,6 +98,8 @@ const login = (req, res) => {
           success: true,
           message: "You are logged in successfully",
           token: token,
+          userId:result.rows[0].id,
+          roleId:result.rows[0].role_id,
         });
       }
 
