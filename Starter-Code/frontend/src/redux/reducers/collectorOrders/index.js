@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const collectorOrdersSlice = createSlice({
-  name: "orders ",
+  name: "orders",
   initialState: {
     orders: [],
   },
@@ -9,13 +9,14 @@ const collectorOrdersSlice = createSlice({
     setOrders: (state, action) => {
       state.orders = action.payload;
     },
-    setOrderStatus: (state, action) => {
+    setOrderDetails: (state, action) => {
       const updatedOrder = action.payload;
       state.orders = state.orders.map((order) => {
         if (order.id === updatedOrder.id) {
           return {
             ...order,
             status: updatedOrder.status,
+            last_price:updatedOrder.last_price
           };
         }
         return order;
@@ -24,6 +25,6 @@ const collectorOrdersSlice = createSlice({
   },
 });
 
-export const { setOrders, setOrderStatus } =
+export const { setOrders, setOrderDetails } =
   collectorOrdersSlice.actions;
 export default collectorOrdersSlice.reducer;
