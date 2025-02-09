@@ -89,7 +89,7 @@ const login = (req, res) => {
         const payload = {
           userId: result.rows[0].id,
           firstName: result.rows[0].first_name,
-          roleId: result.rows[0].role_id,
+          roleid: result.rows[0].role_id,
         };
         const options = { expiresIn: "200m" };
         const token = await jwt.sign(payload, process.env.SECRET, options);
@@ -98,9 +98,6 @@ const login = (req, res) => {
           success: true,
           message: "You are logged in successfully",
           token: token,
-          userId: result.rows[0].id,
-          roleId: result.rows[0].role_id,
-
         });
       }
 
