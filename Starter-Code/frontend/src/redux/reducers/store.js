@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/index";
-import adminOrdersReducer from "./adminOrders/index";
-import orderReducer from "./createOrder/index";
-import AdminCategoryReducer from "./adminCategories";
+import adminOrdersReducer from "./adminOrders/index"
+import orderReducer from "./createOrder/index"; 
+import  AdminCategoryReducer from "./adminCategories";
+import userCategories from "./userCategory"
 import collectorOrdersReducer from "./collectorOrders";
 
 const store = configureStore({
@@ -12,6 +13,8 @@ const store = configureStore({
     collectorOrdersReducer: collectorOrdersReducer,
     adminCategories: AdminCategoryReducer,
     order: orderReducer,
+    userCategory:userCategories
+    
   },
 });
 

@@ -11,6 +11,9 @@ const AdminCategory = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  
+
   const [newCategory, setNewCategory] = useState({
     category_name: "",
     description: "",
@@ -26,6 +29,7 @@ const AdminCategory = () => {
       .get("http://localhost:5000/category/getAllCategories")
       .then((response) => {
         dispatch(setCategories(response.data.Categories));
+        console.log("ddd",categories);
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
