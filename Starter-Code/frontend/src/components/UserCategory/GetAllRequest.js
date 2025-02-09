@@ -11,8 +11,28 @@ const GetAllRequest = () => {
     const [requests,setRequests]=useState([])
     const state = useSelector((state)=>state)
     const token =  state.authReducer.token
-    
-    
+   const updateRequest=()=>{
+
+    }
+    const deleteRequest = (id)=>{
+        console.log(id);
+        
+        axios.delete(`http://localhost:5000/user/cancelRequestById/${id}`)
+        .then((response)=>{
+            console.log(response);
+            const newRequests = requests.filter((ele,i)=>{
+                return ele.id !== id
+
+            })
+            setRequests(newRequests)
+        })
+        .catch((error)=>{
+            console.log(error);
+            
+
+        })
+
+    }
     useEffect(()=>{
         axios.get("http://localhost:5000/user/getRequestByuserId", {headers: {
         Authorization: `Bearer ${token}`
@@ -43,8 +63,12 @@ return (
                 <p>predicted_price: {ele.predicted_price}</p>
                 </div>
                 <div>
-                    <button >Update</button>
-                    <button>Delete</button>
+                    <button onClick={()=>{
+                        updateRequest()
+                    }} >Update</button>
+                    <button onClick={()=>{
+                        deleteRequest(ele.id)
+                    }}>Delete</button>
                 </div>
                 
 
