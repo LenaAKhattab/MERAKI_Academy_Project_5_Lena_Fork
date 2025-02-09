@@ -1,13 +1,15 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useSelector ,useDispatch} from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { setCurrentCategory } from '../../redux/reducers/userCategory'
 //put current category info into store 
-
+import CurrentCategory from './CurrentCategory'
 
 
 
 const UserCategory=()=>{
+    const Navigate = useNavigate()
     const dispatch = useDispatch();
     const [allCategories,setAllCategories] = useState([])
     const currentCategory = useSelector(selector =>selector)
@@ -43,7 +45,9 @@ return (
                 console.log(ele);
                 
                 dispatch(setCurrentCategory(ele))
+                Navigate("/currentCategory")
                 console.log(currentCategory);
+                
                 
                 
 

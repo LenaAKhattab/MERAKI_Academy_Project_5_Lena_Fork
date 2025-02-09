@@ -68,7 +68,7 @@ const Login = () => {
   return (
     <div className="full-page">
       <div className="blurred-container">
-        <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
+        <MDBContainer className="p-3 my-5 d-flex flex-column w-100">
           <MDBTabs
             pills
             justify
@@ -78,7 +78,7 @@ const Login = () => {
               <MDBTabsLink
                 onClick={() => handleJustifyClick("tab1")}
                 active={justifyActive === "tab1"}
-                style={{ fontWeight: "bold" }}
+                style={{ fontWeight:"bold", fontSize: "15px" }}
               >
                 Login
               </MDBTabsLink>
@@ -87,7 +87,7 @@ const Login = () => {
               <MDBTabsLink
                 onClick={() => handleJustifyClick("tab2")}
                 active={justifyActive === "tab2"}
-                style={{ fontWeight: "bold" }}
+                style={{ fontWeight: "bold", fontSize: "15px" }}
               >
                 Register
               </MDBTabsLink>
@@ -98,7 +98,7 @@ const Login = () => {
             {/* تسجيل الدخول */}
             <MDBTabsPane open={justifyActive === "tab1"}>
               <div className="text-center mb-3">
-                <p>Sign in with:</p>
+                <p style={{ fontSize: "20px" }}>Sign in with:</p>
                 <div className="d-flex justify-content-between mx-auto social-icons">
                   <MDBBtn tag="a" color="none" className="m-1">
                     <MDBIcon fab color="white" icon="facebook-f" size="1x" />
@@ -113,7 +113,7 @@ const Login = () => {
                     <MDBIcon fab color="white" icon="github" size="1x" />
                   </MDBBtn>
                 </div>
-                <p className="text-center mt-3">or:</p>
+                <p className="text-center mt-3" style={{ fontSize: "20px" }}>or:</p>
               </div>
               <div className="LInput">
                 <MDBInput
@@ -139,7 +139,7 @@ const Login = () => {
                 <MDBCheckbox
                   name="flexCheck"
                   label={
-                    <span className="text-center" style={{ fontSize: "15px" }}>
+                    <span className="text-center" style={{ fontSize: "20px" }}>
                       Remember me
                     </span>
                   }
@@ -147,7 +147,7 @@ const Login = () => {
                 <a
                   href="#!"
                   className="text-center"
-                  style={{ fontSize: "15px" }}
+                  style={{ fontSize: "20px" }}
                 >
                   Forgot password?
                 </a>
@@ -156,11 +156,11 @@ const Login = () => {
               <MDBBtn
                 className="mb-4 w-100"
                 onClick={login}
-                style={{ fontWeight: "bold" }}
+                style={{ fontWeight: "bold" ,fontSize:"15px"}}
               >
                 Sign in
               </MDBBtn>
-              <p className="text-center">
+              <p className="text-center" style={{ fontSize: "20px" }}>
                 Not a member? <a href="#!">Register</a>
               </p>
             </MDBTabsPane>
@@ -168,7 +168,7 @@ const Login = () => {
             {/* التسجيل */}
             <MDBTabsPane open={justifyActive === "tab2"}>
               <div className="text-center mb-3">
-                <p>Sign up with:</p>
+                <p style={{ fontSize: "20px" }}>Sign up with:</p>
                 <div className="d-flex justify-content-between mx-auto social-icons">
                   <MDBBtn tag="a" color="none" className="m-1">
                     <MDBIcon fab color="white" icon="facebook-f" size="1x" />
@@ -183,21 +183,22 @@ const Login = () => {
                     <MDBIcon fab color="white" icon="github" size="1x" />
                   </MDBBtn>
                 </div>
-                <p className="text-center mt-3">or:</p>
+                <p className="text-center mt-3" style={{ fontSize: "20px" }}>or:</p>
               </div>
-
-              <MDBInput
-                wrapperClass="mb-4"
-                label="First Name"
-                type="text"
-                style={{ color: "white" }}
-              />
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Last Name"
-                type="text"
-                style={{ color: "white" }}
-              />
+              <div style={{ display: "flex", gap: "10px" }}>
+                <MDBInput
+                  wrapperClass="mb-4"
+                  label="First Name"
+                  type="text"
+                  style={{ color: "white" }}
+                />
+                <MDBInput
+                  wrapperClass="mb-4"
+                  label="Last Name"
+                  type="text"
+                  style={{ color: "white" }}
+                />
+              </div>
               <MDBInput
                 wrapperClass="mb-4"
                 label="Phon Number"
@@ -216,7 +217,7 @@ const Login = () => {
                 type="password"
                 style={{ color: "white" }}
               />
-              <MDBBtn className="mb-4 w-100" style={{ fontWeight: "bold" }}>
+              <MDBBtn className="mb-4 w-100" style={{ fontWeight: "bold" ,fontSize:"15px"}}>
                 Sign up
               </MDBBtn>
             </MDBTabsPane>
