@@ -6,7 +6,7 @@ import Login from "./components/Login";
 // import { router } from "./Routers";
 import AdminDash from "./components/AdminDash";
 import AdminCategory from "./components/AdminCategory";
-import UserCategory from "./components/UserCategory";
+import UserCategory from "./components/UserCategory/UserCategory";
 
 
 import OrderCreate from "./components/createOrder";
@@ -14,10 +14,12 @@ import CollectorsDash from "./components/CollectorsDash";
 import  CurrentCategory  from "./components/UserCategory/CurrentCategory";
 import GetAllRequest from "./components/UserCategory/GetAllRequest";
 
+import GetOrder from "./components/GetAllOrder/GetOrder";
+
 const App = () => {
   return (
     <>
-    <Login/>
+ 
 
     
     <Routes>
@@ -30,7 +32,8 @@ const App = () => {
        <Route path={"/collector"}  element={<CollectorsDash/>}/> 
       <Route path="/currentCategory" element={<CurrentCategory/>}/>
       <Route path="/AllRequest" element= {<GetAllRequest/>}/>
-    </Routes>
+      <Route path="/getAllOrderById" element={<GetOrder/>} />
+    </Routes >
     </>
   );
 };
