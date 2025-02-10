@@ -61,7 +61,7 @@ const Login = () => {
 
   useEffect(() => {
     if (authIsLoggedIn) {
-      navigate("/collector");
+      navigate("/cart");
     }
   }, [authIsLoggedIn, navigate]);
 
