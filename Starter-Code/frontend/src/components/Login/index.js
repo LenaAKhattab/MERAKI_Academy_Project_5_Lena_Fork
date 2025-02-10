@@ -67,7 +67,7 @@ const Login = () => {
     if (authIsLoggedIn) {
       navigate("/categoriesPage");
 
-
+    }
     if (authIsLoggedIn&&authRoleId==="1") {
       navigate("/sideNav");
     }
