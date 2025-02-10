@@ -241,8 +241,6 @@ const updateRequestById = (req, res) => {
   const { id } = req.params;
   const user_id = req.token.userId;
   const {
-    predicted_price,
-    status,
     description,
     weight,
     length,
@@ -253,8 +251,6 @@ const updateRequestById = (req, res) => {
   const query = `
     UPDATE requests 
     SET 
-      predicted_price = COALESCE($1, predicted_price),
-      status = COALESCE($2, status),
       description = COALESCE($3, description),
       weight = COALESCE($4, weight),
       "length" = COALESCE($5, "length"),

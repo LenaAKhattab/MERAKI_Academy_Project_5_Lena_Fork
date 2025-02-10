@@ -54,11 +54,11 @@ const GetOrder = () => {
           <p>Location:{ele.location}</p>
           <p>predicted_price:{ele.predicted_price}</p>
           <p>Status:{ele.status}</p>
-       {/*    <p>{ele.arrive_time}</p> ==>back*/}
-       <button onClick={()=>{
+      {/*    <p>{ele.arrive_time}</p> ==>back*/}
+      <button onClick={()=>{
         cancelOrder(ele.id)
-       }}>Cancel Order</button>
-       <p>{message}</p>
+      }}>Cancel Order</button>
+      <p>{message}</p>
 
         </div>
 

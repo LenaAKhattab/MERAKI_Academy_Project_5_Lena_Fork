@@ -9,7 +9,8 @@ const GetAllRequest = () => {
     const categoryNameInKg = ["paper","plastic","wood","clothes","Iron","Copper","Glasses","paper","food"];
     const categoryNameInHight =["furniture"]
     const [requests,setRequests]=useState([])
-    const [udatedValue,setUpdated] =useState({})
+ 
+    const [updatedValue,setUpdated] =useState({})
     const state = useSelector((state)=>state)
     const token =  state.authReducer.token
     const [isUpdateWidth,setIsUpdateWidth] = useState(false)
@@ -17,7 +18,10 @@ const GetAllRequest = () => {
     const [isUpdateDes,setIsUpdateDes] = useState(false)
     const [isUpdateLength,setIsUpdateLength] = useState(false)
     const [isUpdateWeight,setIsUpdateWeight] = useState(false)
-   const updateRequest=()=>{
+    
+const updateRequest=()=>{
+
+
 
     }
     const deleteRequest = (id)=>{
@@ -60,19 +64,31 @@ return (
             return <div>
                 <p>request:</p>
                 {ele.category_id == 23 ?<div>
-                <p>height:{!isUpdateHeight?ele.height:<input></input>} </p>
-                <p>length:{!isUpdateLength?ele.length:<input></input>} </p>
-                <p>width:{!isUpdateWidth?ele.width:<input></input>}</p>
-                    </div>:<p>weight:{!isUpdateWeight?ele.weight:<input></input>}</p>}
+                <div><p>height:{!isUpdateHeight?ele.height:<input></input>}</p><button onClick={()=>{
+                        /* setIsUpdate(true) */
+                        setIsUpdateHeight(true)
+                        setUpdated({...updatedValue,})
+                    }} >Update</button></div>
+                <div><p>length:{!isUpdateLength?ele.length:<input></input>} </p><button onClick={()=>{
+                        /* setIsUpdate(true) */
+                        setIsUpdateLength(true)
+                    }} >Update</button> </div>
+                <div><p>width:{!isUpdateWidth?ele.width:<input></input>}</p> <button onClick={()=>{
+                        /* setIsUpdate(true) */
+                        setIsUpdateWidth(true)
+                    }} >Update</button></div>
+                    </div>:<div><p>weight:{!isUpdateWeight?ele.weight:<input></input>}</p> <button onClick={()=>{
+                        /* setIsUpdate(true) */
+                        setIsUpdateWeight(true)
+                    }} >Update</button></div>}
                 <div>
-                <p>Description: {!isUpdateDes?ele.description:<input></input>}</p>
+                <p>Description: {!isUpdateDes?ele.description:<input></input>}</p><button onClick={()=>{
+                        /* setIsUpdate(true) */
+                        setIsUpdateDes(true)
+                    }} >Update</button>
                 <p>predicted_price: {ele.predicted_price}</p>
                 </div>
                 <div>
-                    <button onClick={()=>{
-                        /* setIsUpdate(true) */
-                        updateRequest()
-                    }} >Update</button>
                     <button onClick={()=>{
                         deleteRequest(ele.id)
                     }}>Delete</button>
