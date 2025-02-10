@@ -78,7 +78,7 @@ const Login = () => {
 
     }
        */
-  }, []);
+  }}, []);
 
   return (
     <div className="full-page">
