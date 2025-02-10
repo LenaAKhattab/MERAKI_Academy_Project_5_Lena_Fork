@@ -6,7 +6,7 @@ import Login from "./components/Login";
 // import { router } from "./Routers";
 import AdminDash from "./components/AdminDash";
 import AdminCategory from "./components/AdminCategory";
-import UserCategory from "./components/UserCategory";
+import UserCategory from "./components/UserCategory/UserCategory";
 
 
 import OrderCreate from "./components/createOrder";
@@ -15,23 +15,34 @@ import  CurrentCategory  from "./components/UserCategory/CurrentCategory";
 import GetAllRequest from "./components/UserCategory/GetAllRequest";
 import SideNav from "./components/SideNav";
 
+import GetOrder from "./components/GetAllOrder/GetOrder";
+
 const App = () => {
   return (
     <>
+ 
 
     
     <Routes>
       <Route path={"/register"} element={<Register />} />
-      <Route path={"/login"} element={<Login />} />
+      <Route path={"/"} element={<Login />} />
       <Route path={"/admin"} element={<AdminDash />} />
       <Route path={"/cart" } element={<OrderCreate/>}/>
       <Route path={"/category"} element={<AdminCategory />} />
       <Route path="/categoriesPage" element={<UserCategory/>} />
+
+       <Route path={"/collector"}  element={<CollectorsDash/>}/> 
+      <Route path="/currentCategory" element={<CurrentCategory/>}/>
+      <Route path="/AllRequest" element= {<GetAllRequest/>}/>
+      <Route path="/getAllOrderById" element={<GetOrder/>} />
+    </Routes >
+
       <Route path="/currentCategory" element={<CurrentCategory/>}/>
       <Route path="/AllRequest" element= {<GetAllRequest/>}/>
       <Route path={"/collector"}  element={<CollectorsDash/>}/>
       <Route path={"/sideNav"} element={<SideNav  />}/>
     </Routes>
+
     </>
   );
 };

@@ -319,7 +319,7 @@ const cancelOrderById = (req, res) => {
     const timeDiff = (nowTime - new Date(orderTime)) / (1000 * 60 * 60);
     if (timeDiff > 24) {
       return res
-        .status(400)
+        .status(201)
         .json({ message: "Cannot cancel order after 24 hours" });
     }
     console.log("timeDiff:", timeDiff);
@@ -351,9 +351,15 @@ const cancelOrderById = (req, res) => {
       });
   });
 };
-const getALLOrdersById = (req,res)=>{
-  const userId = req.token.userId;
-  pool.query(`SELECT * FROM orders WHERE user_id = ${userId}`)
+const getALLOrdersById = (req,res)=>{ //user
+  console.log(11111);
+  
+  const user_id= req.token.userId;
+  console.log(user_id);
+  
+ 
+  
+  pool.query(`SELECT * FROM orders WHERE user_id ='${user_id}'`)
   .then((result)=>{
     res.status(201).json({
       success:true,
