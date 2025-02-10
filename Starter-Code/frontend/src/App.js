@@ -19,7 +19,7 @@ import GetOrder from "./components/GetAllOrder/GetOrder";
 
 const App = () => {
   return (
-    <>
+  
  
 
     
@@ -35,15 +35,13 @@ const App = () => {
       <Route path="/currentCategory" element={<CurrentCategory/>}/>
       <Route path="/AllRequest" element= {<GetAllRequest/>}/>
       <Route path="/getAllOrderById" element={<GetOrder/>} />
-    </Routes >
+    
 
       <Route path="/currentCategory" element={<CurrentCategory/>}/>
       <Route path="/AllRequest" element= {<GetAllRequest/>}/>
       <Route path={"/collector"}  element={<CollectorsDash/>}/>
       <Route path={"/sideNav"} element={<SideNav  />}/>
-    </Routes>
-
-    </>
+    </Routes >
   );
 };
 
