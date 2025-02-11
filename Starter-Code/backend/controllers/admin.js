@@ -1,9 +1,48 @@
 const { pool } = require("../models/db");
 
 const getAllOrders = (req, res) => {
- 
+  const query = `
+    SELECT 
+        orders.id AS order_id,
+        requester.first_name AS requester_first_name,
+        requester.last_name AS requester_last_name,
+        collector.first_name AS collector_first_name,
+        collector.last_name AS collector_last_name,
+        orders.status,
+        orders.last_price,
+        orders.order_time,
+        orders.location,
+        orders.arrive_time,
+        orders.predicted_price,
+
+      
+        COALESCE(JSON_AGG(
+            JSONB_BUILD_OBJECT(
+                'request_id', requests.id,
+                'category_name', category.category_name,
+                'description', requests.description,
+                'request_status', requests.status,
+                'weight', requests.weight,
+                'length', requests.length,
+                'width', requests.width,
+                'height', requests.height,
+                'request_predicted_price', requests.predicted_price
+            )
+        ) FILTER (WHERE requests.id IS NOT NULL), '[]') AS requests_list
+
+    FROM orders
+    INNER JOIN users AS requester ON requester.id = orders.user_id
+    LEFT JOIN users AS collector ON collector.id = orders.collector_id
+    LEFT JOIN requests ON requests.order_id = orders.id
+    LEFT JOIN category ON category.id = requests.category_id
+
+    GROUP BY orders.id, requester.first_name, requester.last_name, 
+             collector.first_name, collector.last_name, orders.status, 
+             orders.last_price, orders.order_time, orders.location, 
+             orders.arrive_time, orders.predicted_price;
+  `;
   pool
-   .query("SELECT * FROM orders inner join users on users.id=orders.user_id")  
+    .query(query)
     .then((result) => {
       if (!result.rows.length) {
         return res.status(200).json({
