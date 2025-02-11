@@ -1,8 +1,9 @@
 const { pool } = require("../models/db");
 
 const getAllOrders = (req, res) => {
+ 
   pool
-    .query("SELECT * FROM orders")
+   .query("SELECT * FROM orders inner join users on users.id=orders.user_id")  
     .then((result) => {
       if (!result.rows.length) {
         return res.status(200).json({

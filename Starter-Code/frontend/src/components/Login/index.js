@@ -63,6 +63,11 @@ const Login = () => {
   };
 
   useEffect(() => {
+
+    if (authIsLoggedIn) {
+      navigate("/categoriesPage");
+
+    }
     if (authIsLoggedIn&&authRoleId==="1") {
       navigate("/sideNav");
     }
@@ -70,6 +75,7 @@ const Login = () => {
      if (authIsLoggedIn&&authRoleId==="2") {
        navigate("/");
        change to user dash
+
     }
        */
   }, []);
