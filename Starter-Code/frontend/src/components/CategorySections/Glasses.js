@@ -2,9 +2,8 @@ import React from 'react'
 
 const Glasses = () => {
   return (
-<<<<<<< Updated upstream
+
     <div>Glasses</div>
-=======
     <div>
     <div className='header'>
       <h2>GLASS</h2>
@@ -51,7 +50,7 @@ The most important fact about glass is that glass is 100% recyclable. It can be 
 
 
   </div>
->>>>>>> Stashed changes
+
   )
 }
 
