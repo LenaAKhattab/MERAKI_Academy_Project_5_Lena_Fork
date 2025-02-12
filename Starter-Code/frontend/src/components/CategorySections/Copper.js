@@ -2,6 +2,7 @@ import React from 'react'
 
 const Copper = () => {
   return (
+    <div>Copper</div>
     <div>
       <div className='header'>
         <h2>COPPER</h2>
