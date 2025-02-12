@@ -5,10 +5,12 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import DescriptionIcon from "@mui/icons-material/Description";
 import LayersIcon from "@mui/icons-material/Layers";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { PageContainer } from "@toolpad/core/PageContainer";
 import Grid from "@mui/material/Grid2";
+import "./style.css"
 import {
   DataGrid,
   GridActionsCellItem,
@@ -18,62 +20,19 @@ import {
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+// import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import Button from "@mui/material/Button";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
 import {
   setOrders,
   setCollector,
   setOrderStatus,
 } from "../../redux/reducers/adminOrders";
-
-const NAVIGATION = [
-  {
-    kind: "header",
-    title: "Main items",
-  },
-  {
-    segment: "dashboard",
-    title: "Dashboard",
-    icon: <DashboardIcon />,
-  },
-  {
-    segment: "orders",
-    title: "Orders",
-    icon: <ShoppingCartIcon />,
-  },
-  {
-    kind: "divider",
-  },
-  {
-    kind: "header",
-    title: "Analytics",
-  },
-  {
-    segment: "reports",
-    title: "Reports",
-    icon: <BarChartIcon />,
-    children: [
-      {
-        segment: "sales",
-        title: "Sales",
-        icon: <DescriptionIcon />,
-      },
-      {
-        segment: "traffic",
-        title: "Traffic",
-        icon: <DescriptionIcon />,
-      },
-    ],
-  },
-  {
-    segment: "integrations",
-    title: "Integrations",
-    icon: <LayersIcon />,
-  },
-];
+import { setLogout } from "../../redux/reducers/auth";
 
 const demoTheme = extendTheme({
   colorSchemes: { light: true, dark: true },
@@ -118,7 +77,41 @@ export default function DashboardLayoutBasic(props) {
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
   const [rows, setRows] = useState([]);
-
+  const navigate = useNavigate();
+  const NAVIGATION = [
+    {
+      kind: "header",
+      title: "Main items",
+    },
+    {
+      segment: "dashboard",
+      title: "Dashboard",
+      icon: <DashboardIcon />,
+    },
+    {
+      segment: "orders",
+      title: "Orders",
+      icon: <ShoppingCartIcon />,
+    },
+    {
+      kind: "divider",
+    },
+    {
+      kind: "header",
+      title: "Analytics",
+    },
+    {
+      title: "logout",
+      icon: (
+        <LogoutIcon
+          onClick={() => {
+            dispatch(setLogout());
+            navigate("/");
+          }}
+        />
+      ),
+    },
+  ];
   const getAllOrders = () => {
     axios
       .get("http://localhost:5000/admin/getAllOrders")
@@ -143,13 +136,44 @@ export default function DashboardLayoutBasic(props) {
     const rowsData = orders.map((order) => ({
       id: order.order_id,
       name: `${order.requester_first_name} ${order.requester_last_name}`,
+      requests: order.requests_list.map((request) => {
+        console.log("rr", request);
+
+        const requestDetails = [];
+
+        if (request.category_name) {
+          requestDetails.push(`Category: ${request.category_name}`);
+        }
+
+        if (request.weight != null) {
+          requestDetails.push(`Weight: ${request.weight}`);
+        }
+
+        if (request.width != null) {
+          requestDetails.push(`Width: ${request.width}`);
+        }
+
+        if (request.height != null) {
+          requestDetails.push(`Height: ${request.height}`);
+        }
+
+        if (request.length != null) {
+          requestDetails.push(`Length: ${request.length}`);
+        }
+
+        return requestDetails;
+      }),
+
       status: order.status,
+      location: order.location,
       predicted_price: order.predicted_price,
       last_price: order.last_price,
-      collector: `${order.collector_first_name} ${order.collector_last_name}`,
+
+      collector:
+        `${order.collector_first_name || ""} ${order.collector_last_name || ""}`.trim(),
     }));
     setRows(rowsData);
-  }, [orders]); 
+  }, [orders]);
 
   const { window } = props;
 
@@ -172,9 +196,9 @@ export default function DashboardLayoutBasic(props) {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
-  };
+  // const handleDeleteClick = (id) => () => {
+  //   setRows(rows.filter((row) => row.id !== id));
+  // };
 
   const handleCancelClick = (id) => () => {
     setRowModesModel({
@@ -199,19 +223,33 @@ export default function DashboardLayoutBasic(props) {
   };
 
   const columns = [
-    { field: "name", headerName: "Name", width: 180, editable: true },
-
+    { field: "name", headerName: "Name", width: 180, editable: false },
+    {
+      field: "requests",
+      headerName: "Requests",
+      width: 600,
+      editable: false,
+    },
+    {
+      field: "location",
+      headerName: "Location",
+      width: 100,
+      editable: false,
+    },
     {
       field: "status",
       headerName: "Status",
       width: 100,
       editable: true,
+      type: "singleSelect",
+      valueOptions: ["accepted", "rejected"],
     },
+
     {
       field: "predicted_price",
       headerName: "Predicted Price",
       width: 150,
-      editable: true,
+      editable: false,
     },
     {
       field: "last_price",
@@ -265,12 +303,12 @@ export default function DashboardLayoutBasic(props) {
             onClick={handleEditClick(id)}
             color="inherit"
           />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
+          // <GridActionsCellItem
+          //   icon={<DeleteIcon />}
+          //   label="Delete"
+          //   onClick={handleDeleteClick(id)}
+          //   color="inherit"
+          // />,
         ];
       },
     },
@@ -286,12 +324,12 @@ export default function DashboardLayoutBasic(props) {
       <DashboardLayout
         sx={{ "& .MuiIconButton-root": { width: "fit-content" } }}
       >
-        <PageContainer>
+        <PageContainer sx={{ ml: 0 ,fontSize: "30px" }} >
           {router.pathname === "/orders" && (
-            <div>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <DataGrid
+            <div >
+              <Grid container spacing={3} className="gridBox">
+                <Grid item xs={12} >
+                  <DataGrid  sx={{fontSize: "17px" }}
                     rows={rows}
                     columns={columns}
                     editMode="row"
