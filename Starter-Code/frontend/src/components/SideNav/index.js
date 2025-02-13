@@ -1,255 +1,424 @@
-import React, { useState } from "react";
+import * as React from "react";
+import { extendTheme, styled } from "@mui/material/styles";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import DescriptionIcon from "@mui/icons-material/Description";
+import LayersIcon from "@mui/icons-material/Layers";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { AppProvider } from "@toolpad/core/AppProvider";
+import { DashboardLayout } from "@toolpad/core/DashboardLayout";
+import { PageContainer } from "@toolpad/core/PageContainer";
+import CategoryIcon from '@mui/icons-material/Category';
+import Grid from "@mui/material/Grid2";
 import "./style.css";
-
 import {
-  MDBContainer,
-  MDBNavbar,
-  MDBNavbarBrand,
-  MDBNavbarToggler,
-  MDBIcon,
-  MDBNavbarNav,
-  MDBNavbarItem,
-  MDBNavbarLink,
-  MDBDropdown,
-  MDBDropdownToggle,
-  MDBDropdownMenu,
-  MDBDropdownItem,
-  MDBCollapse,
-  MDBRipple,
-  MDBBadge,
-  MDBInput,
-  MDBListGroup,
-  MDBListGroupItem,
-} from "mdb-react-ui-kit";
+  DataGrid,
+  GridActionsCellItem,
+  GridRowModes,
+  GridRowEditStopReasons,
+} from "@mui/x-data-grid";
+import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
+import Button from "@mui/material/Button";
+import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Sidebar = () => {
-  const [showShow, setShowShow] = useState(false);
+import axios from "axios";
+import {
+  setOrders,
+  setCollector,
+  setOrderStatus,
+} from "../../redux/reducers/adminOrders";
+import { setLogout } from "../../redux/reducers/auth";
 
-  const toggleShow = () => setShowShow(!showShow);
+const demoTheme = extendTheme({
+  colorSchemes: { light: true, dark: true },
+  colorSchemeSelector: "class",
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 600,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
+});
+
+function useDemoRouter(initialPath) {
+  const [pathname, setPathname] = React.useState(initialPath);
+
+  const router = React.useMemo(() => {
+    return {
+      pathname,
+      searchParams: new URLSearchParams(),
+      navigate: (path) => setPathname(String(path)),
+    };
+  }, [pathname]);
+
+  return router;
+}
+
+const Skeleton = styled("div")(({ theme, height }) => ({
+  backgroundColor: theme.palette.action.hover,
+  borderRadius: theme.shape.borderRadius,
+  height,
+  content: '" "',
+}));
+
+function EditToolbar(props) {
+  const { setRows, setRowModesModel } = props;
+}
+
+export default function DashboardLayoutBasic(props) {
+  const dispatch = useDispatch();
+  const [message, setMessage] = useState("");
+  const [rows, setRows] = useState([]);
+  const [status, setStatus] = useState();
+
+  const history = useNavigate();
+  const NAVIGATION = [
+    {
+      kind: "header",
+      title: "Main items",
+    },
+    {
+      segment: "dashboard",
+      title: "Dashboard",
+      icon: <DashboardIcon />,
+    },
+    {
+      segment: "categories",
+      title: "Categories",
+      icon: <CategoryIcon />,
+    },
+    {
+      segment: "orders",
+      title: "Orders",
+      icon: <ShoppingCartIcon />,
+    },
+    {
+      kind: "divider",
+    },
+    {
+      segment:"logout",
+      title: "Logout",
+      icon: (
+        <LogoutIcon
+          onClick={() => {
+            dispatch(setLogout());
+            history("/");
+          }}
+        />
+      ),
+    },
+  ];
+  const getAllOrders = () => {
+    axios
+      .get("http://localhost:5000/admin/getAllOrders")
+      .then((result) => {
+        console.log(result);
+        dispatch(setOrders(result.data.orders));
+      })
+      .catch((error) => {
+        console.log(error);
+        setMessage(error.response.data.message);
+      });
+  };
+  //============================================================
+
+  useEffect(() => {
+    getAllOrders();
+  }, []);
+
+  const orders = useSelector((reducers) => reducers.adminOrdersReducer.orders);
+  const roleId = useSelector((reducers) => reducers.authReducer.roleId);
+  console.log("orders", orders);
+
+  useEffect(() => {
+    const rowsData = orders.map((order) => ({
+      id: order.order_id,
+      name: `${order.requester_first_name} ${order.requester_last_name}`,
+      requests: order.requests_list.map((request) => {
+        // console.log("rr", request);
+
+        const requestDetails = [];
+
+        if (request.category_name) {
+          requestDetails.push(`Category: ${request.category_name}`);
+        }
+
+        if (request.weight != null) {
+          requestDetails.push(`Weight: ${request.weight}`);
+        }
+
+        if (request.width != null) {
+          requestDetails.push(`Width: ${request.width}`);
+        }
+
+        if (request.height != null) {
+          requestDetails.push(`Height: ${request.height}`);
+        }
+
+        if (request.length != null) {
+          requestDetails.push(`Length: ${request.length}`);
+        }
+
+        return requestDetails;
+      }),
+
+      status: order.status,
+      location: order.location,
+      predicted_price: order.predicted_price,
+      last_price: order.last_price,
+
+      collector:
+        `${order.collector_first_name || ""} ${order.collector_last_name || ""}`.trim(),
+    }));
+    setRows(rowsData);
+  }, [orders]);
+
+  const { window } = props;
+
+  const router = useDemoRouter("/dashboard");
+
+  const demoWindow = window ? window() : undefined;
+  const [rowModesModel, setRowModesModel] = React.useState({});
+
+  const handleRowEditStop = (params, event) => {
+    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+      event.defaultMuiPrevented = true;
+    }
+  };
+
+  const handleEditClick = (id) => () => {
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+  };
+
+  const handleSaveClick = (id) => () => {
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+  };
+
+
+  const handleCancelClick = (id) => () => {
+    setRowModesModel({
+      ...rowModesModel,
+      [id]: { mode: GridRowModes.View, ignoreModifications: true },
+    });
+
+    const editedRow = rows.find((row) => row.id === id);
+    if (editedRow.isNew) {
+      setRows(rows.filter((row) => row.id !== id));
+    }
+  };
+  // =============================================
+  const collectorMap = {
+    "mousa ahmad": 12,
+    "tariq rami": 13,
+    "khaled sami": 14,
+  };
+
+  // =============================================
+  const processRowUpdate = async (newRow) => {
+    const updatedRow = { ...newRow, isNew: false };
+  
+    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+  
+    if (newRow.status) {
+      try {
+        const result = await axios.put(
+          `http://localhost:5000/admin/changeOrderStatusById/${newRow.id}`,
+          { status: newRow.status }
+        );
+  
+        dispatch(setOrderStatus(result.data.order));
+        console.log("Status Updated:", result.data);
+      } catch (error) {
+        console.error("Error updating status:", error);
+      }
+    }
+  
+    if (roleId == 1 && newRow.collector) {
+      const collector_id = collectorMap[newRow.collector];
+      try {
+        const result = await axios.put(
+          `http://localhost:5000/admin/chooseCollector/${newRow.id}`,
+          { collector_id: collector_id }
+        );
+        dispatch(setCollector(result.data.order));
+        console.log("Collector Assigned:", result.data);
+      } catch (error) {
+        console.error("Error assigning collector:", error);
+      }
+    }
+  
+    if (roleId == 2 && newRow.status) {
+      try {
+        const result = await axios.put(
+          `http://localhost:5000/admin/changeOrderStatusById/${newRow.id}`,
+          { status: newRow.status }
+        );
+  
+        dispatch(setOrderStatus(result.data.order));
+        console.log("Status Updated:", result.data);
+      } catch (error) {
+        console.error("Error updating status:", error);
+      }
+    }
+  
+    if (roleId == 2 && newRow.last_price) {
+      try {
+        const result = await axios.put(
+          `http://localhost:5000/admin/updateLastPrice/${newRow.id}`,
+          { last_price: newRow.last_price }
+        );
+  
+        console.log("Last Price Updated:", result.data);
+      } catch (error) {
+        console.error("Error updating last price:", error);
+      }
+    }
+  
+    return updatedRow;
+  };
+  
+
+  // ==========================================================
+  const handleRowModesModelChange = (newRowModesModel) => {
+    setRowModesModel(newRowModesModel);
+  };
+
+  const columns = [
+    { field: "name", headerName: "Name", width: 180, editable: false },
+    {
+      field: "requests",
+      headerName: "Requests",
+      width: 600,
+      editable: false,
+    },
+    {
+      field: "location",
+      headerName: "Location",
+      width: 100,
+      editable: false,
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      width: 100,
+      editable: roleId == 1 || roleId == 3,
+      type: "singleSelect",
+      valueOptions: [
+        "pending",
+        "approved",
+        "completed",
+        "cancelled",
+        "rejected",
+      ],
+    },
+
+    {
+      field: "predicted_price",
+      headerName: "Predicted Price",
+      width: 150,
+      editable: false,
+    },
+    {
+      field: "last_price",
+      headerName: "Last Price",
+      width: 150,
+      editable: roleId == 3,
+    },
+    {
+      field: "collector",
+      headerName: "Collector",
+      width: 150,
+      editable: roleId == 1,
+      type: "singleSelect",
+      valueOptions: ["mousa ahmad", "tariq rami", "khaled sami"],
+    },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      width: 100,
+      cellClassName: "actions",
+      getActions: ({ id }) => {
+        const isInEditMode =
+          rowModesModel[id]?.mode === GridRowModes.Edit || false;
+
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<SaveIcon />}
+              label="Save"
+              sx={{
+                color: "primary.main",
+              }}
+              onClick={handleSaveClick(id)}
+            />,
+            <GridActionsCellItem
+              icon={<CancelIcon />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={handleCancelClick(id)}
+              color="inherit"
+            />,
+          ];
+        }
+
+        return [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(id)}
+            color="inherit"
+          />,
+       
+        ];
+      },
+    },
+  ];
 
   return (
-    <>
-      <MDBCollapse
-        show={showShow}
-        tag="nav"
-        className="d-lg-block bg-white sidebar"
+    <AppProvider
+      navigation={NAVIGATION}
+      router={router}
+      theme={demoTheme}
+      window={demoWindow}
+    >
+      <DashboardLayout
+        sx={{ "& .MuiIconButton-root": { width: "fit-content" } }}
       >
-        <div className="position-sticky">
-          <MDBListGroup flush className="mx-3 mt-4">
-            <MDBRipple rippleTag="span">
-              <MDBListGroupItem
-                tag="a"
-                href="#"
-                action
-                className="border-0 border-bottom rounded rounded"
-              >
-                <MDBIcon fas icon="tachometer-alt me-3" />
-                Main Dashboard
-              </MDBListGroupItem>
-            </MDBRipple>
-
-            <MDBRipple rippleTag="span">
-              <MDBListGroupItem
-                tag="a"
-                href="#"
-                action
-                className="border-0 border-bottom rounded"
-              >
-                <MDBIcon fas icon="lock me-3" />
-                Password
-              </MDBListGroupItem>
-            </MDBRipple>
-
-            <MDBRipple rippleTag="span">
-              <MDBListGroupItem
-                tag="a"
-                href="#"
-                action
-                className="border-0 border-bottom rounded"
-              >
-                <MDBIcon fas icon="chart-line me-3" />
-                Analitics
-              </MDBListGroupItem>
-            </MDBRipple>
-
-            <MDBRipple rippleTag="span">
-              <MDBListGroupItem
-                tag="a"
-                href="#"
-                action
-                className="border-0 border-bottom rounded"
-              >
-                <MDBIcon far icon="chart-bar me-3" />
-                Orders
-              </MDBListGroupItem>
-            </MDBRipple>
-
-            <MDBRipple rippleTag="span">
-              <MDBListGroupItem
-                tag="a"
-                href="#"
-                action
-                className="border-0 border-bottom rounded"
-              >
-                <MDBIcon fas icon="list-alt me-3" />
-                Categories
-              </MDBListGroupItem>
-            </MDBRipple>
-
-            <MDBRipple rippleTag="span">
-              <MDBListGroupItem
-                tag="a"
-                href="#"
-                action
-                className="border-0 border-bottom rounded"
-              >
-                <MDBIcon fas icon="calendar me-3" />
-                Calendar
-              </MDBListGroupItem>
-            </MDBRipple>
-
-            <MDBRipple rippleTag="span">
-              <MDBListGroupItem
-                tag="a"
-                href="#"
-                action
-                className="border-0 border-bottom rounded"
-              >
-                <MDBIcon fas icon="users me-3" />
-                Users
-              </MDBListGroupItem>
-            </MDBRipple>
-            <MDBRipple rippleTag="span">
-              <MDBListGroupItem
-                tag="a"
-                href="#"
-                action
-                className="border-0 border-bottom rounded"
-              >
-                <MDBIcon fas icon="user-alt me-3" />
-                Collectors
-              </MDBListGroupItem>
-            </MDBRipple>
-            <MDBRipple rippleTag="span">
-              <MDBListGroupItem
-                tag="a"
-                href="#"
-                action
-                className="border-0 border-bottom rounded"
-              >
-                <MDBIcon fas icon="sign-out-alt me-3" />
-                Logout
-              </MDBListGroupItem>
-            </MDBRipple>
-          </MDBListGroup>
-        </div>
-      </MDBCollapse>
-
-      <MDBNavbar expand="lg" light bgColor="white" className="topNav">
-        <MDBContainer fluid>
-          <MDBNavbarNav className="d-flex flex-row align-items-center w-auto">
-            <MDBNavbarToggler
-              type="button"
-              aria-label="Toggle navigation"
-              onClick={toggleShow}
-            >
-              <MDBIcon icon="bars" fas />
-            </MDBNavbarToggler>
-            <MDBNavbarBrand href="#">
-              <img
-                src="https://tfp-global.org/wp-content/uploads/2020/09/eTrash2Cash_Official.jpg"
-                height="30"
-                alt=""
-                loading="lazy"
-              />
-            </MDBNavbarBrand>
-
-            <MDBCollapse navbar>
-              <MDBNavbarItem className="d-flex align-items-center">
-                <MDBInput
-                  label='Search (ctrl + "/" to focus)'
-                  id="form1"
-                  type="text"
-                />
-                <MDBIcon fas icon="search mx-2" />
-              </MDBNavbarItem>
-            </MDBCollapse>
-          </MDBNavbarNav>
-          <MDBNavbarNav className="d-flex flex-row justify-content-end w-auto nnn">
-            <MDBNavbarItem className="me-3 me-lg-0 d-flex align-items-center">
-              <MDBDropdown>
-                <MDBDropdownToggle
-                  tag="a"
-                  href="#!"
-                  className="hidden-arrow nav-link"
-                >
-                  <MDBIcon fas icon="bell" size="1x" />
-                  <MDBBadge color="danger" notification pill>
-                    1
-                  </MDBBadge>
-                </MDBDropdownToggle>
-
-                <MDBDropdownMenu>
-                  <MDBDropdownItem>
-                    <MDBDropdownItem href="#">Some news</MDBDropdownItem>
-                  </MDBDropdownItem>
-                  <MDBDropdownItem>
-                    <MDBDropdownItem href="#">Another news</MDBDropdownItem>
-                  </MDBDropdownItem>
-                  <MDBDropdownItem>
-                    <MDBDropdownItem href="#">
-                      Something else here
-                    </MDBDropdownItem>
-                  </MDBDropdownItem>
-                </MDBDropdownMenu>
-              </MDBDropdown>
-            </MDBNavbarItem>
-
-            <MDBNavbarItem className="me-3 me-lg-0">
-              <MDBNavbarLink href="#">
-                <MDBIcon fas icon="fill-drip" />
-              </MDBNavbarLink>
-            </MDBNavbarItem>
-            <MDBNavbarItem className="me-3 me-lg-0">
-              <MDBNavbarLink href="#">
-                <MDBIcon fab icon="github" />
-              </MDBNavbarLink>
-            </MDBNavbarItem>
-
-            <MDBNavbarItem className="me-3 me-lg-0 d-flex align-items-center">
-              <MDBDropdown>
-                <MDBDropdownToggle
-                  tag="a"
-                  href="#!"
-                  className="hidden-arrow nav-link"
-                >
-                  <img
-                    src="https://mdbootstrap.com/img/Photos/Avatars/img (31).jpg"
-                    className="rounded-circle"
-                    height="22"
-                    alt=""
-                    loading="lazy"
+        <PageContainer sx={{ ml: 0, fontSize: "30px" }}>
+          {router.pathname === "/orders" && (
+            <div>
+              <Grid container spacing={3} className="gridBox">
+                <Grid item xs={12}>
+                  <DataGrid
+                    sx={{ fontSize: "17px" }}
+                    rows={rows}
+                    columns={columns}
+                    editMode="row"
+                    rowModesModel={rowModesModel}
+                    onRowModesModelChange={handleRowModesModelChange}
+                    onRowEditStop={handleRowEditStop}
+                    processRowUpdate={processRowUpdate}
+                    slots={{ toolbar: EditToolbar }}
+                    slotProps={{
+                      toolbar: { setRows, setRowModesModel },
+                    }}
                   />
-                </MDBDropdownToggle>
-
-                <MDBDropdownMenu>
-                  <MDBDropdownItem>
-                    <MDBDropdownItem href="#">My profile</MDBDropdownItem>
-                  </MDBDropdownItem>
-                  <MDBDropdownItem>
-                    <MDBDropdownItem href="#">Settings</MDBDropdownItem>
-                  </MDBDropdownItem>
-                  <MDBDropdownItem>
-                    <MDBDropdownItem href="#">Logout</MDBDropdownItem>
-                  </MDBDropdownItem>
-                </MDBDropdownMenu>
-              </MDBDropdown>
-            </MDBNavbarItem>
-          </MDBNavbarNav>
-        </MDBContainer>
-      </MDBNavbar>
-    </>
+                </Grid>
+              </Grid>
+            </div>
+          )}
+        </PageContainer>
+      </DashboardLayout>
+    </AppProvider>
   );
-};
-
-export default Sidebar;
+}
