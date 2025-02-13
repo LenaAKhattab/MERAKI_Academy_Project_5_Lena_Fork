@@ -1,10 +1,5 @@
 import React from 'react'
-<<<<<<< Updated upstream
 
-const Iron = () => {
-  return (
-    <div>Iron</div>
-=======
 import { Navigate } from 'react-router-dom'
 
 const Iron = () => {
@@ -45,7 +40,7 @@ const Iron = () => {
 
 
   </div>
->>>>>>> Stashed changes
+
   )
 }
 

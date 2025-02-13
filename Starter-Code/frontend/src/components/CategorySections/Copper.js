@@ -2,9 +2,7 @@ import React from 'react'
 
 const Copper = () => {
   return (
-<<<<<<< Updated upstream
     <div>Copper</div>
-=======
     <div>
       <div className='header'>
         <h2>COPPER</h2>
@@ -40,7 +38,6 @@ const Copper = () => {
 
 
     </div>
->>>>>>> Stashed changes
   )
 }
 

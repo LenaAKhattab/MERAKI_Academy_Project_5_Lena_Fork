@@ -2,9 +2,8 @@ import React from 'react'
 
 const Paper = () => {
   return (
-<<<<<<< Updated upstream
     <div>Paper</div>
-=======
+
     <div>
     <div className='header'>
       <h2>Paper</h2>
@@ -40,7 +39,7 @@ Recycling: Newspaper is one of the easiest and most common paper types to recycl
     <div></div>
 
 </div>
->>>>>>> Stashed changes
+
   )
 }
 
