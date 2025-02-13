@@ -9,8 +9,9 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { PageContainer } from "@toolpad/core/PageContainer";
+import CategoryIcon from '@mui/icons-material/Category';
 import Grid from "@mui/material/Grid2";
-import "./style.css"
+import "./style.css";
 import {
   DataGrid,
   GridActionsCellItem,
@@ -20,7 +21,6 @@ import {
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
-// import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import Button from "@mui/material/Button";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
@@ -77,7 +77,9 @@ export default function DashboardLayoutBasic(props) {
   const dispatch = useDispatch();
   const [message, setMessage] = useState("");
   const [rows, setRows] = useState([]);
-  const navigate = useNavigate();
+  const [status, setStatus] = useState();
+
+  const history = useNavigate();
   const NAVIGATION = [
     {
       kind: "header",
@@ -89,6 +91,11 @@ export default function DashboardLayoutBasic(props) {
       icon: <DashboardIcon />,
     },
     {
+      segment: "categories",
+      title: "Categories",
+      icon: <CategoryIcon />,
+    },
+    {
       segment: "orders",
       title: "Orders",
       icon: <ShoppingCartIcon />,
@@ -97,16 +104,13 @@ export default function DashboardLayoutBasic(props) {
       kind: "divider",
     },
     {
-      kind: "header",
-      title: "Analytics",
-    },
-    {
-      title: "logout",
+      segment:"logout",
+      title: "Logout",
       icon: (
         <LogoutIcon
           onClick={() => {
             dispatch(setLogout());
-            navigate("/");
+            history("/");
           }}
         />
       ),
@@ -124,12 +128,14 @@ export default function DashboardLayoutBasic(props) {
         setMessage(error.response.data.message);
       });
   };
+  //============================================================
 
   useEffect(() => {
     getAllOrders();
   }, []);
 
   const orders = useSelector((reducers) => reducers.adminOrdersReducer.orders);
+  const roleId = useSelector((reducers) => reducers.authReducer.roleId);
   console.log("orders", orders);
 
   useEffect(() => {
@@ -137,7 +143,7 @@ export default function DashboardLayoutBasic(props) {
       id: order.order_id,
       name: `${order.requester_first_name} ${order.requester_last_name}`,
       requests: order.requests_list.map((request) => {
-        console.log("rr", request);
+        // console.log("rr", request);
 
         const requestDetails = [];
 
@@ -196,9 +202,6 @@ export default function DashboardLayoutBasic(props) {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  // const handleDeleteClick = (id) => () => {
-  //   setRows(rows.filter((row) => row.id !== id));
-  // };
 
   const handleCancelClick = (id) => () => {
     setRowModesModel({
@@ -211,13 +214,79 @@ export default function DashboardLayoutBasic(props) {
       setRows(rows.filter((row) => row.id !== id));
     }
   };
-
-  const processRowUpdate = (newRow) => {
-    const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    return updatedRow;
+  // =============================================
+  const collectorMap = {
+    "mousa ahmad": 12,
+    "tariq rami": 13,
+    "khaled sami": 14,
   };
 
+  // =============================================
+  const processRowUpdate = async (newRow) => {
+    const updatedRow = { ...newRow, isNew: false };
+  
+    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+  
+    if (newRow.status) {
+      try {
+        const result = await axios.put(
+          `http://localhost:5000/admin/changeOrderStatusById/${newRow.id}`,
+          { status: newRow.status }
+        );
+  
+        dispatch(setOrderStatus(result.data.order));
+        console.log("Status Updated:", result.data);
+      } catch (error) {
+        console.error("Error updating status:", error);
+      }
+    }
+  
+    if (roleId == 1 && newRow.collector) {
+      const collector_id = collectorMap[newRow.collector];
+      try {
+        const result = await axios.put(
+          `http://localhost:5000/admin/chooseCollector/${newRow.id}`,
+          { collector_id: collector_id }
+        );
+        dispatch(setCollector(result.data.order));
+        console.log("Collector Assigned:", result.data);
+      } catch (error) {
+        console.error("Error assigning collector:", error);
+      }
+    }
+  
+    if (roleId == 2 && newRow.status) {
+      try {
+        const result = await axios.put(
+          `http://localhost:5000/admin/changeOrderStatusById/${newRow.id}`,
+          { status: newRow.status }
+        );
+  
+        dispatch(setOrderStatus(result.data.order));
+        console.log("Status Updated:", result.data);
+      } catch (error) {
+        console.error("Error updating status:", error);
+      }
+    }
+  
+    if (roleId == 2 && newRow.last_price) {
+      try {
+        const result = await axios.put(
+          `http://localhost:5000/admin/updateLastPrice/${newRow.id}`,
+          { last_price: newRow.last_price }
+        );
+  
+        console.log("Last Price Updated:", result.data);
+      } catch (error) {
+        console.error("Error updating last price:", error);
+      }
+    }
+  
+    return updatedRow;
+  };
+  
+
+  // ==========================================================
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
   };
@@ -240,9 +309,15 @@ export default function DashboardLayoutBasic(props) {
       field: "status",
       headerName: "Status",
       width: 100,
-      editable: true,
+      editable: roleId == 1 || roleId == 3,
       type: "singleSelect",
-      valueOptions: ["accepted", "rejected"],
+      valueOptions: [
+        "pending",
+        "approved",
+        "completed",
+        "cancelled",
+        "rejected",
+      ],
     },
 
     {
@@ -255,15 +330,15 @@ export default function DashboardLayoutBasic(props) {
       field: "last_price",
       headerName: "Last Price",
       width: 150,
-      editable: true,
+      editable: roleId == 3,
     },
     {
       field: "collector",
       headerName: "Collector",
       width: 150,
-      editable: true,
+      editable: roleId == 1,
       type: "singleSelect",
-      valueOptions: ["ahmad", "ali", "sami"],
+      valueOptions: ["mousa ahmad", "tariq rami", "khaled sami"],
     },
     {
       field: "actions",
@@ -303,12 +378,7 @@ export default function DashboardLayoutBasic(props) {
             onClick={handleEditClick(id)}
             color="inherit"
           />,
-          // <GridActionsCellItem
-          //   icon={<DeleteIcon />}
-          //   label="Delete"
-          //   onClick={handleDeleteClick(id)}
-          //   color="inherit"
-          // />,
+       
         ];
       },
     },
@@ -324,12 +394,13 @@ export default function DashboardLayoutBasic(props) {
       <DashboardLayout
         sx={{ "& .MuiIconButton-root": { width: "fit-content" } }}
       >
-        <PageContainer sx={{ ml: 0 ,fontSize: "30px" }} >
+        <PageContainer sx={{ ml: 0, fontSize: "30px" }}>
           {router.pathname === "/orders" && (
-            <div >
+            <div>
               <Grid container spacing={3} className="gridBox">
-                <Grid item xs={12} >
-                  <DataGrid  sx={{fontSize: "17px" }}
+                <Grid item xs={12}>
+                  <DataGrid
+                    sx={{ fontSize: "17px" }}
                     rows={rows}
                     columns={columns}
                     editMode="row"

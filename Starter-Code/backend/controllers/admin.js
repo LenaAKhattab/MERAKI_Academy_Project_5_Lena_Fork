@@ -8,6 +8,7 @@ const getAllOrders = (req, res) => {
         requester.last_name AS requester_last_name,
         collector.first_name AS collector_first_name,
         collector.last_name AS collector_last_name,
+        collector.id AS collector_id, 
         orders.status,
         orders.last_price,
         orders.order_time,
@@ -38,6 +39,7 @@ const getAllOrders = (req, res) => {
 
     GROUP BY orders.id, requester.first_name, requester.last_name, 
              collector.first_name, collector.last_name, orders.status, 
+             collector.id, collector.first_name, collector.last_name,
              orders.last_price, orders.order_time, orders.location, 
              orders.arrive_time, orders.predicted_price;
   `;
@@ -178,7 +180,7 @@ const changeOrderStatusById = (req, res) => {
   const orderId = req.params.id;
   const { status } = req.body;
 
-  const validStatuses = ["pending", "approved", "completed", "cancelled"];
+  const validStatuses = ["pending", "approved", "completed", "cancelled","rejected"];
   if (!validStatuses.includes(status)) {
     return res.status(400).json({
       message: `Invalid status value. Allowed values: ${validStatuses.join(
