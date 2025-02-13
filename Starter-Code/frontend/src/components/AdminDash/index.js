@@ -75,7 +75,7 @@ const AdminDash = () => {
             }}
           />
           <button
-            id={order.id}
+            id={order.order_id}
             onClick={(e) => {
               assignOrderToCollector(e.target.id);
             }}

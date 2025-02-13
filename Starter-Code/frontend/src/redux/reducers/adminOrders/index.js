@@ -11,8 +11,10 @@ const adminOrdersSlice = createSlice({
     },
     setCollector: (state, action) => {
       const updatedOrder = action.payload;
+      console.log("herrrr", updatedOrder);
+
       state.orders = state.orders.map((order) => {
-        if (order.id === updatedOrder.id) {
+        if (order.order_id === updatedOrder.id) {
           return {
             ...order,
             collector_id: updatedOrder.collector_id,
@@ -23,8 +25,9 @@ const adminOrdersSlice = createSlice({
     },
     setOrderStatus: (state, action) => {
       const updatedOrder = action.payload;
+
       state.orders = state.orders.map((order) => {
-        if (order.id === updatedOrder.id) {
+        if (order.order_id === updatedOrder.id) {
           return {
             ...order,
             status: updatedOrder.status,
