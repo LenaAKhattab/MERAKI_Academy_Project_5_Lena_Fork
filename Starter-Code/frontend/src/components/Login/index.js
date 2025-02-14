@@ -69,6 +69,24 @@ const Login = () => {
       });
   };
 
+  useEffect(() => {
+
+    if (authIsLoggedIn) {
+      navigate("/");
+
+    }
+    if (authIsLoggedIn&&authRoleId==="1") {
+      navigate("/sideNav");
+    }
+    
+     if (authIsLoggedIn&&authRoleId==="2") {
+       navigate("/Homepage");
+
+    }
+      
+  }, []);
+
+
   return (
     <div className="full-page">
       <div className="blurred-container">

@@ -1,12 +1,52 @@
-import { NavLink } from "react-router-dom";
 import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+
+//this nav is by bootstrap
 
 const Navbar = () => {
-  return (
-    <nav>
-      <NavLink to="/">Home</NavLink>
-    </nav>
-  );
+ return (
+   <nav className="navbar navbar-expand-lg bg-white shadow-sm">
+     <div className="container d-flex flex-column">
+       {/* Navbar Links */}
+       <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
+         <ul className="navbar-nav text-center border-bottom pb-1">
+           <li className="nav-item px-3">
+             <a className="nav-link" href="#">
+               Home
+             </a>
+           </li>
+           <li className="nav-item px-3">
+             <a className="nav-link" href="#">
+               About Us
+             </a>
+           </li>
+           <li className="nav-item px-3">
+             <a className="nav-link" href="#">
+               Categories
+             </a>
+           </li>
+           <li className="nav-item px-3">
+             <a className="nav-link" href="#">
+               Our Story
+             </a>
+           </li>
+           <li className="nav-item px-3">
+             <a className="nav-link" href="#">
+               Contact Us
+             </a>
+           </li>
+           <li className="nav-item px-3">
+             <a className="nav-link" href="#">
+               Login
+             </a>
+           </li>
+         </ul>
+       </div>
+       {/* Underline */}
+       {/* <hr className="w-100 mt-0 mb-0" /> */}
+     </div>
+   </nav>
+ );
 };
 
 export default Navbar;

@@ -7,6 +7,8 @@ import Login from "./components/Login";
 import AdminDash from "./components/AdminDash";
 import AdminCategory from "./components/AdminCategory";
 import UserCategory from "./components/UserCategory/UserCategory";
+import UserHomePage from './components/userHomePage'
+import Navbar from './components/NavBar/index'
 
 
 import OrderCreate from "./components/createOrder";
@@ -19,11 +21,9 @@ import GetOrder from "./components/GetAllOrder/GetOrder";
 
 const App = () => {
   return (
-  
- 
-
-    
-    <Routes>
+  <>
+  <Navbar/>
+  <Routes>
       <Route path={"/register"} element={<Register />} />
       <Route path={"/"} element={<Login />} />
       <Route path={"/admin"} element={<AdminDash />} />
@@ -41,7 +41,14 @@ const App = () => {
       <Route path="/AllRequest" element= {<GetAllRequest/>}/>
       <Route path={"/collector"}  element={<CollectorsDash/>}/>
       <Route path={"/sideNav"} element={<SideNav  />}/>
+      <Route path={"/Homepage"} element={<UserHomePage/>}/>
+
     </Routes >
+  </>
+
+
+    
+    
   );
 };
 
