@@ -62,7 +62,7 @@ const Login = () => {
       });
   };
 
-  useEffect(() => {
+/*   useEffect(() => {
 
     if (authIsLoggedIn) {
       navigate("/categoriesPage");
@@ -70,7 +70,7 @@ const Login = () => {
     }
     if (authIsLoggedIn&&authRoleId==="1") {
       navigate("/sideNav");
-    }
+    } */
     /*
      if (authIsLoggedIn&&authRoleId==="2") {
        navigate("/");
@@ -78,7 +78,7 @@ const Login = () => {
 
     }
        */
-  }, []);
+
 
   return (
     <div className="full-page">

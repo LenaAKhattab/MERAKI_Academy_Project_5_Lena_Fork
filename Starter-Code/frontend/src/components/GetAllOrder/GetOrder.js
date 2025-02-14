@@ -7,6 +7,8 @@ const GetOrder = () => {
   const [orders,setOrders]=useState([])
   const [message,setMessage] = useState("")
   const state = useSelector(state =>state)
+  console.log(state);
+  
   const token = state.authReducer.token
   console.log(token);
   const cancelOrder = (id)=>{
@@ -25,6 +27,7 @@ const GetOrder = () => {
   
 
   useEffect(()=>{
+    console.log(state);
     axios.get("http://localhost:5000/user/getOrderById",{
       headers: {
         Authorization: `Bearer ${token}`
@@ -33,13 +36,9 @@ const GetOrder = () => {
     .then((result)=>{
       console.log(result.data.result);
       setOrders(result.data.result)
-      
-
     })
     .catch((error)=>{
       console.log(error);
-      
-
     })
 
   },[])
