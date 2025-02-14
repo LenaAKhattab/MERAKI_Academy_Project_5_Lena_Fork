@@ -18,9 +18,17 @@ import GetAllRequest from "./components/UserCategory/GetAllRequest";
 import SideNav from "./components/SideNav";
 
 import GetOrder from "./components/GetAllOrder/GetOrder";
+import Copper from "./components/CategorySections/Copper"
+
 
 const App = () => {
   return (
+  
+ 
+
+    
+    <Routes>
+      <Route path="/copper" element={<Copper/>} />
   <>
   <Navbar/>
   <Routes>
@@ -31,10 +39,11 @@ const App = () => {
       <Route path={"/category"} element={<AdminCategory />} />
       <Route path="/categoriesPage" element={<UserCategory/>} />
 
-       <Route path={"/collector"}  element={<CollectorsDash/>}/> 
+      <Route path={"/collector"}  element={<CollectorsDash/>}/> 
       <Route path="/currentCategory" element={<CurrentCategory/>}/>
       <Route path="/AllRequest" element= {<GetAllRequest/>}/>
       <Route path="/getAllOrderById" element={<GetOrder/>} />
+ 
     
 
       <Route path="/currentCategory" element={<CurrentCategory/>}/>
