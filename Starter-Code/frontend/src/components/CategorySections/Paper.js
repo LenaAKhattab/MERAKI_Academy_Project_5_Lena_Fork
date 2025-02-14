@@ -2,7 +2,6 @@ import React from 'react'
 
 const Paper = () => {
   return (
-    <>
     <div>Paper</div>
 
     <div>
@@ -40,7 +39,7 @@ Recycling: Newspaper is one of the easiest and most common paper types to recycl
     <div></div>
 
 </div>
-</>
+
   )
 }
 
