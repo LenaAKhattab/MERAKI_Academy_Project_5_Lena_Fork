@@ -1,242 +1,217 @@
-import React, { useEffect, useState } from "react";
-import "./style.css";
-import { useNavigate } from "react-router-dom";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
+import React, { useState } from "react";
+import "./style.css";
+import axios from "axios";
 import {
-  MDBContainer,
-  MDBTabs,
-  MDBTabsItem,
-  MDBTabsLink,
-  MDBTabsContent,
-  MDBTabsPane,
   MDBBtn,
-  MDBIcon,
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBCard,
+  MDBCardBody,
   MDBInput,
   MDBCheckbox,
+  MDBIcon,
 } from "mdb-react-ui-kit";
-import { useSelector, useDispatch } from "react-redux";
-import { setLogin, setUserId } from "../../redux/reducers/auth/index";
-import axios from "axios";
 
-const Login = () => {
-  const [justifyActive, setJustifyActive] = useState("tab1");
-
-  const handleJustifyClick = (value) => {
-    if (String(value) === justifyActive) {
-      return;
-    }
-
-    setJustifyActive(value);
-  };
-  const navigate = useNavigate();
+const Auth = () => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
   const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const [status, setStatus] = useState(false);
 
-  const authIsLoggedIn = useSelector(
-    (reducers) => reducers.authReducer.isLoggedIn
-  );
-
-  const authRoleId = useSelector((reducers) => reducers.authReducer.roleId);
-
-  const dispatch = useDispatch();
-
-  const login = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post("http://localhost:5000/user/login", { email, password })
-      .then((result) => {
-        setMessage(result.data.message);
-        dispatch(
-          setLogin({ token: result.data.token, roleId: result.data.roleId })
-        );
-        dispatch(setUserId(result.data.userId));
-        setStatus(true);
-        console.log(typeof authRoleId, authRoleId);
+    const url = isLogin
+      ? "http://localhost:5000/user/login"
+      : "http://localhost:5000/user/register";
+    const data = isLogin
+      ? { email, password }
+      : {
+          first_name: firstName,
+          last_name: lastName,
+          phone_number: phoneNumber,
+          email,
+          password,
+        };
 
-        if (authIsLoggedIn && authRoleId == 1) {
-          navigate("/sideNav");
-        } else if (authIsLoggedIn && authRoleId == 2) {
-          navigate("/categoriesPage");
-        }
+    axios
+      .post(url, data)
+      .then((result) => {
+        setStatus(true);
+        setMessage(result.data.message);
       })
       .catch((error) => {
-        setMessage(error.response?.data?.message || "Login failed");
         setStatus(false);
+        setMessage(error.response?.data?.message || "Something went wrong");
       });
   };
 
   return (
-    <div className="full-page">
-      <div className="blurred-container">
-        <MDBContainer className="p-3 my-5 d-flex flex-column w-100">
-          <MDBTabs
-            pills
-            justify
-            className="mb-3 d-flex flex-row justify-content-between"
-          >
-            <MDBTabsItem>
-              <MDBTabsLink
-                onClick={() => handleJustifyClick("tab1")}
-                active={justifyActive === "tab1"}
-                style={{ fontWeight: "bold", fontSize: "15px" }}
-              >
-                Login
-              </MDBTabsLink>
-            </MDBTabsItem>
-            <MDBTabsItem>
-              <MDBTabsLink
-                onClick={() => handleJustifyClick("tab2")}
-                active={justifyActive === "tab2"}
-                style={{ fontWeight: "bold", fontSize: "15px" }}
-              >
-                Register
-              </MDBTabsLink>
-            </MDBTabsItem>
-          </MDBTabs>
+    <MDBContainer
+      fluid
+      className="p-4"
+      style={{
+        backgroundImage:
+          "url(https://images.pexels.com/photos/7048061/pexels-photo-7048061.jpeg)",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        minHeight: "93.5vh",
+      }}
+    >
+      <MDBRow className="h-100">
+        <MDBCol
+          md="7"
+          className="text-center text-md-start d-flex flex-column justify-content-center"
+        >
+          <h1 className="my-5 display-3 fw-bold ls-tight px-3">
+            <br />
+            <span className="text-primary">
+              {/* {isLogin ? "Login to your account" : "Create an account"} */}
+            </span>
+          </h1>
+        </MDBCol>
 
-          <MDBTabsContent>
-            {/* login */}
-            <MDBTabsPane open={justifyActive === "tab1"}>
-              <div className="text-center mb-3">
-                <p style={{ fontSize: "20px" }}>Sign in with:</p>
-                <div className="d-flex justify-content-between mx-auto social-icons">
-                  <MDBBtn tag="a" color="none" className="m-1">
-                    <MDBIcon fab color="white" icon="facebook-f" size="1x" />
-                  </MDBBtn>
-                  <MDBBtn tag="a" color="none" className="m-1">
-                    <MDBIcon fab color="white" icon="twitter" size="1x" />
-                  </MDBBtn>
-                  <MDBBtn tag="a" color="none" className="m-1">
-                    <MDBIcon fab color="white" icon="google" size="1x" />
-                  </MDBBtn>
-                  <MDBBtn tag="a" color="none" className="m-1">
-                    <MDBIcon fab color="white" icon="github" size="1x" />
-                  </MDBBtn>
-                </div>
-                <p className="text-center mt-3" style={{ fontSize: "20px" }}>
-                  or:
-                </p>
-              </div>
-              <div className="LInput">
+        {/* العمود الأيمن */}
+        <MDBCol
+          md="4"
+          className="offset-md-1 d-flex align-items-center justify-content-center"
+        >
+          <MDBCard
+            className="my-5 blurred-container"
+            style={{ width: "100%", maxWidth: "600px", display: "flex" }}
+          >
+            <h1
+              style={{ alignSelf: "center", color: "#14A44D" }}
+              className="text-success"
+            >
+              <br />
+              <span>
+                {isLogin ? "Login to your account" : "Create an account"}
+              </span>
+            </h1>
+            <MDBCardBody className="p-5">
+              <form onSubmit={handleSubmit}>
+                {!isLogin && (
+                  <MDBRow>
+                    <MDBCol col="6">
+                      <MDBInput
+                        wrapperClass="mb-4"
+                        label="First name"
+                        type="text"
+                        onChange={(e) => setFirstName(e.target.value)}
+                      />
+                    </MDBCol>
+                    <MDBCol col="6">
+                      <MDBInput
+                        wrapperClass="mb-4"
+                        label="Last name"
+                        type="text"
+                        onChange={(e) => setLastName(e.target.value)}
+                      />
+                    </MDBCol>
+                  </MDBRow>
+                )}
+                {!isLogin && (
+                  <MDBInput
+                    wrapperClass="mb-4"
+                    label="Phone Number"
+                    type="text"
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                  />
+                )}
                 <MDBInput
                   wrapperClass="mb-4"
-                  label="Email address"
+                  label="Email"
                   type="email"
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
-                  style={{ color: "white" }}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <MDBInput
                   wrapperClass="mb-4"
                   label="Password"
                   type="password"
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
-                  style={{ color: "white" }}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
-              </div>
-              <div className="d-flex justify-content-between mx-4 mb-4">
-                <MDBCheckbox
-                  name="flexCheck"
-                  label={
-                    <span className="text-center" style={{ fontSize: "20px" }}>
-                      Remember me
-                    </span>
-                  }
-                />
-                <a
-                  href="#!"
-                  className="text-center"
-                  style={{ fontSize: "20px" }}
+
+                <MDBBtn
+                  className="w-100 mb-4"
+                  size="sm"
+                  type="submit"
+                  color="success"
+                  style={{fontSize:"20px"}}
                 >
-                  Forgot password?
-                </a>
-              </div>
-
-              <MDBBtn
-                className="mb-4 w-100"
-                onClick={login}
-                style={{ fontWeight: "bold", fontSize: "15px" }}
-              >
-                Sign in
-              </MDBBtn>
-              <p className="text-center" style={{ fontSize: "20px" }}>
-                Not a member? <a href="#!">Register</a>
-              </p>
-            </MDBTabsPane>
-
-            {/* register */}
-            <MDBTabsPane open={justifyActive === "tab2"}>
-              <div className="text-center mb-3">
-                <p style={{ fontSize: "20px" }}>Sign up with:</p>
-                <div className="d-flex justify-content-between mx-auto social-icons">
-                  <MDBBtn tag="a" color="none" className="m-1">
-                    <MDBIcon fab color="white" icon="facebook-f" size="1x" />
-                  </MDBBtn>
-                  <MDBBtn tag="a" color="none" className="m-1">
-                    <MDBIcon fab color="white" icon="twitter" size="1x" />
-                  </MDBBtn>
-                  <MDBBtn tag="a" color="none" className="m-1">
-                    <MDBIcon fab color="white" icon="google" size="1x" />
-                  </MDBBtn>
-                  <MDBBtn tag="a" color="none" className="m-1">
-                    <MDBIcon fab color="white" icon="github" size="1x" />
-                  </MDBBtn>
+                  {isLogin ? "Sign in" : "Sign up"}
+                </MDBBtn>
+              </form>
+              {message && (
+                <div className={status ? "text-success" : "text-danger"}>
+                  {message}
                 </div>
-                <p className="text-center mt-3" style={{ fontSize: "20px" }}>
-                  or:
-                </p>
+              )}
+              <div className="text-center">
+                <p> {isLogin ? "or sign in with" : "or sign up with"}</p>
+                <MDBBtn
+                  tag="a"
+                  color="none"
+                  className="mx-3"
+                  style={{ color: "#1266f1" }}
+                >
+                  <MDBIcon fab icon="facebook-f" size="1x" className="text-success"/>
+                </MDBBtn>
+                <MDBBtn
+                  tag="a"
+                  color="none"
+                  className="mx-3"
+                  style={{ color: "#1266f1" }}
+                >
+                  <MDBIcon fab icon="twitter" size="1x" className="text-success"/>
+                </MDBBtn>
+                <MDBBtn
+                  tag="a"
+                  color="none"
+                  className="mx-3"
+                  style={{ color: "#1266f1" }}
+                >
+                  <MDBIcon fab icon="google" size="1x" className="text-success" />
+                </MDBBtn>
+                <MDBBtn
+                  tag="a"
+                  color="none"
+                  className="mx-3"
+                  style={{ color: "#1266f1" }}
+                >
+                  <MDBIcon fab icon="github" size="1x" className="text-success" />
+                </MDBBtn>
               </div>
-              <div style={{ display: "flex", gap: "10px" }}>
-                <MDBInput
-                  wrapperClass="mb-4"
-                  label="First Name"
-                  type="text"
-                  style={{ color: "white" }}
-                />
-                <MDBInput
-                  wrapperClass="mb-4"
-                  label="Last Name"
-                  type="text"
-                  style={{ color: "white" }}
-                />
-              </div>
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Phon Number"
-                type="tel"
-                style={{ color: "white" }}
-              />
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Email"
-                type="email"
-                style={{ color: "white" }}
-              />
-              <MDBInput
-                wrapperClass="mb-4"
-                label="Password"
-                type="password"
-                style={{ color: "white" }}
-              />
-              <MDBBtn
-                className="mb-4 w-100"
-                style={{ fontWeight: "bold", fontSize: "15px" }}
-              >
-                Sign up
-              </MDBBtn>
-            </MDBTabsPane>
-          </MDBTabsContent>
-        </MDBContainer>
-      </div>
-    </div>
+              <p className="text-center mt-3">
+                {isLogin
+                  ? "Don't have an account?"
+                  : "Already have an account?"}{" "}
+                <span
+                className="text-success"
+                  style={{
+                    cursor: "pointer",
+                    fontWeight:"bold",
+                    textDecoration: "underline",
+                  }}
+                  onClick={() => setIsLogin(!isLogin)}
+                >
+                  
+                  {isLogin ? "Register" : "Login"}
+                </span>
+              </p>
+            </MDBCardBody>
+          </MDBCard>
+        </MDBCol>
+      </MDBRow>
+    </MDBContainer>
   );
 };
 
-export default Login;
+export default Auth;
