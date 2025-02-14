@@ -11,10 +11,11 @@ import {
   MDBCard,
   MDBCardBody,
   MDBInput,
-  MDBCheckbox,
   MDBIcon,
 } from "mdb-react-ui-kit";
-
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setLogin, setUserId, setLogout } from "../../redux/reducers/auth";
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [firstName, setFirstName] = useState("");
@@ -24,32 +25,46 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState(false);
-
-  const handleSubmit = (e) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const url = isLogin
-      ? "http://localhost:5000/user/login"
-      : "http://localhost:5000/user/register";
-    const data = isLogin
-      ? { email, password }
-      : {
-          first_name: firstName,
-          last_name: lastName,
-          phone_number: phoneNumber,
-          email,
-          password,
-        };
-
-    axios
-      .post(url, data)
-      .then((result) => {
-        setStatus(true);
-        setMessage(result.data.message);
-      })
-      .catch((error) => {
-        setStatus(false);
-        setMessage(error.response?.data?.message || "Something went wrong");
+    try {
+      const response = await axios.post("http://localhost:5000/user/login", {
+        email,
+        password,
       });
+      setStatus(true);
+      setMessage(response.data.message);
+      dispatch(
+        setLogin({ token: response.data.token, roleId: response.data.roleId })
+      );
+      dispatch(setUserId(response.data.userId));
+      if (response.data.roleId == 1 ||response.data.roleId == 3) {
+        navigate("/sideNav");
+      }
+    } catch (error) {
+      setStatus(false);
+      setMessage(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:5000/user/register", {
+        first_name: firstName,
+        last_name: lastName,
+        phone_number: phoneNumber,
+        email,
+        password,
+      });
+      setStatus(true);
+      setMessage(response.data.message);
+    } catch (error) {
+      setStatus(false);
+      setMessage(error.response?.data?.message || "Something went wrong");
+    }
   };
 
   return (
@@ -78,7 +93,6 @@ const Auth = () => {
           </h1>
         </MDBCol>
 
-        {/* العمود الأيمن */}
         <MDBCol
           md="4"
           className="offset-md-1 d-flex align-items-center justify-content-center"
@@ -97,7 +111,7 @@ const Auth = () => {
               </span>
             </h1>
             <MDBCardBody className="p-5">
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={isLogin ? handleLogin : handleRegister}>
                 {!isLogin && (
                   <MDBRow>
                     <MDBCol col="6">
@@ -144,7 +158,7 @@ const Auth = () => {
                   size="sm"
                   type="submit"
                   color="success"
-                  style={{fontSize:"20px"}}
+                  style={{ fontSize: "20px" }}
                 >
                   {isLogin ? "Sign in" : "Sign up"}
                 </MDBBtn>
@@ -154,55 +168,23 @@ const Auth = () => {
                   {message}
                 </div>
               )}
-              <div className="text-center">
-                <p> {isLogin ? "or sign in with" : "or sign up with"}</p>
-                <MDBBtn
-                  tag="a"
-                  color="none"
-                  className="mx-3"
-                  style={{ color: "#1266f1" }}
-                >
-                  <MDBIcon fab icon="facebook-f" size="1x" className="text-success"/>
-                </MDBBtn>
-                <MDBBtn
-                  tag="a"
-                  color="none"
-                  className="mx-3"
-                  style={{ color: "#1266f1" }}
-                >
-                  <MDBIcon fab icon="twitter" size="1x" className="text-success"/>
-                </MDBBtn>
-                <MDBBtn
-                  tag="a"
-                  color="none"
-                  className="mx-3"
-                  style={{ color: "#1266f1" }}
-                >
-                  <MDBIcon fab icon="google" size="1x" className="text-success" />
-                </MDBBtn>
-                <MDBBtn
-                  tag="a"
-                  color="none"
-                  className="mx-3"
-                  style={{ color: "#1266f1" }}
-                >
-                  <MDBIcon fab icon="github" size="1x" className="text-success" />
-                </MDBBtn>
-              </div>
-              <p className="text-center mt-3">
+
+              <p className="text-center mt-3" style={{ alignSelf: "center" }}>
                 {isLogin
                   ? "Don't have an account?"
                   : "Already have an account?"}{" "}
                 <span
-                className="text-success"
+                  className="text-success"
                   style={{
                     cursor: "pointer",
-                    fontWeight:"bold",
+                    fontWeight: "bold",
                     textDecoration: "underline",
                   }}
-                  onClick={() => setIsLogin(!isLogin)}
+                  onClick={() => {
+                    setIsLogin(!isLogin);
+                    setMessage("");
+                  }}
                 >
-                  
                   {isLogin ? "Register" : "Login"}
                 </span>
               </p>
