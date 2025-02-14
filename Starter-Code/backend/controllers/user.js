@@ -236,6 +236,8 @@ const getRequestsById = (req, res) => {
 };
 
 const updateRequestById = (req, res) => {
+  console.log("update");
+  
   const { id } = req.params;
   const user_id = req.token.userId;
   const { status, description, weight, length, width, height, category_id } =
