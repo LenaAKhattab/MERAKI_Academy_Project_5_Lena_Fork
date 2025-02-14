@@ -1,0 +1,45 @@
+*{
+    box-sizing: content-box;
+    margin: 0;
+    padding: 0;
+}
+.categoryPage{
+    width:100%;
+    height: 100vh;
+    
+    
+    
+}
+.categorySection{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    justify-items: center;
+}
+
+
+.catElement{
+
+    width:80%;
+    height: 100%;
+    justify-items: center;
+}
+.categoryImg{
+    
+    width: 100%;
+    height: 75%;
+    
+}
+.categoryImg:hover{
+    transform: scale(.75);
+    cursor: pointer;
+}
+.pre-category{
+    width: 100%;
+
+}
+.header-category{
+   
+    margin-top: 3%;
+    justify-items: center;
+    background-color: gray;
+}

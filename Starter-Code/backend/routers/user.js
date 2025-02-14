@@ -25,17 +25,14 @@ userRouter.get("/getRequestByuserId", authentication,getRequestsById);
 userRouter.put("/cancelOrderById/:id",cancelOrderById);
 
 userRouter.get("/getOrderById", getALLOrdersById);//user
-userRouter.get("/getAssignById",authentication, getAssignOrderById );//collector
 
+userRouter.get("/getOrderById",authentication, getALLOrdersById);//user
 userRouter.get("/getAssignOrderById",authentication, getAssignOrderById );//collector
 userRouter.delete("/cancelRequestById/:id",cancelRequestById)
 
-userRouter.get("/getOrderById/:id", getALLOrdersById);//user
+userRouter.get("/getOrderById", authentication,getALLOrdersById);//user
 userRouter.post("/createOrders", authentication, createOrder);
 
 
 
 module.exports = userRouter;
-
-
-

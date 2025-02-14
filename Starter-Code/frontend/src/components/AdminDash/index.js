@@ -57,7 +57,7 @@ const AdminDash = () => {
   };
   useEffect(() => {
     getAllOrders();
-  }, [getAllOrders]);
+  }, []);
   return (
     <div>
       {orders?.map((order, index) => (
@@ -75,7 +75,7 @@ const AdminDash = () => {
             }}
           />
           <button
-            id={order.id}
+            id={order.order_id}
             onClick={(e) => {
               assignOrderToCollector(e.target.id);
             }}
@@ -89,7 +89,7 @@ const AdminDash = () => {
             }}
           />
           <button
-            id={order.id}
+            id={order.order_id}
             onClick={(e) => {
               changeOrderStatusById(e.target.id);
             }}
