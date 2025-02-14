@@ -7,18 +7,24 @@ import Login from "./components/Login";
 import AdminDash from "./components/AdminDash";
 import AdminCategory from "./components/AdminCategory";
 import UserCategory from "./components/UserCategory/UserCategory";
+
 import UserHomePage from './components/userHomePage'
 import Navbar from './components/NavBar/index'
 
 import Glasses from "./components/CategorySections/Glasses";
+
+import UserHomePage from "./components/userHomePage";
+import Navbar from "./components/NavBar/index";
+
 import OrderCreate from "./components/createOrder";
 import CollectorsDash from "./components/CollectorsDash";
-import  CurrentCategory  from "./components/UserCategory/CurrentCategory";
+import CurrentCategory from "./components/UserCategory/CurrentCategory";
 import GetAllRequest from "./components/UserCategory/GetAllRequest";
 import SideNav from "./components/SideNav";
 
 import GetOrder from "./components/GetAllOrder/GetOrder";
 import Copper from "./components/CategorySections/Copper";
+
 import  Paper  from "./components/CategorySections/Paper";
 import Food from "./components/CategorySections/Food";
 import Iron from "./components/CategorySections/Iron"
@@ -58,6 +64,30 @@ const App = () => {
 
     
     
+
+
+const App = () => {
+  return (
+    <>
+      <Navbar />
+      <Routes>
+        <Route path={"/register"} element={<Register />} />
+        <Route path={"/login"} element={<Login />} />
+        <Route path={"/admin"} element={<AdminDash />} />
+        <Route path={"/cart"} element={<OrderCreate />} />
+        <Route path={"/category"} element={<AdminCategory />} />
+        <Route path="/categoriesPage" element={<UserCategory />} />
+
+        <Route path={"/collector"} element={<CollectorsDash />} />
+        <Route path="/currentCategory" element={<CurrentCategory />} />
+        <Route path="/AllRequest" element={<GetAllRequest />} />
+        <Route path="/getAllOrderById" element={<GetOrder />} />
+
+        <Route path={"/sideNav"} element={<SideNav />} />
+        <Route path={"/"} element={<UserHomePage />} />
+      </Routes>
+    </>
+
   );
   
 };

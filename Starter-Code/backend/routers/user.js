@@ -11,7 +11,7 @@ const {
   getALLOrdersById,
   getAssignOrderById,
   cancelRequestById,
-    createOrder
+  createOrder
 
 } = require("../controllers/user");
 const authentication = require("../middleware/authentication");
@@ -23,6 +23,8 @@ userRouter.post("/createRequestByuserId", authentication, createRequest);
 userRouter.put("/updateRequestById/:id", authentication, updateRequestById);
 userRouter.get("/getRequestByuserId", authentication,getRequestsById);
 userRouter.put("/cancelOrderById/:id",cancelOrderById);
+
+userRouter.get("/getOrderById", getALLOrdersById);//user
 
 userRouter.get("/getOrderById",authentication, getALLOrdersById);//user
 userRouter.get("/getAssignOrderById",authentication, getAssignOrderById );//collector

@@ -118,7 +118,7 @@ const chooseCollector = (req, res) => {
   const orderId = req.params.id;
   const { collector_id } = req.body;
 
-  if (![12, 13, 14].includes(collector_id)) {
+  if (![12, 13, 14,32].includes(collector_id)) {
     return res
       .status(400)
       .json({ message: "Invalid id value. Use '12', '13', or '14' only" });
