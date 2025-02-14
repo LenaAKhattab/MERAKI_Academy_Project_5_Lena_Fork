@@ -21,6 +21,7 @@ import {
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
+// import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import Button from "@mui/material/Button";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
@@ -202,7 +203,6 @@ export default function DashboardLayoutBasic(props) {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-
   const handleCancelClick = (id) => () => {
     setRowModesModel({
       ...rowModesModel,
@@ -224,24 +224,24 @@ export default function DashboardLayoutBasic(props) {
   // =============================================
   const processRowUpdate = async (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
-  
+
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-  
+
     if (newRow.status) {
       try {
         const result = await axios.put(
           `http://localhost:5000/admin/changeOrderStatusById/${newRow.id}`,
           { status: newRow.status }
         );
-  
+
         dispatch(setOrderStatus(result.data.order));
         console.log("Status Updated:", result.data);
       } catch (error) {
         console.error("Error updating status:", error);
       }
     }
-  
-    if (roleId == 1 && newRow.collector) {
+
+    if (newRow.collector) {
       const collector_id = collectorMap[newRow.collector];
       try {
         const result = await axios.put(
@@ -254,38 +254,71 @@ export default function DashboardLayoutBasic(props) {
         console.error("Error assigning collector:", error);
       }
     }
-  
-    if (roleId == 2 && newRow.status) {
-      try {
-        const result = await axios.put(
-          `http://localhost:5000/admin/changeOrderStatusById/${newRow.id}`,
-          { status: newRow.status }
-        );
-  
-        dispatch(setOrderStatus(result.data.order));
-        console.log("Status Updated:", result.data);
-      } catch (error) {
-        console.error("Error updating status:", error);
-      }
-    }
-  
-    if (roleId == 2 && newRow.last_price) {
-      try {
-        const result = await axios.put(
-          `http://localhost:5000/admin/updateLastPrice/${newRow.id}`,
-          { last_price: newRow.last_price }
-        );
-  
-        console.log("Last Price Updated:", result.data);
-      } catch (error) {
-        console.error("Error updating last price:", error);
-      }
-    }
-  
+
     return updatedRow;
   };
+  // const processRowUpdate = async (newRow) => {
+  //   const updatedRow = { ...newRow, isNew: false };
   
-
+  //   setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+  
+  //   if (roleId === 1 && newRow.status) {
+  //     try {
+  //       const result = await axios.put(
+  //         `http://localhost:5000/admin/changeOrderStatusById/${newRow.id}`,
+  //         { status: newRow.status }
+  //       );
+  
+  //       dispatch(setOrderStatus(result.data.order));
+  //       console.log("Status Updated:", result.data);
+  //     } catch (error) {
+  //       console.error("Error updating status:", error);
+  //     }
+  //   }
+  
+  //   if (roleId === 1 && newRow.collector) {
+  //     const collector_id = collectorMap[newRow.collector];
+  //     try {
+  //       const result = await axios.put(
+  //         `http://localhost:5000/admin/chooseCollector/${newRow.id}`,
+  //         { collector_id: collector_id }
+  //       );
+  //       dispatch(setCollector(result.data.order));
+  //       console.log("Collector Assigned:", result.data);
+  //     } catch (error) {
+  //       console.error("Error assigning collector:", error);
+  //     }
+  //   }
+  
+  //   if (roleId === 2 && newRow.status) {
+  //     try {
+  //       const result = await axios.put(
+  //         `http://localhost:5000/admin/changeOrderStatusById/${newRow.id}`,
+  //         { status: newRow.status }
+  //       );
+  
+  //       dispatch(setOrderStatus(result.data.order));
+  //       console.log("Status Updated:", result.data);
+  //     } catch (error) {
+  //       console.error("Error updating status:", error);
+  //     }
+  //   }
+  
+  //   if (roleId === 2 && newRow.last_price) {
+  //     try {
+  //       const result = await axios.put(
+  //         `http://localhost:5000/admin/updateLastPrice/${newRow.id}`,
+  //         { last_price: newRow.last_price }
+  //       );
+  
+  //       console.log("Last Price Updated:", result.data);
+  //     } catch (error) {
+  //       console.error("Error updating last price:", error);
+  //     }
+  //   }
+  
+  //   return updatedRow;
+  // };
   // ==========================================================
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
@@ -309,7 +342,7 @@ export default function DashboardLayoutBasic(props) {
       field: "status",
       headerName: "Status",
       width: 100,
-      editable: roleId == 1 || roleId == 3,
+      editable: roleId == 1 || roleId == 2,
       type: "singleSelect",
       valueOptions: [
         "pending",
@@ -330,7 +363,7 @@ export default function DashboardLayoutBasic(props) {
       field: "last_price",
       headerName: "Last Price",
       width: 150,
-      editable: roleId == 3,
+      editable: roleId == 2,
     },
     {
       field: "collector",
@@ -378,7 +411,6 @@ export default function DashboardLayoutBasic(props) {
             onClick={handleEditClick(id)}
             color="inherit"
           />,
-       
         ];
       },
     },

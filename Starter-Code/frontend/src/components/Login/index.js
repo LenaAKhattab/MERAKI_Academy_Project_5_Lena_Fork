@@ -69,25 +69,6 @@ const Login = () => {
       });
   };
 
-
-/*   useEffect(() => {
-
-    if (authIsLoggedIn) {
-      navigate("/categoriesPage");
-
-    }
-    if (authIsLoggedIn&&authRoleId==="1") {
-      navigate("/sideNav");
-    } */
-    /*
-     if (authIsLoggedIn&&authRoleId==="2") {
-       navigate("/");
-       change to user dash
-
-    }
-       */
-
-
   return (
     <div className="full-page">
       <div className="blurred-container">
