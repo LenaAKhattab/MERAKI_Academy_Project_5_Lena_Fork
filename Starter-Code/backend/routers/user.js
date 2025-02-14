@@ -34,6 +34,3 @@ userRouter.post("/createOrders", authentication, createOrder);
 
 
 module.exports = userRouter;
-
-
-

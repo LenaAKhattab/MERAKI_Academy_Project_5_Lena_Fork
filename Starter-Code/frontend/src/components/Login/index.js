@@ -39,9 +39,9 @@ const Login = () => {
   const authIsLoggedIn = useSelector(
     (reducers) => reducers.authReducer.isLoggedIn
   );
-  const authRoleId = useSelector(
-    (reducers) => reducers.authReducer.roleId
-  );
+
+  const authRoleId = useSelector((reducers) => reducers.authReducer.roleId);
+
   const dispatch = useDispatch();
 
   const login = (e) => {
@@ -55,12 +55,20 @@ const Login = () => {
         );
         dispatch(setUserId(result.data.userId));
         setStatus(true);
+        console.log(typeof authRoleId, authRoleId);
+
+        if (authIsLoggedIn && authRoleId == 1) {
+          navigate("/sideNav");
+        } else if (authIsLoggedIn && authRoleId == 2) {
+          navigate("/categoriesPage");
+        }
       })
       .catch((error) => {
         setMessage(error.response?.data?.message || "Login failed");
         setStatus(false);
       });
   };
+
 
 /*   useEffect(() => {
 
@@ -93,7 +101,7 @@ const Login = () => {
               <MDBTabsLink
                 onClick={() => handleJustifyClick("tab1")}
                 active={justifyActive === "tab1"}
-                style={{ fontWeight:"bold", fontSize: "15px" }}
+                style={{ fontWeight: "bold", fontSize: "15px" }}
               >
                 Login
               </MDBTabsLink>
@@ -128,7 +136,9 @@ const Login = () => {
                     <MDBIcon fab color="white" icon="github" size="1x" />
                   </MDBBtn>
                 </div>
-                <p className="text-center mt-3" style={{ fontSize: "20px" }}>or:</p>
+                <p className="text-center mt-3" style={{ fontSize: "20px" }}>
+                  or:
+                </p>
               </div>
               <div className="LInput">
                 <MDBInput
@@ -171,7 +181,7 @@ const Login = () => {
               <MDBBtn
                 className="mb-4 w-100"
                 onClick={login}
-                style={{ fontWeight: "bold" ,fontSize:"15px"}}
+                style={{ fontWeight: "bold", fontSize: "15px" }}
               >
                 Sign in
               </MDBBtn>
@@ -198,7 +208,9 @@ const Login = () => {
                     <MDBIcon fab color="white" icon="github" size="1x" />
                   </MDBBtn>
                 </div>
-                <p className="text-center mt-3" style={{ fontSize: "20px" }}>or:</p>
+                <p className="text-center mt-3" style={{ fontSize: "20px" }}>
+                  or:
+                </p>
               </div>
               <div style={{ display: "flex", gap: "10px" }}>
                 <MDBInput
@@ -232,7 +244,10 @@ const Login = () => {
                 type="password"
                 style={{ color: "white" }}
               />
-              <MDBBtn className="mb-4 w-100" style={{ fontWeight: "bold" ,fontSize:"15px"}}>
+              <MDBBtn
+                className="mb-4 w-100"
+                style={{ fontWeight: "bold", fontSize: "15px" }}
+              >
                 Sign up
               </MDBBtn>
             </MDBTabsPane>

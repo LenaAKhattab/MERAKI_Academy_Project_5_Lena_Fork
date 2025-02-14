@@ -11,7 +11,7 @@ const CollectorsDash = () => {
   const [last_price, setLast_price] = useState();
   const [status, setStatus] = useState();
   const authToken = useSelector((reducers) => reducers.authReducer.token);
-  const orders = useSelector(
+  const collectorOrders = useSelector(
     (reducers) => reducers.collectorOrdersReducer.orders
   );
 
