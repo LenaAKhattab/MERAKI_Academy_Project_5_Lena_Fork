@@ -2,11 +2,13 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 //this nav is by bootstrap
-
+import { useSelector } from "react-redux";
 const Navbar = () => {
+  const roleId=useSelector((reducer)=>reducer.authReducer.roleId)
   const navigate = useNavigate();
   return (
-    <nav className="navbar navbar-expand-lg bg-white shadow-sm">
+<>
+{!roleId==1 &&  <nav className="navbar navbar-expand-lg bg-white shadow-sm">
       <div className="container d-flex flex-column">
         {/* Navbar Links */}
         <div
@@ -61,8 +63,10 @@ const Navbar = () => {
         {/* Underline */}
         {/* <hr className="w-100 mt-0 mb-0" /> */}
       </div>
-    </nav>
-  );
+    </nav>}
+
+</>
+  )
 };
 
 export default Navbar;
