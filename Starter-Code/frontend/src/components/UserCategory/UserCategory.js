@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState ,Link} from 'react'
 import { useSelector ,useDispatch} from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { setCurrentCategory } from '../../redux/reducers/userCategory'
@@ -10,6 +10,7 @@ import "./user.css"
 
 
 const UserCategory=()=>{
+    const state = useSelector(state=>state)
     const Navigate = useNavigate()
     const dispatch = useDispatch();
     const [allCategories,setAllCategories] = useState([])
@@ -41,27 +42,28 @@ return (
 
     <div className='categoryPage'>
         <div className='pre-category'>
-            <div className='header-category'>
-            <h2>Waste classification</h2>
-            <p>we are welcome to pick up any type of these waste:</p>
-            </div>
         </div>
-        <div className='categorySection'>
+        <div className='categorySection row'>
         {allCategories.map((ele,i)=>{
-            return <div className='catElement' onClick={()=>{
+            console.log(ele);
+            
+            return <div key={i} className='catElement card col-m-10' style={{width:"30rem"}} >
+                <img className='categoryImg card-img-top' src= {ele.image}/> 
+                <p className='title-1 card-title'>{ele.category_name}</p>
+                <p className='description-1 card-text'>{ele.description}</p>
+                <button className="btn btn-default btn-dark" onClick={()=>{
                 console.log(ele);
                 
                 dispatch(setCurrentCategory(ele))
-                Navigate("/currentCategory")
-                console.log(currentCategory);
+                Navigate(`/category/${ele.category_name}`)
+                
+               console.log(state);
+               
                 
                 
                 
 
-            }}>
-                <img className='categoryImg' src= {ele.image}/> 
-                <p>{ele.category_name}</p>
-                <p>{ele.description}</p>
+            }}>Explore More</button>
             </div>
             
 

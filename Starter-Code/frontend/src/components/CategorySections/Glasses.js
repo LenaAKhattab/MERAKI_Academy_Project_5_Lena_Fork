@@ -1,7 +1,9 @@
 import React from 'react'
-
+import  Request  from "../Request/Request"
+import CurrentCategory from '../UserCategory/CurrentCategory'
 const Glasses = () => {
   return (
+    <>
 
     <div>Glasses</div>
     <div>
@@ -44,13 +46,15 @@ The most important fact about glass is that glass is 100% recyclable. It can be 
 
     </div>
     
-    <div></div>
+    <div>
+      {<CurrentCategory/>}
+    </div>
 
 
 
 
   </div>
-
+  </>
   )
 }
 

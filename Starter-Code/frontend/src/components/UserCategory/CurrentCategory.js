@@ -5,11 +5,11 @@ import axios from 'axios'
 const CurrentCategory = () => {
     const state = useSelector(state=>state)
     console.log(state.authReducer.token);
-    const categoryName = state.userCategory.currentCategory.category_name  
+    const categoryName = state.userCategory.currentCategory.category_name
     const [request,setRequest] = useState({})
-    const categoryNameInKg = ["paper","plastic","wood","clothes","Iron","Copper","Glasses","paper","food"]
+    const categoryNameInKg = ["Paper","Plastic","Wood","Clothes","Iron","Copper","Glass","Paper","Food"]
     const categoryNameInPoint = ["paper","food"]
-    const categoryNameInHight =["furniture"]
+    const categoryNameInHight =["Furniture"]
     const token = state.authReducer.token
     //detailes about each category
     //create request 
