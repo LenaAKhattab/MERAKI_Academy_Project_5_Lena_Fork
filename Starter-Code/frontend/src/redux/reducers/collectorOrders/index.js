@@ -6,13 +6,13 @@ const collectorOrdersSlice = createSlice({
     orders: [],
   },
   reducers: {
-    setOrders: (state, action) => {
+    setCollectorOrders: (state, action) => {
       state.orders = action.payload;
     },
     setOrderDetails: (state, action) => {
       const updatedOrder = action.payload;
       state.orders = state.orders.map((order) => {
-        if (order.id === updatedOrder.id) {
+        if (order.order_id === updatedOrder.id) {
           return {
             ...order,
             status: updatedOrder.status,
@@ -25,6 +25,6 @@ const collectorOrdersSlice = createSlice({
   },
 });
 
-export const { setOrders, setOrderDetails } =
+export const { setCollectorOrders, setOrderDetails } =
   collectorOrdersSlice.actions;
 export default collectorOrdersSlice.reducer;

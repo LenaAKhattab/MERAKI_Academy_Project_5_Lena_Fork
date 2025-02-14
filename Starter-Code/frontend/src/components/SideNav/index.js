@@ -9,7 +9,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { PageContainer } from "@toolpad/core/PageContainer";
-import CategoryIcon from '@mui/icons-material/Category';
+import CategoryIcon from "@mui/icons-material/Category";
 import Grid from "@mui/material/Grid2";
 import "./style.css";
 import {
@@ -33,6 +33,10 @@ import {
   setCollector,
   setOrderStatus,
 } from "../../redux/reducers/adminOrders";
+import {
+  setCollectorOrders,
+  setOrderDetails,
+} from "../../redux/reducers/collectorOrders";
 import { setLogout } from "../../redux/reducers/auth";
 
 const demoTheme = extendTheme({
@@ -79,6 +83,7 @@ export default function DashboardLayoutBasic(props) {
   const [message, setMessage] = useState("");
   const [rows, setRows] = useState([]);
   const [status, setStatus] = useState();
+  const authToken = useSelector((reducers) => reducers.authReducer.token);
 
   const history = useNavigate();
   const NAVIGATION = [
@@ -105,7 +110,7 @@ export default function DashboardLayoutBasic(props) {
       kind: "divider",
     },
     {
-      segment:"logout",
+      segment: "logout",
       title: "Logout",
       icon: (
         <LogoutIcon
@@ -129,58 +134,122 @@ export default function DashboardLayoutBasic(props) {
         setMessage(error.response.data.message);
       });
   };
-  //============================================================
-
+  //==============================================================
+  const getAssignedOrdersById = () => {
+    axios
+      .get(`http://localhost:5000/user/getAssignOrderById`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
+      .then((result) => {
+        console.log(result);
+        dispatch(setCollectorOrders(result.data.result));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  // =============================================================
   useEffect(() => {
-    getAllOrders();
+    if (roleId == 1) {
+      getAllOrders();
+    }
+    if (roleId == 3) {
+      getAssignedOrdersById();
+    }
   }, []);
 
   const orders = useSelector((reducers) => reducers.adminOrdersReducer.orders);
+  const collectorOrders = useSelector(
+    (reducers) => reducers.collectorOrdersReducer.orders
+  );
   const roleId = useSelector((reducers) => reducers.authReducer.roleId);
   console.log("orders", orders);
 
   useEffect(() => {
-    const rowsData = orders.map((order) => ({
-      id: order.order_id,
-      name: `${order.requester_first_name} ${order.requester_last_name}`,
-      requests: order.requests_list.map((request) => {
-        // console.log("rr", request);
+    if (roleId == 1) {
+      const rowsData = orders.map((order) => ({
+        id: order.order_id,
+        name: `${order.requester_first_name} ${order.requester_last_name}`,
+        requests: order.requests_list.map((request) => {
+          // console.log("rr", request);
 
-        const requestDetails = [];
+          const requestDetails = [];
 
-        if (request.category_name) {
-          requestDetails.push(`Category: ${request.category_name}`);
-        }
+          if (request.category_name) {
+            requestDetails.push(`Category: ${request.category_name}`);
+          }
 
-        if (request.weight != null) {
-          requestDetails.push(`Weight: ${request.weight}`);
-        }
+          if (request.weight != null) {
+            requestDetails.push(`Weight: ${request.weight}`);
+          }
 
-        if (request.width != null) {
-          requestDetails.push(`Width: ${request.width}`);
-        }
+          if (request.width != null) {
+            requestDetails.push(`Width: ${request.width}`);
+          }
 
-        if (request.height != null) {
-          requestDetails.push(`Height: ${request.height}`);
-        }
+          if (request.height != null) {
+            requestDetails.push(`Height: ${request.height}`);
+          }
 
-        if (request.length != null) {
-          requestDetails.push(`Length: ${request.length}`);
-        }
+          if (request.length != null) {
+            requestDetails.push(`Length: ${request.length}`);
+          }
 
-        return requestDetails;
-      }),
+          return requestDetails;
+        }),
 
-      status: order.status,
-      location: order.location,
-      predicted_price: order.predicted_price,
-      last_price: order.last_price,
+        status: order.status,
+        location: order.location,
+        predicted_price: order.predicted_price,
+        last_price: order.last_price,
 
-      collector:
-        `${order.collector_first_name || ""} ${order.collector_last_name || ""}`.trim(),
-    }));
-    setRows(rowsData);
-  }, [orders]);
+        collector:
+          `${order.collector_first_name || ""} ${order.collector_last_name || ""}`.trim(),
+      }));
+      setRows(rowsData);
+    }
+    if (roleId == 3) {
+      const rowsData = collectorOrders.map((order) => ({
+        id: order.order_id,
+        name: `${order.requester_first_name} ${order.requester_last_name}`,
+        requests: order.requests_list.map((request) => {
+          // console.log("rr", request);
+
+          const requestDetails = [];
+
+          if (request.category_name) {
+            requestDetails.push(`Category: ${request.category_name}`);
+          }
+
+          if (request.weight != null) {
+            requestDetails.push(`Weight: ${request.weight}`);
+          }
+
+          if (request.width != null) {
+            requestDetails.push(`Width: ${request.width}`);
+          }
+
+          if (request.height != null) {
+            requestDetails.push(`Height: ${request.height}`);
+          }
+
+          if (request.length != null) {
+            requestDetails.push(`Length: ${request.length}`);
+          }
+
+          return requestDetails;
+        }),
+
+        status: order.status,
+        location: order.location,
+        predicted_price: order.predicted_price,
+        last_price: order.last_price,
+      }));
+      setRows(rowsData);
+    }
+  }, [collectorOrders]);
 
   const { window } = props;
 
@@ -254,28 +323,46 @@ export default function DashboardLayoutBasic(props) {
         console.error("Error assigning collector:", error);
       }
     }
+    if (newRow.last_price) {
+      try {
+        const result = await axios.put(
+          `http://localhost:5000/collector/updateRequestDetailsById/${newRow.id}`,
+          { last_price: newRow.last_price },
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        dispatch(setOrderDetails(result.data.result));
+
+        console.log("Last Price Updated:", result.data);
+      } catch (error) {
+        console.error("Error updating last price:", error);
+      }
+    }
 
     return updatedRow;
   };
   // const processRowUpdate = async (newRow) => {
   //   const updatedRow = { ...newRow, isNew: false };
-  
+
   //   setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-  
+
   //   if (roleId === 1 && newRow.status) {
   //     try {
   //       const result = await axios.put(
   //         `http://localhost:5000/admin/changeOrderStatusById/${newRow.id}`,
   //         { status: newRow.status }
   //       );
-  
+
   //       dispatch(setOrderStatus(result.data.order));
   //       console.log("Status Updated:", result.data);
   //     } catch (error) {
   //       console.error("Error updating status:", error);
   //     }
   //   }
-  
+
   //   if (roleId === 1 && newRow.collector) {
   //     const collector_id = collectorMap[newRow.collector];
   //     try {
@@ -289,34 +376,34 @@ export default function DashboardLayoutBasic(props) {
   //       console.error("Error assigning collector:", error);
   //     }
   //   }
-  
+
   //   if (roleId === 2 && newRow.status) {
   //     try {
   //       const result = await axios.put(
   //         `http://localhost:5000/admin/changeOrderStatusById/${newRow.id}`,
   //         { status: newRow.status }
   //       );
-  
+
   //       dispatch(setOrderStatus(result.data.order));
   //       console.log("Status Updated:", result.data);
   //     } catch (error) {
   //       console.error("Error updating status:", error);
   //     }
   //   }
-  
+
   //   if (roleId === 2 && newRow.last_price) {
   //     try {
   //       const result = await axios.put(
   //         `http://localhost:5000/admin/updateLastPrice/${newRow.id}`,
   //         { last_price: newRow.last_price }
   //       );
-  
+
   //       console.log("Last Price Updated:", result.data);
   //     } catch (error) {
   //       console.error("Error updating last price:", error);
   //     }
   //   }
-  
+
   //   return updatedRow;
   // };
   // ==========================================================
@@ -342,7 +429,7 @@ export default function DashboardLayoutBasic(props) {
       field: "status",
       headerName: "Status",
       width: 100,
-      editable: roleId == 1 || roleId == 2,
+      editable: roleId == 1 || roleId == 3,
       type: "singleSelect",
       valueOptions: [
         "pending",
@@ -363,7 +450,7 @@ export default function DashboardLayoutBasic(props) {
       field: "last_price",
       headerName: "Last Price",
       width: 150,
-      editable: roleId == 2,
+      editable: roleId == 3,
     },
     {
       field: "collector",

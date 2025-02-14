@@ -73,7 +73,6 @@ const register = async (req, res) => {
 const login = (req, res) => {
   const { email, password } = req.body;
 
-
   pool
     .query(`SELECT * FROM users WHERE email = '${email}'`)
     .then(async (result) => {
@@ -93,13 +92,13 @@ const login = (req, res) => {
         };
         const options = { expiresIn: "200m" };
         const token = await jwt.sign(payload, process.env.SECRET, options);
-        
+
         return res.status(201).json({
           success: true,
           message: "You are logged in successfully",
           token: token,
-          userId:result.rows[0].id,
-          roleId:result.rows[0].role_id,
+          userId: result.rows[0].id,
+          roleId: result.rows[0].role_id,
         });
       }
 
@@ -116,7 +115,6 @@ const login = (req, res) => {
       });
     });
 };
-
 
 const createRequest = (req, res) => {
   const userId = req.token.userId;
@@ -240,15 +238,8 @@ const getRequestsById = (req, res) => {
 const updateRequestById = (req, res) => {
   const { id } = req.params;
   const user_id = req.token.userId;
-  const {
-    status,
-    description,
-    weight,
-    length,
-    width,
-    height,
-    category_id, 
-  } = req.body;
+  const { status, description, weight, length, width, height, category_id } =
+    req.body;
 
   const priceQuery = `
     SELECT price_per_kg, price_per_dimensions, points_per_kg FROM category WHERE id=$1;
@@ -256,7 +247,8 @@ const updateRequestById = (req, res) => {
   pool
     .query(priceQuery, [category_id])
     .then((result) => {
-      const { price_per_kg, price_per_dimensions, points_per_kg } = result.rows[0];
+      const { price_per_kg, price_per_dimensions, points_per_kg } =
+        result.rows[0];
 
       let predicted_price = 0;
 
@@ -378,96 +370,134 @@ const cancelOrderById = (req, res) => {
       });
   });
 };
-const getALLOrdersById = (req,res)=>{ //user
+const getALLOrdersById = (req, res) => {
+  //user
   console.log(11111);
-  
-  const user_id= req.token.userId;
+
+  const user_id = req.token.userId;
   console.log(user_id);
-  
- 
-  
-  pool.query(`SELECT * FROM orders WHERE user_id ='${user_id}'`)
-  .then((result)=>{
-    res.status(201).json({
-      success:true,
-      result : result.rows
+
+  pool
+    .query(`SELECT * FROM orders WHERE user_id ='${user_id}'`)
+    .then((result) => {
+      res.status(201).json({
+        success: true,
+        result: result.rows,
+      });
     })
-
-  })
-  .catch((error) => {
-    res.status(500).json({
-      success: false,
-      message: "server error",
-      error: error.message,
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: "server error",
+        error: error.message,
+      });
     });
-  });
-
-}
-const getAssignOrderById = (req,res)=>{
+};
+const getAssignOrderById = (req, res) => {
   const userId = req.token.userId;
-  pool.query(`SELECT * FROM orders WHERE collector_id = ${userId}`)
-  .then((result)=>{
-    res.status(201).json({
-      success:true,
-      result : result.rows
+  const query = `
+  SELECT 
+      orders.id AS order_id,
+      requester.first_name AS requester_first_name,
+      requester.last_name AS requester_last_name,
+      collector.first_name AS collector_first_name,
+      collector.last_name AS collector_last_name,
+      collector.id AS collector_id, 
+      orders.status,
+      orders.last_price,
+      orders.order_time,
+      orders.location,
+      orders.arrive_time,
+      orders.predicted_price,
+      COALESCE(JSON_AGG(
+          JSONB_BUILD_OBJECT(
+              'request_id', requests.id,
+              'category_name', category.category_name,
+              'description', requests.description,
+              'request_status', requests.status,
+              'weight', requests.weight,
+              'length', requests.length,
+              'width', requests.width,
+              'height', requests.height,
+              'request_predicted_price', requests.predicted_price
+          )
+      ) FILTER (WHERE requests.id IS NOT NULL), '[]') AS requests_list
+  FROM orders
+  INNER JOIN users AS requester ON requester.id = orders.user_id
+  LEFT JOIN users AS collector ON collector.id = orders.collector_id
+  LEFT JOIN requests ON requests.order_id = orders.id
+  LEFT JOIN category ON category.id = requests.category_id
+  WHERE orders.collector_id = $1
+  GROUP BY orders.id, requester.first_name, requester.last_name, 
+           collector.first_name, collector.last_name, orders.status, 
+           collector.id, collector.first_name, collector.last_name,
+           orders.last_price, orders.order_time, orders.location, 
+           orders.arrive_time, orders.predicted_price;
+`;
+  pool
+    .query(query, [userId])
+    .then((result) => {
+      res.status(201).json({
+        success: true,
+        result: result.rows,
+      });
     })
-
-  })
-  .catch((error) => {
-    res.status(500).json({
-      success: false,
-      message: "server error",
-      error: error.message,
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        message: "server error",
+        error: error.message,
+      });
     });
-  });
-
-}
-const cancelRequestById = (req,res)=>{
-  const {id} = req.params 
+};
+const cancelRequestById = (req, res) => {
+  const { id } = req.params;
   console.log(id);
-  pool.query(`DELETE FROM requests WHERE id = ${id} `)
-  .then((result)=>{
-    res.status(201).json({
-      success:true,
-      result:result,
-      message:"the request has been deleted"
+  pool
+    .query(`DELETE FROM requests WHERE id = ${id} `)
+    .then((result) => {
+      res.status(201).json({
+        success: true,
+        result: result,
+        message: "the request has been deleted",
+      });
     })
-  })
-  .catch((error) => {
-    console.log(error);
-    
-    res.status(500).json({
-      success: false,
-      message: "server error",
-      error: error,
+    .catch((error) => {
+      console.log(error);
+
+      res.status(500).json({
+        success: false,
+        message: "server error",
+        error: error,
+      });
     });
-  });
-}
-const assignOrderByCollectorId = (req,res)=>{
-  const {id} = req.params
-  const {collectorId} = req.body
-  console.log("vvvv",collectorId,id);
-  
-  pool.query(`
+};
+const assignOrderByCollectorId = (req, res) => {
+  const { id } = req.params;
+  const { collectorId } = req.body;
+  console.log("vvvv", collectorId, id);
+
+  pool
+    .query(
+      `
     UPDATE orders
     SET collector_id = ${collectorId}
-    WHERE id = ${id}`)
-  .then((result)=>{
-    res.status(201).json({
-      result:result
+    WHERE id = ${id}`
+    )
+    .then((result) => {
+      res.status(201).json({
+        result: result,
+      });
     })
-  })
-  .catch((error) => {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: "server error",
-      error: error,
-    })
-  });
-}
-
-
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json({
+        success: false,
+        message: "server error",
+        error: error,
+      });
+    });
+};
 
 const createOrder = (req, res) => {
   const userId = req.token.userId;
@@ -476,7 +506,7 @@ const createOrder = (req, res) => {
   if (!location) {
     return res.status(400).json({
       success: false,
-      message: "Location is required"
+      message: "Location is required",
     });
   }
 
@@ -484,14 +514,14 @@ const createOrder = (req, res) => {
     SELECT * FROM requests 
     WHERE user_id = $1 AND status = 'draft'
   `;
-  
+
   pool
     .query(draftRequestsQuery, [userId])
     .then((draftRequestsResult) => {
       if (draftRequestsResult.rows.length === 0) {
         return res.status(404).json({
           success: false,
-          message: "No draft requests found"
+          message: "No draft requests found",
         });
       }
 
@@ -528,14 +558,14 @@ const createOrder = (req, res) => {
               return res.status(201).json({
                 success: true,
                 message: "Order created successfully",
-                order: order
+                order: order,
               });
             })
             .catch((error) => {
               return res.status(500).json({
                 success: false,
                 message: "Error updating request status",
-                error: error.message
+                error: error.message,
               });
             });
         })
@@ -543,7 +573,7 @@ const createOrder = (req, res) => {
           return res.status(500).json({
             success: false,
             message: "Error creating order",
-            error: error.message
+            error: error.message,
           });
         });
     })
@@ -551,11 +581,10 @@ const createOrder = (req, res) => {
       return res.status(500).json({
         success: false,
         message: "Error retrieving draft requests",
-        error: error.message
+        error: error.message,
       });
     });
 };
-
 
 module.exports = {
   login,
@@ -568,5 +597,5 @@ module.exports = {
   getAssignOrderById,
   cancelRequestById,
   assignOrderByCollectorId,
-  createOrder
+  createOrder,
 };
