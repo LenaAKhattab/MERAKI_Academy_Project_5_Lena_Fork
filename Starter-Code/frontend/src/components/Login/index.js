@@ -93,11 +93,10 @@ const Auth = () => {
           </h1>
         </MDBCol>
 
-       <MDBCol
-  md="4"
-  className="offset-md-1 d-flex align-items-center justify-content-center auth-box"
->
-
+        <MDBCol
+          md="4"
+          className="offset-md-1 d-flex align-items-center justify-content-center auth-box"
+        >
           <MDBCard
             className="my-5 blurred-container"
             style={{
@@ -177,7 +176,61 @@ const Auth = () => {
                   {message}
                 </div>
               )}
-
+              <div className="text-center">
+                <p> {isLogin ? "or sign in with" : "or sign up with"}</p>
+                <MDBBtn
+                  tag="a"
+                  color="none"
+                  className="mx-3"
+                  style={{ color: "#1266f1" }}
+                >
+                  <MDBIcon
+                    fab
+                    icon="facebook-f"
+                    size="1x"
+                    className="text-success"
+                  />
+                </MDBBtn>
+                <MDBBtn
+                  tag="a"
+                  color="none"
+                  className="mx-3"
+                  style={{ color: "#1266f1" }}
+                >
+                  <MDBIcon
+                    fab
+                    icon="twitter"
+                    size="1x"
+                    className="text-success"
+                  />
+                </MDBBtn>
+                <MDBBtn
+                  tag="a"
+                  color="none"
+                  className="mx-3"
+                  style={{ color: "#1266f1" }}
+                >
+                  <MDBIcon
+                    fab
+                    icon="google"
+                    size="1x"
+                    className="text-success"
+                  />
+                </MDBBtn>
+                <MDBBtn
+                  tag="a"
+                  color="none"
+                  className="mx-3"
+                  style={{ color: "#1266f1" }}
+                >
+                  <MDBIcon
+                    fab
+                    icon="github"
+                    size="1x"
+                    className="text-success"
+                  />
+                </MDBBtn>
+              </div>
               <p className="text-center mt-3" style={{ alignSelf: "center" }}>
                 {isLogin
                   ? "Don't have an account?"
