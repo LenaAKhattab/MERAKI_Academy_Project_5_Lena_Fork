@@ -9,12 +9,12 @@ import AdminCategory from "./components/AdminCategory";
 import UserCategory from "./components/UserCategory/UserCategory";
 
 import UserHomePage from './components/userHomePage'
-import Navbar from './components/NavBar/index'
+
 
 import Glasses from "./components/CategorySections/Glasses";
 
-import UserHomePage from "./components/userHomePage";
-import Navbar from "./components/NavBar/index";
+
+import Navbar from "./components/NavBar";
 
 import OrderCreate from "./components/createOrder";
 import CollectorsDash from "./components/CollectorsDash";
@@ -30,7 +30,7 @@ import Food from "./components/CategorySections/Food";
 import Iron from "./components/CategorySections/Iron"
 import Furniture from "./components/CategorySections/Furniture"
 import Wood from "./components/CategorySections/Wood"
-const App = () => {
+/* const App = () => {
   return (
     <>
   <Navbar/> 
@@ -50,21 +50,14 @@ const App = () => {
       <Route path="/AllRequest" element= {<GetAllRequest/>}/>
       <Route path={"/collector"}  element={<CollectorsDash/>}/>
       <Route path={"/sideNav"} element={<SideNav  />}/>
-      <Route path={"/Homepage"} element={<UserHomePage/>}/>
-      <Route path={"/category/Copper"} element= {<Copper/>}/>
-      <Route path={"/category/Paper"} element={<Paper/>}/>
-      <Route path={"/category/Food"} element={<Food/>}/>
-      <Route path={"/category/Glass"} element={<Glasses/>}/>
-      <Route path={"/category/Iron"} element={<Iron/>}/>
-      <Route path={"/category/Furniture"} element={<Furniture/>}/>
-      <Route path={"/category/Wood"} element={<Wood/>}/>
+    
     </Routes >
   </>
 
 
     
     
-
+  )} */
 
 const App = () => {
   return (
@@ -85,6 +78,14 @@ const App = () => {
 
         <Route path={"/sideNav"} element={<SideNav />} />
         <Route path={"/"} element={<UserHomePage />} />
+        <Route path={"/Homepage"} element={<UserHomePage/>}/>
+      <Route path={"/category/Copper"} element= {<Copper/>}/>
+      <Route path={"/category/Paper"} element={<Paper/>}/>
+      <Route path={"/category/Food"} element={<Food/>}/>
+      <Route path={"/category/Glass"} element={<Glasses/>}/>
+      <Route path={"/category/Iron"} element={<Iron/>}/>
+      <Route path={"/category/Furniture"} element={<Furniture/>}/>
+      <Route path={"/category/Wood"} element={<Wood/>}/>
       </Routes>
     </>
 
