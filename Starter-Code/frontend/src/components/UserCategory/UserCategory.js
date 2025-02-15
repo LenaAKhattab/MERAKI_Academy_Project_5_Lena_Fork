@@ -51,14 +51,14 @@ return (
                 <img className='categoryImg card-img-top' src= {ele.image}/> 
                 <p className='title-1 card-title'>{ele.category_name}</p>
                 <p className='description-1 card-text'>{ele.description}</p>
-                <button className="btn btn-default btn-dark" onClick={()=>{
+                <button className="btn btn-default btn-success" onClick={()=>{
                 console.log(ele);
                 
                 dispatch(setCurrentCategory(ele))
-                Navigate(`/category/${ele.category_name}`)
+                Navigate(`/currentCategory`)
                 
-               console.log(state);
-               
+            console.log(state);
+
                 
                 
                 
