@@ -40,7 +40,7 @@ const Auth = () => {
         setLogin({ token: response.data.token, roleId: response.data.roleId })
       );
       dispatch(setUserId(response.data.userId));
-      if (response.data.roleId == 1 ||response.data.roleId == 3) {
+      if (response.data.roleId == 1 || response.data.roleId == 3) {
         navigate("/sideNav");
       }
     } catch (error) {
@@ -73,11 +73,11 @@ const Auth = () => {
       className="p-4"
       style={{
         backgroundImage:
-          "url(https://images.pexels.com/photos/7048061/pexels-photo-7048061.jpeg)",
+          "url(https://res.cloudinary.com/dozr5pfwt/image/upload/v1739645499/s5dultjaspdjbnyiwfu8.png)",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
-        minHeight: "93.5vh",
+        maxHeight: "92vh",
       }}
     >
       <MDBRow className="h-100">
@@ -93,13 +93,22 @@ const Auth = () => {
           </h1>
         </MDBCol>
 
-        <MDBCol
-          md="4"
-          className="offset-md-1 d-flex align-items-center justify-content-center"
-        >
+       <MDBCol
+  md="4"
+  className="offset-md-1 d-flex align-items-center justify-content-center auth-box"
+>
+
           <MDBCard
             className="my-5 blurred-container"
-            style={{ width: "100%", maxWidth: "600px", display: "flex" }}
+            style={{
+              width: "100%",
+              maxWidth: "none",
+              display: "flex",
+              height: "75vh",
+              border: "none",
+              boxShadow: "none",
+              background: "transparent",
+            }}
           >
             <h1
               style={{ alignSelf: "center", color: "#14A44D" }}
