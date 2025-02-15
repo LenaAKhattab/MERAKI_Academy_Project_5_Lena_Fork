@@ -38,6 +38,7 @@ import {
   setOrderDetails,
 } from "../../redux/reducers/collectorOrders";
 import { setLogout } from "../../redux/reducers/auth";
+import { Navigation } from "lucide-react";
 
 const demoTheme = extendTheme({
   colorSchemes: { light: true, dark: true },
@@ -86,11 +87,7 @@ export default function DashboardLayoutBasic(props) {
   const authToken = useSelector((reducers) => reducers.authReducer.token);
 
   const history = useNavigate();
-  const NAVIGATION = [
-    {
-      kind: "header",
-      title: "Main items",
-    },
+  const NAVIGATION1 = [
     {
       segment: "dashboard",
       title: "Dashboard",
@@ -101,6 +98,28 @@ export default function DashboardLayoutBasic(props) {
       title: "Categories",
       icon: <CategoryIcon />,
     },
+    {
+      segment: "orders",
+      title: "Orders",
+      icon: <ShoppingCartIcon />,
+    },
+    {
+      kind: "divider",
+    },
+    {
+      segment: "logout",
+      title: "Logout",
+      icon: (
+        <LogoutIcon
+          onClick={() => {
+            dispatch(setLogout());
+            history("/");
+          }}
+        />
+      ),
+    },
+  ];
+  const NAVIGATION3 = [
     {
       segment: "orders",
       title: "Orders",
@@ -249,7 +268,7 @@ export default function DashboardLayoutBasic(props) {
       }));
       setRows(rowsData);
     }
-  }, [collectorOrders]);
+  }, [orders, collectorOrders]);
 
   const { window } = props;
 
@@ -505,7 +524,7 @@ export default function DashboardLayoutBasic(props) {
 
   return (
     <AppProvider
-      navigation={NAVIGATION}
+      navigation={roleId == 1 ? NAVIGATION1 : NAVIGATION3}
       router={router}
       theme={demoTheme}
       window={demoWindow}
@@ -514,6 +533,8 @@ export default function DashboardLayoutBasic(props) {
         sx={{ "& .MuiIconButton-root": { width: "fit-content" } }}
       >
         <PageContainer sx={{ ml: 0, fontSize: "30px" }}>
+          {router.pathname === "/logout" &&
+            (dispatch(setLogout()), history("/"))}
           {router.pathname === "/orders" && (
             <div>
               <Grid container spacing={3} className="gridBox">

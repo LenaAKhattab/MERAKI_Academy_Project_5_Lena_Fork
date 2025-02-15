@@ -1,17 +1,12 @@
 /*  */
 .blurred-container {
-  /* background: rgba(255, 255, 255, 0.15);  */
-  padding: 30px;
-  border-radius: 15px;
-  /* backdrop-filter: blur(100px); */
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
-  width: 35%;
-  max-height: 100%;
-  transition: all 0.3s ease-in-out;
+  background: transparent; /* إزالة الخلفية */
+  box-shadow: none; /* إزالة الظل */
+  border: none; /* إزالة أي حدود */
+  width: 100%; /* تمديد العرض ليشغل المساحة بالكامل */
+  min-height: 100%;
   font-size: 20px;
   animation: fadeIn 0.6s ease-in-out;
-
-  
 }
 
 
@@ -30,4 +25,8 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+.auth-box {
+  margin-left: -30px !important;
+  margin-top: 30px !important;
 }

@@ -6,12 +6,16 @@ import "./style.css";
 
 const UserHomePage = () => {
   return (
-    <div className="user-home-page">
-      <img
-        src={BackgroundImage}
-        alt="Background"
-        className="background-image"
-      />
+     <div className="user-home-page">
+    <video
+      className="background-video"
+      src="https://res.cloudinary.com/dozr5pfwt/video/upload/v1739619383/ocyibbofxrltxra39kkk.mp4"
+      style={{width:"100vw"}}
+      autoPlay
+      loop
+      muted
+      playsInline
+    />
 
       <div className="content"></div>
       {/* CATEGORY SECTION */}
