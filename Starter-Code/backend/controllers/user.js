@@ -30,7 +30,7 @@ const register = async (req, res) => {
       res.status(409).json({
         success: false,
         message: "The email already exists",
-        err,
+        err:err
       });
     });
 };
