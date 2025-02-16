@@ -2,16 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import {
-  Card,
-  CardContent,
-  CardActions,
   Typography,
   TextField,
   Button,
   Alert,
   CircularProgress,
+  Box,
+  Grid,
+  Divider,
+  Container,
+  Paper,
 } from "@mui/material";
-import { ShoppingCart } from "@mui/icons-material";
+import { Recycling, LocalShipping } from "@mui/icons-material";
 import {
   fetchDraftRequestsStart,
   fetchDraftRequestsSuccess,
@@ -25,15 +27,12 @@ const Cart = () => {
   const dispatch = useDispatch();
   const [location, setLocation] = useState("");
 
-  const { token, isLoggedIn, userId } = useSelector((state) => state.authReducer); 
+  const { token, isLoggedIn, userId } = useSelector((state) => state.authReducer);
   const { draftRequests = [], loading, error, success } = useSelector(
-    (state) => state.orders 
+    (state) => state.orders
   );
 
   useEffect(() => {
-    console.log("Token:", token);
-    console.log("Is Logged In:", isLoggedIn, userId);
-
     if (!isLoggedIn) {
       console.log("User is not logged in!");
       return;
@@ -57,7 +56,7 @@ const Cart = () => {
 
   const handleCreateOrder = () => {
     if (!location.trim()) {
-      dispatch(createOrderFailure("Please enter a delivery location"));
+      dispatch(createOrderFailure("Please enter a pickup location"));
       return;
     }
 
@@ -74,7 +73,7 @@ const Cart = () => {
       )
       .then((response) => {
         dispatch(createOrderSuccess(response.data.order));
-        setLocation(""); 
+        setLocation("");
       })
       .catch(() => {
         dispatch(createOrderFailure("Failed to create order"));
@@ -87,105 +86,162 @@ const Cart = () => {
   );
 
   return (
-    <Card sx={{ maxWidth: 600, margin: "auto", padding: 3 }}>
-      <Typography variant="h5" color="primary" display="flex" alignItems="center">
-        <ShoppingCart sx={{ mr: 2 }} /> Cart
-      </Typography>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: { xs: "column", md: "row" },
+        bgcolor: "#f5f5f5",
+      }}
+    >
+      <Box
+        sx={{
+          flex: 1,
+          p: 4,
+          bgcolor: "#ffffff",
+          borderRight: { md: "1px solid #e0e0e0" },
+        }}
+      >
+        <Typography
+          variant="h3" 
+          sx={{ fontWeight: "bold", mb: 4, display: "flex", alignItems: "center" }}
+        >
+          <Recycling sx={{ mr: 2, color: "#4caf50", fontSize: "2.5rem" }} />
+          Your Recycling Cart
+        </Typography>
 
-      <CardContent>
         {error && (
-          <Alert severity="error">
+          <Alert severity="error" sx={{ mb: 3, fontSize: "1.2rem" }}>
             <strong>Error:</strong> {error}
           </Alert>
         )}
 
         {success && (
-          <Alert severity="success">
+          <Alert severity="success" sx={{ mb: 3, fontSize: "1.2rem" }}>
             <strong>Success:</strong> {success}
           </Alert>
         )}
 
         {draftRequests.length === 0 ? (
-          <Typography variant="body1" align="center" color="textSecondary">
-            Your cart is empty
+          <Typography variant="body1" align="center" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
+            Your recycling cart is empty
           </Typography>
         ) : (
-          <div>
+          <Grid container spacing={3}>
             {draftRequests.map((request, index) => (
-              <Card key={request.id} sx={{ marginBottom: 2 }}>
-                <CardContent>
-                  <Typography variant="h6">Request #{index + 1}</Typography>
+              <Grid item xs={12} key={request.id}>
+                <Paper
+                  sx={{
+                    p: 3,
+                    borderRadius: 2,
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                  }}
+                >
+                  <Typography variant="h5" gutterBottom sx={{ fontSize: "1.8rem" }}>
+                    Recycling Request #{index + 1}
+                  </Typography>
 
                   {request.category_name && (
-                    <Typography variant="body2" color="textSecondary">
-                      Category: {request.category_name}
+                    <Typography variant="body1" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
+                      Material: {request.category_name}
                     </Typography>
                   )}
 
                   {request.description && (
-                    <Typography variant="body2" color="textSecondary">
-                      Description: {request.description}
+                    <Typography variant="body1" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
+                      Details: {request.description}
                     </Typography>
                   )}
 
                   {request.weight && (
-                    <Typography variant="body2" color="textSecondary">
+                    <Typography variant="body1" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
                       Weight: {request.weight} kg
                     </Typography>
                   )}
 
-                  {request.length && (
-                    <Typography variant="body2" color="textSecondary">
-                      Length: {request.length} cm
-                    </Typography>
-                  )}
-
-                  {request.height && (
-                    <Typography variant="body2" color="textSecondary">
-                      Height: {request.height} cm
-                    </Typography>
-                  )}
-
-                  {request.width && (
-                    <Typography variant="body2" color="textSecondary">
-                      Width: {request.width} cm
-                    </Typography>
-                  )}
-
-                  <Typography variant="body1" align="right" color="primary">
+                  <Typography
+                    variant="h5"
+                    color="primary"
+                    sx={{ mt: 2, color: "#4caf50", fontSize: "1.8rem" }}
+                  >
                     ${Number(request.predicted_price).toFixed(2)}
                   </Typography>
-                </CardContent>
-              </Card>
+                </Paper>
+              </Grid>
             ))}
-
-            <Typography variant="h6" align="right" color="primary">
-              Total: ${totalPredictedPrice.toFixed(2)}
-            </Typography>
-
-            <TextField
-              fullWidth
-              label="Enter delivery location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              margin="normal"
-            />
-          </div>
+          </Grid>
         )}
-      </CardContent>
+      </Box>
 
-      <CardActions>
+      <Box
+        sx={{
+          width: { xs: "100%", md: "400px" },
+          p: 4,
+          bgcolor: "#ffffff",
+          boxShadow: { xs: "0 -2px 8px rgba(0, 0, 0, 0.1)", md: "none" },
+          position: { xs: "sticky", md: "static" },
+          bottom: 0,
+        }}
+      >
+        <Typography variant="h4" sx={{ fontWeight: "bold", mb: 3, fontSize: "2rem" }}>
+          Payment & Location
+        </Typography>
+
+        <TextField
+          fullWidth
+          label="Enter pickup location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          variant="outlined"
+          sx={{ mb: 3, fontSize: "1.4rem" }}
+          InputProps={{ style: { fontSize: "1.4rem" } }} 
+          InputLabelProps={{ style: { fontSize: "1.4rem" } }} 
+        />
+
+        <Typography variant="h4" sx={{ fontWeight: "bold", mb: 2, fontSize: "2rem" }}>
+          Order Summary
+        </Typography>
+
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="body1" sx={{ fontSize: "1.6rem" }}>
+            Subtotal: ${totalPredictedPrice.toFixed(2)}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
+            Free Delivery
+          </Typography>
+        </Box>
+
         <Button
           fullWidth
           variant="contained"
           color="primary"
           onClick={handleCreateOrder}
           disabled={loading || draftRequests.length === 0}
+          sx={{
+            py: 1.5,
+            borderRadius: 2,
+            bgcolor: "#4caf50",
+            "&:hover": { bgcolor: "#388e3c" },
+            fontSize: "1.6rem", 
+          }}
         >
-          {loading ? <CircularProgress size={24} color="inherit" /> : "Checkout"}
+          {loading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            "Schedule Pickup"
+          )}
         </Button>
-      </CardActions>
-    </Card>
+
+        <Box sx={{ mt: 2, textAlign: "center" }}>
+          <Typography variant="body2" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
+            Pickup will be scheduled within 24 hours.
+          </Typography>
+          <Typography variant="body2" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
+            We will process your order as fast as possible.
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
