@@ -6,6 +6,7 @@ import  AdminCategoryReducer from "./adminCategories";
 import userCategories from "./userCategory"
 import collectorOrdersReducer from "./collectorOrders";
 import requestReducer from "../reducers/request/index"
+import OrdersReducer from "../reducers/OrderCreate/index"
 
 const store = configureStore({
   reducer: {
@@ -15,7 +16,8 @@ const store = configureStore({
     adminCategories: AdminCategoryReducer,
     order: orderReducer,
     userCategory:userCategories,
-    userRequest :requestReducer
+    userRequest :requestReducer,
+    orders:OrdersReducer
     
   },
 });
