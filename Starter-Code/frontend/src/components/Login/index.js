@@ -3,6 +3,8 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import React, { useState } from "react";
 import "./style.css";
 import axios from "axios";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 import {
   MDBBtn,
   MDBContainer,
@@ -66,14 +68,14 @@ const Auth = () => {
       setMessage(error.response?.data?.message || "Something went wrong");
     }
   };
-
+  // https://res.cloudinary.com/dozr5pfwt/image/upload/v1739645499/s5dultjaspdjbnyiwfu8.png
   return (
     <MDBContainer
       fluid
       className="p-4"
       style={{
         backgroundImage:
-          "url(https://res.cloudinary.com/dozr5pfwt/image/upload/v1739645499/s5dultjaspdjbnyiwfu8.png)",
+          "url(https://res.cloudinary.com/dozr5pfwt/image/upload/v1739665841/ovos8qh0uddpfj5q2xdz.png)",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
@@ -127,6 +129,7 @@ const Auth = () => {
                         wrapperClass="mb-4"
                         label="First name"
                         type="text"
+                        style={{ backgroundColor: "#f7ffee" }}
                         onChange={(e) => setFirstName(e.target.value)}
                       />
                     </MDBCol>
@@ -135,6 +138,7 @@ const Auth = () => {
                         wrapperClass="mb-4"
                         label="Last name"
                         type="text"
+                        style={{ backgroundColor: "#f7ffee" }}
                         onChange={(e) => setLastName(e.target.value)}
                       />
                     </MDBCol>
@@ -145,6 +149,7 @@ const Auth = () => {
                     wrapperClass="mb-4"
                     label="Phone Number"
                     type="text"
+                    style={{ backgroundColor: "#f7ffee" }}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 )}
@@ -152,12 +157,15 @@ const Auth = () => {
                   wrapperClass="mb-4"
                   label="Email"
                   type="email"
+                  style={{ backgroundColor: "#f7ffee" }}
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <MDBInput
                   wrapperClass="mb-4"
                   label="Password"
                   type="password"
+                  style={{ backgroundColor: "#f7ffee" }}
+                  className="dd"
                   onChange={(e) => setPassword(e.target.value)}
                 />
 
@@ -178,7 +186,32 @@ const Auth = () => {
               )}
               <div className="text-center">
                 <p> {isLogin ? "or sign in with" : "or sign up with"}</p>
-                <MDBBtn
+                <GoogleLogin
+                  onSuccess={(response) => {
+                    const body = jwtDecode(response.credential);
+                    axios
+                      .post("http://localhost:5000/auth/google", body)
+                      .then((result) => {
+                        console.log("tttt", result);
+                        dispatch(
+                          setLogin({
+                            token: result.data.token,
+                            roleId: result.data.roleId,
+                          })
+                        );
+                        dispatch(setUserId(result.data.userId));
+                        navigate("/")
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                    console.log(jwtDecode(response.credential));
+                  }}
+                  onError={() => {
+                    console.log("failed");
+                  }}
+                />
+                {/* <MDBBtn
                   tag="a"
                   color="none"
                   className="mx-3"
@@ -229,7 +262,7 @@ const Auth = () => {
                     size="1x"
                     className="text-success"
                   />
-                </MDBBtn>
+                </MDBBtn> */}
               </div>
               <p className="text-center mt-3" style={{ alignSelf: "center" }}>
                 {isLogin

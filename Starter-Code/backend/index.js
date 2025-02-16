@@ -1,27 +1,24 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
 
 const app = express();
 
-//routers
 const userRouter = require("./routers/user");
 const categoryRouter = require("./routers/category");
-const AdminRouter=require("./routers/admin")
-const collectorRouter=require("./routers/collector")
+const AdminRouter = require("./routers/admin");
+const collectorRouter = require("./routers/collector");
+const authRouter = require("./routers/authRoutes");
 
-
-
-//built-in middleware
 app.use(cors());
 app.use(express.json());
 
-app.use("/user",userRouter)
-app.use("/category",categoryRouter)
-app.use("/admin", AdminRouter)
-app.use("/collector", collectorRouter)
-
-// router middleware
+app.use("/user", userRouter);
+app.use("/category", categoryRouter);
+app.use("/admin", AdminRouter);
+app.use("/collector", collectorRouter);
+app.use("/auth", authRouter);
 
 const PORT = process.env.PORT || 5000;
 

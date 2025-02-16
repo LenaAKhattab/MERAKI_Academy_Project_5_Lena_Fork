@@ -1,9 +1,9 @@
 /*  */
 .blurred-container {
-  background: transparent; /* إزالة الخلفية */
-  box-shadow: none; /* إزالة الظل */
-  border: none; /* إزالة أي حدود */
-  width: 100%; /* تمديد العرض ليشغل المساحة بالكامل */
+  background: transparent; 
+  box-shadow: none;
+  border: none; 
+  width: 100%; 
   min-height: 100%;
   font-size: 20px;
   animation: fadeIn 0.6s ease-in-out;
@@ -29,4 +29,9 @@
 .auth-box {
   margin-left: -30px !important;
   margin-top: 30px !important;
+}
+
+.dd:focus{
+  border:5px solid green !important  ;
+  outline: none;
 }
