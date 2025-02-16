@@ -30,7 +30,7 @@ const register = async (req, res) => {
       res.status(409).json({
         success: false,
         message: "The email already exists",
-        err,
+        err:err
       });
     });
 };
@@ -195,11 +195,20 @@ const createRequest = (req, res) => {
 };
 
 const getRequestsById = (req, res) => {
-  const userId = req.token.userId;
+  const userId = req.query.userId || req.token.userId;
   console.log(userId);
 
+  if (!userId) {
+    return res.status(400).json({
+      message: "User ID is required",
+    });
+  }
+
   const query = `
-    SELECT * FROM requests WHERE status=$1 AND user_id = $2
+    SELECT r.*, c.category_name
+    FROM requests r
+    LEFT JOIN category c ON r.category_id = c.id
+    WHERE r.status = $1 AND r.user_id = $2
   `;
 
   const data = ["draft", userId];

@@ -8,7 +8,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   return (
     <>
-      {!roleId == 1 && (
+      {roleId !==1 && (
         <nav className="navbar navbar-expand-lg bg-white shadow-sm">
           <div className="container d-flex flex-column">
             {/* Navbar Links */}
