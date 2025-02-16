@@ -1,11 +1,18 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+
 import { useNavigate } from "react-router-dom";
 //this nav is by bootstrap
-import { useSelector } from "react-redux";
+import { useSelector ,useDispatch} from "react-redux";
+import {  setLogout } from "../../redux/reducers/auth";
+
 const Navbar = () => {
   const roleId = useSelector((reducer) => reducer.authReducer.roleId);
+  const isLoggedIn = useSelector((reducer) => reducer.authReducer.isLoggedIn);
+  
   const navigate = useNavigate();
+    const dispatch = useDispatch();
+  
   return (
     <>
       {roleId !==1 && (
@@ -49,7 +56,18 @@ const Navbar = () => {
                     Contact Us
                   </a>
                 </li>
-                <li className="nav-item px-3">
+                
+                {isLoggedIn?<li className="nav-item px-3">
+                  <a
+                    className="nav-link"
+                    href="#"
+                    onClick={() => {
+                      dispatch(setLogout())
+                    }}
+                  >
+                    Logout
+                  </a>
+                </li>:<li className="nav-item px-3">
                   <a
                     className="nav-link"
                     href="#"
@@ -59,7 +77,7 @@ const Navbar = () => {
                   >
                     Login
                   </a>
-                </li>
+                </li>}
               </ul>
             </div>
            

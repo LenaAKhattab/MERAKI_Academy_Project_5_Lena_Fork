@@ -1,10 +1,13 @@
-*{
+/* *{
+
+ * This is a universal selector that affects the entire application :) !
+ 
     box-sizing: content-box;
     margin: 0;
     padding: .5%;
     font-size: 15px;
     font-weight: 700;
-}
+} */
 
 .categoryPage{
     width:100%;
