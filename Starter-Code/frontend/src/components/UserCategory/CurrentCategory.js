@@ -8,9 +8,9 @@ const CurrentCategory = () => {
     const categoryName = state.userCategory.currentCategory.category_name
     const category_ = state.userCategory.currentCategory
     const [request,setRequest] = useState({})
-    const categoryNameInKg = ["Paper","Plastic","Wood","Clothes","Iron","Copper","Glass","Paper","Food","Electronic"]
+    const categoryNameInKg = ["paper","plastic","wood","clothes","Iron","Copper","Glasses","paper","food"]
     const categoryNameInPoint = ["paper","food"]
-    const categoryNameInHight =["Furniture"]
+    const categoryNameInHight =["furniture"]
     const token = state.authReducer.token
     //detailes about each category
     //create request 
