@@ -185,8 +185,9 @@ const Auth = () => {
                 </div>
               )}
               <div className="text-center">
-                <p> {isLogin ? "or sign in with" : "or sign up with"}</p>
+                {/* <p> {isLogin ? "or sign in with" : "or sign up with"}</p> */}
                 <GoogleLogin
+                  text= "continue_with"
                   onSuccess={(response) => {
                     const body = jwtDecode(response.credential);
                     axios
@@ -200,7 +201,7 @@ const Auth = () => {
                           })
                         );
                         dispatch(setUserId(result.data.userId));
-                        navigate("/")
+                        navigate("/");
                       })
                       .catch((error) => {
                         console.log(error);
