@@ -39,6 +39,7 @@ import {
 } from "../../redux/reducers/collectorOrders";
 import { setLogout } from "../../redux/reducers/auth";
 import { Navigation } from "lucide-react";
+import AdminCategory from "../AdminCategory";
 
 const demoTheme = extendTheme({
   colorSchemes: { light: true, dark: true },
@@ -363,68 +364,7 @@ export default function DashboardLayoutBasic(props) {
 
     return updatedRow;
   };
-  // const processRowUpdate = async (newRow) => {
-  //   const updatedRow = { ...newRow, isNew: false };
-
-  //   setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-
-  //   if (roleId === 1 && newRow.status) {
-  //     try {
-  //       const result = await axios.put(
-  //         `http://localhost:5000/admin/changeOrderStatusById/${newRow.id}`,
-  //         { status: newRow.status }
-  //       );
-
-  //       dispatch(setOrderStatus(result.data.order));
-  //       console.log("Status Updated:", result.data);
-  //     } catch (error) {
-  //       console.error("Error updating status:", error);
-  //     }
-  //   }
-
-  //   if (roleId === 1 && newRow.collector) {
-  //     const collector_id = collectorMap[newRow.collector];
-  //     try {
-  //       const result = await axios.put(
-  //         `http://localhost:5000/admin/chooseCollector/${newRow.id}`,
-  //         { collector_id: collector_id }
-  //       );
-  //       dispatch(setCollector(result.data.order));
-  //       console.log("Collector Assigned:", result.data);
-  //     } catch (error) {
-  //       console.error("Error assigning collector:", error);
-  //     }
-  //   }
-
-  //   if (roleId === 2 && newRow.status) {
-  //     try {
-  //       const result = await axios.put(
-  //         `http://localhost:5000/admin/changeOrderStatusById/${newRow.id}`,
-  //         { status: newRow.status }
-  //       );
-
-  //       dispatch(setOrderStatus(result.data.order));
-  //       console.log("Status Updated:", result.data);
-  //     } catch (error) {
-  //       console.error("Error updating status:", error);
-  //     }
-  //   }
-
-  //   if (roleId === 2 && newRow.last_price) {
-  //     try {
-  //       const result = await axios.put(
-  //         `http://localhost:5000/admin/updateLastPrice/${newRow.id}`,
-  //         { last_price: newRow.last_price }
-  //       );
-
-  //       console.log("Last Price Updated:", result.data);
-  //     } catch (error) {
-  //       console.error("Error updating last price:", error);
-  //     }
-  //   }
-
-  //   return updatedRow;
-  // };
+  
   // ==========================================================
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
@@ -557,6 +497,7 @@ export default function DashboardLayoutBasic(props) {
               </Grid>
             </div>
           )}
+          {router.pathname==="/categories" && <AdminCategory />}
         </PageContainer>
       </DashboardLayout>
     </AppProvider>

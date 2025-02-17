@@ -237,3 +237,8 @@
 .icon-cancel:hover {
   color: #b91c1c;
 }
+
+.MuiContainer-root{
+  font-size: 18px !important;
+  /* width: 100vw; */
+}

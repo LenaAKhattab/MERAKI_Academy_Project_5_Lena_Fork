@@ -34,7 +34,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminDash />} />
-        <Route path="/category" element={<AdminCategory />} />
+        {/* <Route path="/category" element={<AdminCategory />} /> */}
         <Route path="/categoriesPage" element={<UserCategory />} />
         <Route path="/collector" element={<CollectorsDash />} />
         <Route path="/currentCategory" element={<CurrentCategory />} />

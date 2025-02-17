@@ -1,8 +1,13 @@
-import './AdminCategory.css';
+import "./AdminCategory.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { setCategories, addCategory, deleteCategory, updateCategory } from "../../redux/reducers/adminCategories";
+import {
+  setCategories,
+  addCategory,
+  deleteCategory,
+  updateCategory,
+} from "../../redux/reducers/adminCategories";
 import { Trash2, Edit, Check, X } from "lucide-react";
 
 const AdminCategory = () => {
@@ -68,7 +73,10 @@ const AdminCategory = () => {
     if (!editedCategory) return;
 
     axios
-      .put(`http://localhost:5000/category/${editedCategory.id}`, editedCategory)
+      .put(
+        `http://localhost:5000/category/${editedCategory.id}`,
+        editedCategory
+      )
       .then((response) => {
         dispatch(updateCategory(editedCategory));
         cancelEdit();
@@ -77,8 +85,20 @@ const AdminCategory = () => {
         console.error("Error updating category:", error);
       });
   };
-
-  const handleViewDetails = (category) => { //skip this
+  // ======================================================
+  const uploadHandler = (file) => {
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "xyz123");
+    axios
+      .post("https://api.cloudinary.com/v1_1/dozr5pfwt/upload", data)
+      .then((res) =>{ setNewCategory({ ...newCategory, image: res.data.url })
+      handleEditChange("image", res.data.url)})
+      .catch((err) => console.log(err.response?.data));
+  };
+// ==============================================================================
+  const handleViewDetails = (category) => {
+    //skip this
     setSelectedCategory(category);
     setShowModal(true);
   };
@@ -94,30 +114,37 @@ const AdminCategory = () => {
   };
 
   const handleEditChange = (field, value) => {
-    setEditedCategory(prev => ({
+    setEditedCategory((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   const renderTableRow = (category, index) => {
     if (!category) return null;
     const isEditing = editingId === category.id;
-
+    // ================================
+   
     return (
       <tr key={category.id || index} className="table-row">
         <td className="table-cell">
           {isEditing ? (
-            <input
-              type="text"
-              value={editedCategory.image}
-              onChange={(e) => handleEditChange('image', e.target.value)}
-              className="form-input"
-            />
+           <label className="btn btn-upload">
+           Upload Image
+           <input
+             type="file"
+             hidden
+             onChange={(e) => uploadHandler(e.target.files[0])}
+           />
+         </label>
           ) : (
             <>
               {category.image ? (
-                <img src={category.image} alt={category.category_name} className="category-img" />
+                <img
+                  src={category.image}
+                  alt={category.category_name}
+                  className="category-img"
+                />
               ) : (
                 <div className="img-placeholder">No Image</div>
               )}
@@ -129,7 +156,9 @@ const AdminCategory = () => {
             <input
               type="text"
               value={editedCategory.category_name}
-              onChange={(e) => handleEditChange('category_name', e.target.value)}
+              onChange={(e) =>
+                handleEditChange("category_name", e.target.value)
+              }
               className="form-input"
             />
           ) : (
@@ -141,7 +170,7 @@ const AdminCategory = () => {
             <input
               type="text"
               value={editedCategory.description}
-              onChange={(e) => handleEditChange('description', e.target.value)}
+              onChange={(e) => handleEditChange("description", e.target.value)}
               className="form-input"
             />
           ) : (
@@ -153,7 +182,7 @@ const AdminCategory = () => {
             <input
               type="number"
               value={editedCategory.price_per_kg}
-              onChange={(e) => handleEditChange('price_per_kg', e.target.value)}
+              onChange={(e) => handleEditChange("price_per_kg", e.target.value)}
               className="form-input"
             />
           ) : (
@@ -165,7 +194,9 @@ const AdminCategory = () => {
             <input
               type="number"
               value={editedCategory.price_per_dimensions}
-              onChange={(e) => handleEditChange('price_per_dimensions', e.target.value)}
+              onChange={(e) =>
+                handleEditChange("price_per_dimensions", e.target.value)
+              }
               className="form-input"
             />
           ) : (
@@ -177,7 +208,9 @@ const AdminCategory = () => {
             <input
               type="number"
               value={editedCategory.points_per_kg}
-              onChange={(e) => handleEditChange('points_per_kg', e.target.value)}
+              onChange={(e) =>
+                handleEditChange("points_per_kg", e.target.value)
+              }
               className="form-input"
             />
           ) : (
@@ -240,10 +273,16 @@ const AdminCategory = () => {
           </thead>
           <tbody>
             {categories?.length > 0 ? (
-              categories.filter(Boolean).map((category, index) => renderTableRow(category, index))
+              categories
+                .filter(Boolean)
+                .map((category, index) => renderTableRow(category, index))
             ) : (
               <tr>
-                <td colSpan="7" className="table-cell" style={{ textAlign: "center" }}>
+                <td
+                  colSpan="7"
+                  className="table-cell"
+                  style={{ textAlign: "center" }}
+                >
                   No categories available.
                 </td>
               </tr>
@@ -267,42 +306,69 @@ const AdminCategory = () => {
               type="text"
               placeholder="Category Name"
               value={newCategory.category_name}
-              onChange={(e) => setNewCategory({ ...newCategory, category_name: e.target.value })}
+              onChange={(e) =>
+                setNewCategory({
+                  ...newCategory,
+                  category_name: e.target.value,
+                })
+              }
               className="form-input"
             />
             <input
               type="text"
               placeholder="Description"
               value={newCategory.description}
-              onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
+              onChange={(e) =>
+                setNewCategory({ ...newCategory, description: e.target.value })
+              }
               className="form-input"
             />
-            <input
+            {/* <input
               type="text"
               placeholder="Image URL"
               value={newCategory.image}
               onChange={(e) => setNewCategory({ ...newCategory, image: e.target.value })}
               className="form-input"
-            />
+            /> */}
+           <label className="btn btn-upload">
+  Upload Image
+  <input
+    type="file"
+    hidden
+    onChange={(e) => uploadHandler(e.target.files[0])}
+  />
+</label>
             <input
               type="number"
               placeholder="Price per KG"
               value={newCategory.price_per_kg}
-              onChange={(e) => setNewCategory({ ...newCategory, price_per_kg: e.target.value })}
+              onChange={(e) =>
+                setNewCategory({ ...newCategory, price_per_kg: e.target.value })
+              }
               className="form-input"
             />
             <input
               type="number"
               placeholder="Price per Dimensions"
               value={newCategory.price_per_dimensions}
-              onChange={(e) => setNewCategory({ ...newCategory, price_per_dimensions: e.target.value })}
+              onChange={(e) =>
+                setNewCategory({
+                  ...newCategory,
+                  price_per_dimensions: e.target.value,
+                })
+              }
               className="form-input"
             />
             <input
               type="number"
               placeholder="Points per KG"
               value={newCategory.points_per_kg}
-              onChange={(e) => setNewCategory({ ...newCategory, points_per_kg: e.target.value })}
+              onChange={(e) =>
+                setNewCategory({
+                  ...newCategory,
+                  points_per_kg: e.target.value,
+                })
+              }
               className="form-input"
             />
           </div>
@@ -321,7 +387,12 @@ const AdminCategory = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h3 className="modal-title">{selectedCategory.category_name}</h3>
-              <button onClick={() => setShowModal(false)} className="modal-close">×</button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="modal-close"
+              >
+                ×
+              </button>
             </div>
             {selectedCategory.image && (
               <img
@@ -333,9 +404,16 @@ const AdminCategory = () => {
             )}
             <div style={{ marginTop: "16px" }}>
               <p>{selectedCategory.description}</p>
-              <p><strong>Price per KG:</strong> ${selectedCategory.price_per_kg}</p>
-              <p><strong>Price per Dimensions:</strong> ${selectedCategory.price_per_dimensions}</p>
-              <p><strong>Points per KG:</strong> {selectedCategory.points_per_kg}</p>
+              <p>
+                <strong>Price per KG:</strong> ${selectedCategory.price_per_kg}
+              </p>
+              <p>
+                <strong>Price per Dimensions:</strong> $
+                {selectedCategory.price_per_dimensions}
+              </p>
+              <p>
+                <strong>Points per KG:</strong> {selectedCategory.points_per_kg}
+              </p>
             </div>
           </div>
         </div>
