@@ -41,9 +41,8 @@ useEffect(()=>{
 return (
 
     <div className='categoryPage'>
-        <div className='pre-category'>
-        </div>
-        <div className='categorySection row'>
+       
+        <div className='categorySection '>
         {allCategories.map((ele,i)=>{
             console.log(ele);
             

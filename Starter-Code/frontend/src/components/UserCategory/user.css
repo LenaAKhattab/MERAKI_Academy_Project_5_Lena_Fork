@@ -1,22 +1,29 @@
-*{
+/* *{
+
+ * This is a universal selector that affects the entire application :) !
+ 
     box-sizing: content-box;
     margin: 0;
-    padding: 0;
-}
+    padding: .5%;
+    font-size: 15px;
+    font-weight: 700;
+} */
 
 .categoryPage{
     width:100%;
-    height: 100vh;
-    
-    
+    max-height: 100vh;
     
 }
 
 .categorySection{
     
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     justify-items: center;
+    gap:2%;
+    height: 100vh;
+    margin-top: 3%;
+
 }
 .img1{
     width: 30rem;
@@ -46,6 +53,7 @@
     height: 100%;
     justify-items: center;
     cursor: pointer;
+    border: transparent;
 }
 .catElement:hover .overlay {
     opacity: 1;
@@ -54,7 +62,7 @@
 .categoryImg{
     
     width: 100%;
-    height: 75%;
+    height: 12rem;
     
 }
 .title-1{
@@ -78,22 +86,23 @@
     width: 50%;
 
 }
-.page{
-    height: 40%;
-}
+
 
 .img{
     width: 20%;
     height: 20%;
 }
+.Page{
+    height: 100%;
+}
 .req1{
-    width: 80%;
     position: relative;
     left: 10%;
     right: 10%;
-    margin-top: 5%;
-    border: #14A44D  solid 2px;
-     height: 70%;
+    margin-top: 1%;
+
+    height: 40%;
+    
 }
 
 .p2{
@@ -106,11 +115,8 @@
     flex-direction: column;
     justify-content: center;
     color: aliceblue;
-   
 }
 .l1{
-    
-    border: solid red 2px;
     width: 100%;
     height: 100%;
 }
@@ -122,5 +128,23 @@ input{
     background-color: aliceblue;
 }
 
+/* .page1{
+    height: 60%;
 
+    font-weight: 800;
+    row-gap: 3%;
+    column-gap: 3%;
+    padding: 5%;
+    border: 20px solid gray;
+} */
+.img2{
+    height: 40rem;
+    width: 35rem;
+   
+}
+.mb-3{
+    font-size: 15px;
+    font-weight: 700;
+
+}
 
