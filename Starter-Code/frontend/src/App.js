@@ -7,14 +7,16 @@ import AdminCategory from "./components/AdminCategory";
 import UserCategory from "./components/UserCategory/UserCategory";
 import UserHomePage from "./components/userHomePage";
 import Navbar from "./components/NavBar/index";
+import GetOrder from "./components/GetAllOrder/GetOrder";
 
-import UserHomePage from './components/userHomePage'
+
+// import UserHomePage from './components/userHomePage'
 
 
 import Glasses from "./components/CategorySections/Glasses";
 
 
-import Navbar from "./components/NavBar";
+// import Navbar from "./components/NavBar";
 
 import OrderCreate from "./components/createOrder";
 import CollectorsDash from "./components/CollectorsDash";
@@ -22,7 +24,7 @@ import CurrentCategory from "./components/UserCategory/CurrentCategory";
 import GetAllRequest from "./components/UserCategory/GetAllRequest";
 import SideNav from "./components/SideNav";
 import Cart from "./components/Cart/index";  
-import Glasses from "./components/CategorySections/Glasses";
+// import Glasses from "./components/CategorySections/Glasses";
 import Copper from "./components/CategorySections/Copper";
 import Paper from "./components/CategorySections/Paper";
 import Food from "./components/CategorySections/Food";
@@ -30,9 +32,8 @@ import Iron from "./components/CategorySections/Iron";
 import Furniture from "./components/CategorySections/Furniture";
 import Wood from "./components/CategorySections/Wood";
 
-import Iron from "./components/CategorySections/Iron"
-import Furniture from "./components/CategorySections/Furniture"
-import Wood from "./components/CategorySections/Wood"
+// import Wood from "./components/CategorySections/Wood"
+
 /* const App = () => {
   return (
     <>

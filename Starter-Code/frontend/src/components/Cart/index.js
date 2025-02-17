@@ -9,11 +9,9 @@ import {
   CircularProgress,
   Box,
   Grid,
-  Divider,
-  Container,
   Paper,
 } from "@mui/material";
-import { Recycling, LocalShipping } from "@mui/icons-material";
+import { Recycling } from "@mui/icons-material";
 import {
   fetchDraftRequestsStart,
   fetchDraftRequestsSuccess,
@@ -26,20 +24,22 @@ import {
 const Cart = () => {
   const dispatch = useDispatch();
   const [location, setLocation] = useState("");
+  const [autoLocation, setAutoLocation] = useState(false);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [orderSuccess, setOrderSuccess] = useState(false);
 
-  const { token, isLoggedIn, userId } = useSelector((state) => state.authReducer);
+  const { token, isLoggedIn } = useSelector((state) => state.authReducer);
   const { draftRequests = [], loading, error, success } = useSelector(
     (state) => state.orders
   );
 
   useEffect(() => {
     if (!isLoggedIn) {
-      console.log("User is not logged in!");
       return;
     }
 
     dispatch(fetchDraftRequestsStart());
-
     axios
       .get("http://localhost:5000/user/getRequestByuserId", {
         headers: {
@@ -54,9 +54,47 @@ const Cart = () => {
       });
   }, [dispatch, token, isLoggedIn]);
 
+  useEffect(() => {
+    if (draftRequests.length === 0) return;
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLatitude(latitude);
+          setLongitude(longitude);
+
+          axios
+            .get(
+              `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyDvBk1nXO5XZP_N9fw-S9_EMTKFy1VA0Fw`
+            )
+            .then((response) => {
+              if (response.data.results[0]) {
+                setLocation(response.data.results[0].formatted_address);
+                setAutoLocation(true);
+              }
+            })
+            .catch((err) => {
+              console.error("Error fetching address from coordinates:", err);
+            });
+        },
+        (error) => {
+          console.error("Error fetching geolocation:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  }, [draftRequests]);
+
   const handleCreateOrder = () => {
     if (!location.trim()) {
       dispatch(createOrderFailure("Please enter a pickup location"));
+      return;
+    }
+
+    if (!latitude || !longitude) {
+      dispatch(createOrderFailure("Location data (latitude/longitude) is missing"));
       return;
     }
 
@@ -64,7 +102,7 @@ const Cart = () => {
     axios
       .post(
         "http://localhost:5000/user/createOrders",
-        { location },
+        { location, latitude, longitude },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -74,6 +112,10 @@ const Cart = () => {
       .then((response) => {
         dispatch(createOrderSuccess(response.data.order));
         setLocation("");
+        setLatitude(null);
+        setLongitude(null);
+        setOrderSuccess(true);
+        setTimeout(() => setOrderSuccess(false), 4000);
       })
       .catch(() => {
         dispatch(createOrderFailure("Failed to create order"));
@@ -103,7 +145,7 @@ const Cart = () => {
         }}
       >
         <Typography
-          variant="h3" 
+          variant="h3"
           sx={{ fontWeight: "bold", mb: 4, display: "flex", alignItems: "center" }}
         >
           <Recycling sx={{ mr: 2, color: "#4caf50", fontSize: "2.5rem" }} />
@@ -116,9 +158,9 @@ const Cart = () => {
           </Alert>
         )}
 
-        {success && (
+        {orderSuccess && (
           <Alert severity="success" sx={{ mb: 3, fontSize: "1.2rem" }}>
-            <strong>Success:</strong> {success}
+            <strong>Success:</strong> Order created successfully!
           </Alert>
         )}
 
@@ -194,9 +236,15 @@ const Cart = () => {
           onChange={(e) => setLocation(e.target.value)}
           variant="outlined"
           sx={{ mb: 3, fontSize: "1.4rem" }}
-          InputProps={{ style: { fontSize: "1.4rem" } }} 
-          InputLabelProps={{ style: { fontSize: "1.4rem" } }} 
+          InputProps={{ style: { fontSize: "1.4rem" } }}
+          InputLabelProps={{ style: { fontSize: "1.4rem" } }}
         />
+
+        {autoLocation && (
+          <Typography variant="body2" sx={{ mb: 2, color: "green" }}>
+            Location autofilled from your current position
+          </Typography>
+        )}
 
         <Typography variant="h4" sx={{ fontWeight: "bold", mb: 2, fontSize: "2rem" }}>
           Order Summary
@@ -222,22 +270,21 @@ const Cart = () => {
             borderRadius: 2,
             bgcolor: "#4caf50",
             "&:hover": { bgcolor: "#388e3c" },
-            fontSize: "1.6rem", 
+            fontSize: "1.6rem",
           }}
         >
-          {loading ? (
-            <CircularProgress size={24} color="inherit" />
-          ) : (
-            "Schedule Pickup"
-          )}
+          {loading ? <CircularProgress size={24} color="inherit" /> : "Schedule Pickup"}
         </Button>
 
         <Box sx={{ mt: 2, textAlign: "center" }}>
           <Typography variant="body2" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
-            Pickup will be scheduled within 24 hours.
+          ◦ Pickup will be scheduled within 24 hours.
           </Typography>
           <Typography variant="body2" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
-            We will process your order as fast as possible.
+          ◦ We will process your order as fast as possible.
+          </Typography>
+          <Typography variant="body2" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
+          ◦ The price given is an estimate and subject to change.
           </Typography>
         </Box>
       </Box>
