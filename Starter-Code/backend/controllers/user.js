@@ -513,12 +513,12 @@ const assignOrderByCollectorId = (req, res) => {
 
 const createOrder = (req, res) => {
   const userId = req.token.userId;
-  const { location } = req.body;
+  const { location, latitude, longitude } = req.body;
 
-  if (!location) {
+  if (!location || !latitude || !longitude) {
     return res.status(400).json({
       success: false,
-      message: "Location is required",
+      message: "Location, latitude, and longitude are required",
     });
   }
 
@@ -537,7 +537,7 @@ const createOrder = (req, res) => {
         });
       }
 
-      // this step is to calculate the total predicted price from all draft requests(for the user)
+      // Calculate the total predicted price from all draft requests(for the user)
       let totalPredictedPrice = 0;
       draftRequestsResult.rows.forEach((draftRequest) => {
         const predictedPrice = parseFloat(draftRequest.predicted_price);
@@ -545,11 +545,11 @@ const createOrder = (req, res) => {
       });
 
       const orderQuery = `
-        INSERT INTO orders (user_id, location, predicted_price) 
-        VALUES ($1, $2, $3) 
+        INSERT INTO orders (user_id, location, latitude, longitude, predicted_price) 
+        VALUES ($1, $2, $3, $4, $5) 
         RETURNING * 
       `;
-      const orderData = [userId, location, totalPredictedPrice];
+      const orderData = [userId, location, latitude, longitude, totalPredictedPrice];
 
       pool
         .query(orderQuery, orderData)
@@ -597,6 +597,7 @@ const createOrder = (req, res) => {
       });
     });
 };
+
 
 module.exports = {
   login,

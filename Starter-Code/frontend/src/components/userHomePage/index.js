@@ -19,7 +19,7 @@ const UserHomePage = () => {
 
       <div className="content"></div>
       {/* CATEGORY SECTION */}
-      <h2 id="CategoryTitle">Categories</h2>
+      <h2 id="CategoryTitle">What can we recycle from home?</h2>
       <div className="categories">
         {/* First 5 categories with left-to-right animation */}
         <motion.div

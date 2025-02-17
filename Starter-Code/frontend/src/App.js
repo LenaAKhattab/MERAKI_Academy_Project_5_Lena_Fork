@@ -6,6 +6,17 @@ import AdminDash from "./components/AdminDash";
 import AdminCategory from "./components/AdminCategory";
 import UserCategory from "./components/UserCategory/UserCategory";
 import Navbar from "./components/NavBar/index";
+import GetOrder from "./components/GetAllOrder/GetOrder";
+
+
+
+// import UserHomePage from './components/userHomePage'
+
+
+import Glasses from "./components/CategorySections/Glasses";
+
+
+// import Navbar from "./components/NavBar";
 
 import UserHomePage from "./components/userHomePage";
 
@@ -17,13 +28,45 @@ import CurrentCategory from "./components/UserCategory/CurrentCategory";
 import GetAllRequest from "./components/UserCategory/GetAllRequest";
 import SideNav from "./components/SideNav";
 import Cart from "./components/Cart/index";  
-import Glasses from "./components/CategorySections/Glasses";
+// import Glasses from "./components/CategorySections/Glasses";
 import Copper from "./components/CategorySections/Copper";
 import Paper from "./components/CategorySections/Paper";
 import Food from "./components/CategorySections/Food";
 import Iron from "./components/CategorySections/Iron";
 import Furniture from "./components/CategorySections/Furniture";
 import Wood from "./components/CategorySections/Wood";
+
+
+// import Wood from "./components/CategorySections/Wood"
+
+/* const App = () => {
+  return (
+    <>
+  <Navbar/> 
+  <Routes>
+      <Route path="/copper" element={<Copper/>} />
+      <Route path={"/register"} element={<Register />} />
+      <Route path={"/"} element={<Login />} />
+      <Route path={"/admin"} element={<AdminDash />} />
+      <Route path={"/cart" } element={<OrderCreate/>}/>
+      <Route path={"/category"} element={<AdminCategory />} />
+      <Route path="/categoriesPage" element={<UserCategory/>} />
+      <Route path={"/collector"}  element={<CollectorsDash/>}/> 
+      <Route path="/currentCategory" element={<CurrentCategory/>}/>
+      <Route path="/AllRequest" element= {<GetAllRequest/>}/>
+      <Route path="/getAllOrderById" element={<GetOrder/>} />
+      <Route path="/currentCategory" element={<CurrentCategory/>}/>
+      <Route path="/AllRequest" element= {<GetAllRequest/>}/>
+      <Route path={"/collector"}  element={<CollectorsDash/>}/>
+      <Route path={"/sideNav"} element={<SideNav  />}/>
+    
+    </Routes >
+  </>
+
+
+    
+    
+  )} */
 
 
 const App = () => {
