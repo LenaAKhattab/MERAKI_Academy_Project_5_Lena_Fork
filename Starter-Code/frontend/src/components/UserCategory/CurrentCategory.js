@@ -1,5 +1,7 @@
+
 import { MDBCard, MDBRow, MDBCol, MDBCardImage, MDBCardBody, 
 MDBCardTitle, MDBCardText,MDBInputGroup } from 'mdb-react-ui-kit';
+import { MDBCard, MDBRow, MDBCol, MDBCardImage, MDBCardBody, MDBCardTitle, MDBCardText, MDBInputGroup  } from 'mdb-react-ui-kit';
 import { useSelector } from 'react-redux'
 
 
@@ -11,9 +13,9 @@ const CurrentCategory = () => {
     const categoryName = state.userCategory.currentCategory.category_name
     const category_ = state.userCategory.currentCategory
     const [request,setRequest] = useState({})
-    const categoryNameInKg = ["Paper","Plastic","Wood","Clothes","Iron","Copper","Glass","Paper","Food"]
+    const categoryNameInKg = ["paper","plastic","wood","clothes","Iron","Copper","Glasses","paper","food"]
     const categoryNameInPoint = ["paper","food"]
-    const categoryNameInHight =["Furniture"]
+    const categoryNameInHight =["furniture"]
     const token = state.authReducer.token
     //detailes about each category
     //create request 
@@ -42,10 +44,10 @@ const CurrentCategory = () => {
     }
 return (
     <div className='Page'>
-         <MDBCard style={{ maxWidth: '80%' }} className='req1'>
+         <MDBCard style={{ maxWidth: '80%'}} className='req1'>
       <MDBRow className='g-0'>
         <MDBCol md='4'>
-          <MDBCardImage  src={category_.picture_details} alt='...' fluid />
+          <MDBCardImage className='img2' src={category_.picture_details} alt='...'  />
         </MDBCol>
         <MDBCol md='8'>
           <MDBCardBody>
@@ -67,21 +69,46 @@ return (
         </div>
         <h3 className='price1 '>Price:{category_.price_per_kg
         }JOD</h3> */}
-        {categoryNameInKg.includes(categoryName)&& <MDBInputGroup className='mb-3' size='sm' textBefore='Small'>
-        <input className='form-control' type='text' />
+        <div className='Page1 req1'  style={{ maxWidth: '50%' ,maxHeight:'50%'}} >
+            <p>order worker to pick up your trash:</p>
+        {categoryNameInKg.includes(categoryName)&& 
+        <MDBInputGroup className='mb-3' textBefore='weight' style={{fontWeight: "800",fontSize:"15px"}}>
+        <input className='form-control' type='number' placeholder= "weight" onChange={(e)=>{
+        setRequest({...request,weight:e.target.value})
+        }}/>
     </MDBInputGroup>
     }
+    {categoryNameInHight.includes(categoryName)&& <div>
+        <MDBInputGroup className='mb-3' textBefore='length'>
+        <input className='form-control' type='text'  maxLength ="3" minlength="1" placeholder= "length" id='length' onChange={(e)=>{
+        setRequest({...request,length:e.target.value})
+        }}  />
+    </MDBInputGroup>
+
+    <MDBInputGroup className='mb-3'  textBefore='width'>
+        <input className='form-control' type='text' id='width' maxLength ="3" minlength="1" placeholder= "width" onChange={(e)=>{
+        setRequest({...request,width:e.target.value})
+        }} />
+    </MDBInputGroup>
+    <MDBInputGroup className='mb-3'  textBefore='height:'>
+        <input className='form-control' type='text' id='width' maxLength ="3" minlength="1" placeholder= "height:" onChange={(e)=>{
+        setRequest({...request,height:e.target.value})
+        }} />
+    </MDBInputGroup>
+    </div>}
+    <MDBInputGroup className='mb-3' textBefore='Description:'>
+    <textarea   className='l1' onChange={(e)=>{
+        setRequest({...request,description:e.target.value})
+        }}></textarea>
+    </MDBInputGroup>
+    <button className='btn btn-success btn-primary' onClick={(event)=>{
+            event.preventDefault()
+        setRequest({...request,order_id:8})
+        setRequest({...request,category_id_id:8})
+        createRequest()}
+    }>Create Request</button>
+    </div>
         
-
-    <MDBInputGroup className='mb-3' textBefore='Default'>
-        <input className='form-control' type='text' />
-    </MDBInputGroup>
-
-    <MDBInputGroup className='mb-3' size='lg' textBefore='Large'>
-        <input className='form-control' type='text' />
-    </MDBInputGroup>
-
-
     {/*  {categoryNameInKg.includes(categoryName)&&
         <div className='l1'><label for="weight">weight: <input id='
         weight' placeholder= "weight" onChange={(e)=>{
@@ -103,17 +130,12 @@ return (
         setRequest({...request,height:e.target.value})
         }}/> M
         </label><br/>
-        </div>}
-        <br/><label  className='l1'>Description :</label><br/>
+        </div>} */}
+       {/*  <br/><label  className='l1'>Description :</label><br/>
         <textarea   className='l1' onChange={(e)=>{
         setRequest({...request,description:e.target.value})
-        }}></textarea><br/>
-        <button className='btn btn-success btn-primary' onClick={(event)=>{
-            event.preventDefault()
-        setRequest({...request,order_id:8})
-        setRequest({...request,category_id_id:8})
-        createRequest()}
-    }>Create Request</button> */}
+        }}></textarea><br/> */}
+       
  
 
     </div>

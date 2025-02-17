@@ -24,6 +24,7 @@ const register = async (req, res) => {
       res.status(200).json({
         success: true,
         message: "Account created successfully",
+        result:result.rows
       });
     })
     .catch((err) => {
