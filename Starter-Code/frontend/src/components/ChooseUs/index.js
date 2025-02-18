@@ -56,7 +56,7 @@ const ChooseUs = () => {
                 alt="Overlay"
                 className="choose-us-overlay"
               />
-              <h3 className="choose-us-text under">2000+</h3>
+              <h2 className="choose-us-text ">2000+</h2>
               <p className="choose-us-caption">
                 Tons over a year, dry waste collected and prevented from
                 entering the landfill
@@ -73,7 +73,7 @@ const ChooseUs = () => {
                 alt="Overlay"
                 className="choose-us-overlay"
               />
-              <h3 className="choose-us-text under">65+</h3>
+              <h2 className="choose-us-text ">65+</h2>
               <p className="choose-us-caption">
                 Waste workers provided with formal and permanent employment
               </p>
@@ -99,11 +99,17 @@ const ChooseUs = () => {
                 className="choose-us-overlay"
                 style={{ height: "100px" }}
               />
-              <h3 className="choose-us-text under">1600+</h3>
+              <h2 className="choose-us-text ">1600+</h2>
               <p className="choose-us-caption">
                 Tonnes of dry waste recycled and converted to raw materials
               </p>
             </div>
+            <img
+              src="https://res.cloudinary.com/dozr5pfwt/image/upload/v1739848084/vs23xsmoel19z4r62asm.png"
+              alt="Pulsing Decoration"
+              className="pulsing-image"
+            />
+
             <div className="choose-us-image-wrapper">
               <img
                 src="https://res.cloudinary.com/dozr5pfwt/image/upload/v1739833019/zzoya9oj7lufqokvvpgp.png"
@@ -115,7 +121,7 @@ const ChooseUs = () => {
                 alt="Overlay"
                 className="choose-us-overlay"
               />
-              <h3 className="choose-us-text under">1500+</h3>
+              <h2 className="choose-us-text ">1500+</h2>
               <p className="choose-us-caption">
                 Households involved and are provided with on-demand,
                 door-to-door waste collection services
