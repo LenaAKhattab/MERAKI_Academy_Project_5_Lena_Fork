@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import BackgroundImage from "../../assets/background.png";
 import "./style.css";
 import ChooseUs from "../ChooseUs";
+import WasteRecyclingProcess from "../wasteProcess";
 import BecomeOurCustomer from "../BecomeOurCustomer";
 // i have used this website for animations https://motion.dev/
 // https://res.cloudinary.com/dozr5pfwt/video/upload/v1739656810/itxkazzvp1vu71zgnllz.mp4
@@ -145,6 +146,9 @@ const UserHomePage = () => {
       <div>
         <ChooseUs />
       </div>
+
+      <div className="process">
+      <WasteRecyclingProcess/>
       <div>
         {/* <BecomeOurCustomer/> */}
       </div>
