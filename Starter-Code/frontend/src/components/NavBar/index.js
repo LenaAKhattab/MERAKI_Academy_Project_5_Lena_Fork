@@ -16,13 +16,13 @@ const Navbar = () => {
   return (
     <>
       {roleId !==1 && (
-        <nav className="navbar navbar-expand-lg bg-white shadow-sm">
+        <nav className="navbar navbar-expand-lg bg-white shadow-sm fffnav"  style={{height:"120px"}}>
           <div className="container d-flex flex-column">
             {/* Navbar Links */}
             <div
               className="collapse navbar-collapse justify-content-center"
               id="navbarNav"
-              style={{fontSize:"25px"}}
+              style={{fontSize:"35px"}}
             >
               <ul className="navbar-nav text-center  pb-1">
                 <li className="nav-item px-3">
