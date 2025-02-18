@@ -4,13 +4,13 @@ import BackgroundImage from "../../assets/background.png";
 import "./style.css";
 import ChooseUs from "../ChooseUs";
 // i have used this website for animations https://motion.dev/
-// https://res.cloudinary.com/dozr5pfwt/video/upload/v1739655154/lahhbjo4t0biiyhcjvph.mp4
+// https://res.cloudinary.com/dozr5pfwt/video/upload/v1739656810/itxkazzvp1vu71zgnllz.mp4
 const UserHomePage = () => {
   return (
     <div className="user-home-page">
       <video
         className="background-video"
-        src="https://res.cloudinary.com/dozr5pfwt/video/upload/v1739656810/itxkazzvp1vu71zgnllz.mp4"
+        src="https://res.cloudinary.com/dozr5pfwt/video/upload/v1739850662/uk07uhx5cqrauz8mseyp.mp4"
         style={{ width: "98.9vw" }}
         autoPlay
         loop
