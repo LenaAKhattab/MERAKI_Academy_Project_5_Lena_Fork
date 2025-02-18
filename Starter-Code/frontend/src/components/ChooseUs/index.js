@@ -1,7 +1,6 @@
 import React from "react";
 import "./style.css";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
-
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import { MDBIcon } from "mdb-react-ui-kit";
@@ -52,29 +51,16 @@ const ChooseUs = () => {
                 alt="Choose Us"
                 className="choose-us-image"
               />
-              {/* <MDBIcon
-                fas
-                icon="recycle"
-                alt="Overlay"
-                className="choose-us-overlay"
-              /> */}
               <img
                 src="https://res.cloudinary.com/dozr5pfwt/image/upload/v1739842890/vj2l6ggdor5fm8zzq1u4.png"
                 alt="Overlay"
                 className="choose-us-overlay"
-                // style={{height:"100px",width:"100px",marginBottom:"30px"}}
               />
               <h3 className="choose-us-text under">2000+</h3>
-              {/* <p
-                className="choose-us-caption"
-                style={{
-                  fontFamily: "'Poppins', sans-serif",
-                  fontSize: "20px",
-                }}
-              >
-                tons over a year, dry waste collected and prevented from
+              <p className="choose-us-caption">
+                Tons over a year, dry waste collected and prevented from
                 entering the landfill
-              </p> */}
+              </p>
             </div>
             <div className="choose-us-image-wrapper">
               <img
@@ -88,15 +74,9 @@ const ChooseUs = () => {
                 className="choose-us-overlay"
               />
               <h3 className="choose-us-text under">65+</h3>
-              {/* <p
-                className="choose-us-caption"
-                style={{
-                  fontFamily: "'Poppins', sans-serif",
-                  fontSize: "20px",
-                }}
-              >
-                waste workers provided with formal and permanent employment
-              </p> */}
+              <p className="choose-us-caption">
+                Waste workers provided with formal and permanent employment
+              </p>
             </div>
           </div>
           <div className="choose-us-center">
@@ -120,15 +100,9 @@ const ChooseUs = () => {
                 style={{ height: "100px" }}
               />
               <h3 className="choose-us-text under">1600+</h3>
-              {/* <p
-                className="choose-us-caption"
-                style={{
-                  fontFamily: "'Poppins', sans-serif",
-                  fontSize: "20px",
-                }}
-              >
-                tonnes of dry waste recycled and converted to raw materials
-              </p> */}
+              <p className="choose-us-caption">
+                Tonnes of dry waste recycled and converted to raw materials
+              </p>
             </div>
             <div className="choose-us-image-wrapper">
               <img
@@ -142,16 +116,10 @@ const ChooseUs = () => {
                 className="choose-us-overlay"
               />
               <h3 className="choose-us-text under">1500+</h3>
-              {/* <p
-                className="choose-us-caption"
-                style={{
-                  fontFamily: "'Poppins', sans-serif",
-                  fontSize: "20px",
-                }}
-              >
-                households involved and are provided with on-demand,
+              <p className="choose-us-caption">
+                Households involved and are provided with on-demand,
                 door-to-door waste collection services
-              </p> */}
+              </p>
             </div>
           </div>
         </div>
