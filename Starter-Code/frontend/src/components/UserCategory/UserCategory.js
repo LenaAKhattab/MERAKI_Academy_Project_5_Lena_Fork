@@ -46,7 +46,7 @@ return (
         {allCategories.map((ele,i)=>{
             console.log(ele);
             
-            return <div key={i} className='catElement card col-m-10' style={{width:"30rem"}} >
+            return <div key={i} className='catElement card col-m-10' /* style={{width:"30rem"}} */ >
                 <img className='categoryImg card-img-top' src= {ele.image}/> 
                 <p className='title-1 card-title'>{ele.category_name}</p>
                 <p className='description-1 card-text'>{ele.description}</p>

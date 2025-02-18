@@ -2,20 +2,23 @@ import React from "react";
 import { motion } from "framer-motion";
 import BackgroundImage from "../../assets/background.png";
 import "./style.css";
+import ChooseUs from "../ChooseUs";
+import WasteRecyclingProcess from "../wasteProcess";
+import BecomeOurCustomer from "../BecomeOurCustomer";
 // i have used this website for animations https://motion.dev/
-// https://res.cloudinary.com/dozr5pfwt/video/upload/v1739655154/lahhbjo4t0biiyhcjvph.mp4
+// https://res.cloudinary.com/dozr5pfwt/video/upload/v1739656810/itxkazzvp1vu71zgnllz.mp4
 const UserHomePage = () => {
   return (
-     <div className="user-home-page">
-    <video
-      className="background-video"
-      src="https://res.cloudinary.com/dozr5pfwt/video/upload/v1739656810/itxkazzvp1vu71zgnllz.mp4"
-      style={{width:"98.9vw"}}
-      autoPlay
-      loop
-      muted
-      playsInline
-    />
+    <div className="user-home-page">
+      <video
+        className="background-video"
+        src="https://res.cloudinary.com/dozr5pfwt/video/upload/v1739850662/uk07uhx5cqrauz8mseyp.mp4"
+        style={{ width: "98.9vw" }}
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
 
       <div className="content"></div>
       {/* CATEGORY SECTION */}
@@ -140,10 +143,15 @@ const UserHomePage = () => {
           <h3>Furniture</h3>
         </motion.div>
       </div>
+      <div>
+        <ChooseUs />
+      </div>
 
-      
-
-
+      <div className="process">
+      <WasteRecyclingProcess/>
+      <div>
+        {/* <BecomeOurCustomer/> */}
+      </div>
     </div>
   );
 };

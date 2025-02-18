@@ -1,7 +1,4 @@
 /* *{
-
- * This is a universal selector that affects the entire application :) !
- 
     box-sizing: content-box;
     margin: 0;
     padding: .5%;
@@ -16,15 +13,18 @@
 }
 
 .categorySection{
-    
+    width: 90%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     justify-items: center;
     gap:2%;
-    height: 100vh;
     margin-top: 3%;
-
+    position: relative;
+    right: 5%;
+    left: 5%;
 }
+
+
 .img1{
     width: 30rem;
     height:30rem;
@@ -45,8 +45,8 @@
     left: 10%;
 }
 
-
 .catElement{
+
     padding: 2%;
     border-radius: 2% ;
     width:80%;
@@ -55,15 +55,14 @@
     cursor: pointer;
     border: transparent;
 }
-.catElement:hover .overlay {
-    opacity: 1;
-    }
+
     
 .categoryImg{
-    
-    width: 100%;
+    width: 12rem;
     height: 12rem;
-    
+}
+.card{
+    border: #9aa414 2px solid;
 }
 .title-1{
     font-size: 2rem;
@@ -91,23 +90,29 @@
 .img{
     width: 20%;
     height: 20%;
+    border: #14A44D solid 2px;
 }
 .Page{
+    background-color: #d2d1cf;
+    padding: 1%;
+    font-size: 15px;
+    font-weight: 700;
     height: 100%;
 }
-.req1{
+.req1 , .card1 , .reqSection{
+
     position: relative;
     left: 10%;
     right: 10%;
     margin-top: 1%;
-
-    height: 40%;
-    
+    height: 30%;
+    border: #14A44D solid 2px;
+}
+.card1{
+    height: 20%;
 }
 
-.p2{
-    font-size: 1.5rem;
-}
+
 .form1{
     font-size: 2rem;
     background-color: #14A44D;
@@ -127,24 +132,30 @@ input{
     color:#14A44D;
     background-color: aliceblue;
 }
-
-/* .page1{
-    height: 60%;
-
+.page1{
+    height: 40%;
+    display: flex;
+    flex-direction: row;
     font-weight: 800;
     row-gap: 3%;
     column-gap: 3%;
     padding: 5%;
-    border: 20px solid gray;
-} */
+} 
 .img2{
-    height: 40rem;
-    width: 35rem;
-   
+    height:19rem;
+    width: 20rem;
 }
-.mb-3{
-    font-size: 15px;
-    font-weight: 700;
-
+.reqSection{
+    display: flex;
+    gap: 2%;
 }
 
+.footer{
+    width: 50%;
+    height: 10%;
+}
+.price{
+    color: #d2d1cf;
+    font-size: 1rem;
+    initial-letter: .5rem;
+}

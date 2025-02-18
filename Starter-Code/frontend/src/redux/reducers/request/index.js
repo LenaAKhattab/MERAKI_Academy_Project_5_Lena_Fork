@@ -19,8 +19,7 @@ const requestSlice = createSlice({
             const key = action.payload.key
             const value =action.payload.value
             const index = action.payload.index
-          
-           state.requests[index][key] =value
+        state.requests[index][key] =value
             
         },
         deleteRequest :(state,action)=>{
