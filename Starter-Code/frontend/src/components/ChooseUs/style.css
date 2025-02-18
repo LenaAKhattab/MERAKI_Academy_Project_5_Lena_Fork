@@ -6,72 +6,113 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
-  .choose-us-wrapper {
+    position: relative
+}
+
+.choose-us-wrapper {
     display: grid;
     grid-template-columns: repeat(2, auto);
     grid-template-rows: auto auto auto;
     align-items: center;
     justify-content: center;
     margin-top: 100px;
-  }
-  
-  .choose-us-row {
+}
+
+.choose-us-row {
     display: flex;
     justify-content: center;
-    gap: 500px;
+    row-gap: 100px;
+    column-gap: 400px;
     align-items: center;
-  }
-  
-  .choose-us-image {
-    width: 200px;
-    height: auto;
-  }
-  
-  .choose-us-center {
-    grid-column: span 2;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .choose-us-center-image {
-    width: 400px;
-    height: auto;
-  }
-  
-  .choose-us-image-wrapper {
+}
+
+
+.choose-us-image-wrapper {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-  }
-  
-  .choose-us-overlay {
+}
+
+.choose-us-image {
+    width: 200px;
+    height: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+.choose-us-image-wrapper:hover .choose-us-image {
+    transform: scale(1.1);
+}
+
+.choose-us-overlay {
     position: absolute;
     top: 25%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 20%; 
+    width: 20%;
     height: auto;
-  }
-  
-  .choose-us-text:hover {
+    transition: transform 0.3s ease-in-out;
+}
+
+.choose-us-image-wrapper:hover .choose-us-overlay {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+
+.choose-us-center {
+    grid-column: span 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    margin: auto;
+}
+
+
+.choose-us-center-image {
+    width: 400px;
+    height: auto;
+}
+
+.choose-us-text {
+    margin-top: 20px;
+}
+
+.choose-us-text:hover {
     color: #3a9e1e;
     cursor: pointer;
-  }
-  .choose-us-text{
-    margin-top: 20px
+}
 
-  }
-  .choose-us-caption {
+.choose-us-caption {
     font-family: 'Poppins', sans-serif;
     font-size: 25px;
     text-align: center;
-    /* margin-top: 5px; */
     color: #333;
     line-height: 1.5;
-    width: 350px;
-  }
-  
+    width: 500px;
+}
+.pulsing-image {
+    position: absolute;
+    top: 10px; 
+    /* bottom: 40px; */
+    left: -90px; 
+    width: 300px;
+    height: auto;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+/* حركة النبض */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05); /* تكبير بسيط */
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
