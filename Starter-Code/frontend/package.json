@@ -33,7 +33,7 @@
     "@mui/icons-material": "^6.4.3",
     "@mui/lab": "^6.0.0-beta.27",
     "@mui/material": "^6.4.4",
-    "@mui/x-data-grid": "^7.26.0",
+    "@mui/x-data-grid": "^7.27.0",
     "@popperjs/core": "^2.11.8",
     "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^2.5.1",

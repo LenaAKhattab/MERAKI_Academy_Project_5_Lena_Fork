@@ -1,8 +1,20 @@
 
-import { MDBCard, MDBRow, MDBCol, MDBCardImage, MDBCardBody, 
-MDBCardTitle, MDBCardText,MDBInputGroup } from 'mdb-react-ui-kit';
-import { useSelector } from 'react-redux'
 
+import { MDBCard, MDBRow, MDBCol, MDBCardImage, MDBCardBody, MDBListGroup,MDBListGroupItem,
+MDBCardTitle} from 'mdb-react-ui-kit';
+import {  MDBCardText, MDBInputGroup  } from 'mdb-react-ui-kit';
+import { useSelector } from 'react-redux'
+//---------------
+
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+//-------------------
 
 import React,{useContext,useEffect,useState} from 'react'
 import axios from 'axios'
@@ -10,15 +22,17 @@ const CurrentCategory = () => {
     const state = useSelector(state=>state)
     console.log(state.authReducer.token);
     const categoryName = state.userCategory.currentCategory.category_name
+    console.log(categoryName);
+    
     const category_ = state.userCategory.currentCategory
     const [request,setRequest] = useState({})
-    const categoryNameInKg = ["paper","plastic","wood","clothes","Iron","Copper","Glasses","paper","food"]
+    const categoryNameInKg = ["Paper","Plastic","Wood","Clothes","Iron","Copper","Glass","Paper","Food"]
     const categoryNameInPoint = ["paper","food"]
-    const categoryNameInHight =["furniture"]
+    const categoryNameInHight =["Furniture"]
+    const [message,setMessage] = useState("")
     const token = state.authReducer.token
     //detailes about each category
     //create request 
-    //
     console.log(category_);
     
     
@@ -42,16 +56,16 @@ const CurrentCategory = () => {
         })
     }
 return (
-    <div className='Page'>
-         <MDBCard style={{ maxWidth: '80%'}} className='req1'>
-      <MDBRow className='g-0'>
+    <div className='Page' >
+         <MDBCard style={{ maxWidth: '80%',border:" transparent"}} className='card1'>
+      <MDBRow >
         <MDBCol md='4'>
-          <MDBCardImage className='img2' src={category_.picture_details} alt='...'  />
+          <MDBCardImage style={{  border: "#3A9E1E solid 12px",padding:"12px",borderTopRightRadius:"14px"}} className='img2' src={category_.picture_details} alt='...'  />
         </MDBCol>
         <MDBCol md='8'>
           <MDBCardBody>
             <MDBCardTitle><h3>{category_.category_name}</h3></MDBCardTitle>
-            <MDBCardText className='p2'>
+            <MDBCardText style={{fontSize:"15px"}} className='p2'>
             {category_.detail}
             </MDBCardText>
             <MDBCardText>
@@ -68,44 +82,67 @@ return (
         </div>
         <h3 className='price1 '>Price:{category_.price_per_kg
         }JOD</h3> */}
-        <div className='Page1 req1'  style={{ maxWidth: '50%' ,maxHeight:'50%'}} >
-            <p>order worker to pick up your trash:</p>
+        <div className='reqSection'  style={{ maxWidth: '80%' ,maxHeight:'80%',backgroundColor:"#3A9E1E"}}>
+        <div className='Page1'  style={{ maxWidth: '60%' ,width:"40%",maxHeight:'40%' ,backgroundColor:"#ffffff",padding:"12px",borderTopRightRadius:"14px"}} >
+            <p>order a worker to pick up your trash:</p>
         {categoryNameInKg.includes(categoryName)&& 
-        <MDBInputGroup className='mb-3' textBefore='weight' style={{fontWeight: "800",fontSize:"15px"}}>
-        <input className='form-control' type='number' placeholder= "weight" onChange={(e)=>{
+        <MDBInputGroup className='mb-3' textBefore='weight' style={{fontWeight: "800",fontSize:"15px",maxWidth: '50%'}}>
+        <input style={{border:"2px solid gray"}} className='form-control' type='number' placeholder= "weight" onChange={(e)=>{
         setRequest({...request,weight:e.target.value})
         }}/>
     </MDBInputGroup>
     }
     {categoryNameInHight.includes(categoryName)&& <div>
         <MDBInputGroup className='mb-3' textBefore='length'>
-        <input className='form-control' type='text'  maxLength ="3" minlength="1" placeholder= "length" id='length' onChange={(e)=>{
+        <input style={{border:"2px solid gray"}} className='form-control' type='number'  maxLength ="3" minlength="1" placeholder= "length" id='length' onChange={(e)=>{
         setRequest({...request,length:e.target.value})
         }}  />
     </MDBInputGroup>
 
     <MDBInputGroup className='mb-3'  textBefore='width'>
-        <input className='form-control' type='text' id='width' maxLength ="3" minlength="1" placeholder= "width" onChange={(e)=>{
+        <input style={{border:"2px solid gray"}}  className='form-control' type='number' id='width' maxLength ="3" minlength="1" placeholder= "width" onChange={(e)=>{
         setRequest({...request,width:e.target.value})
         }} />
     </MDBInputGroup>
     <MDBInputGroup className='mb-3'  textBefore='height:'>
-        <input className='form-control' type='text' id='width' maxLength ="3" minlength="1" placeholder= "height:" onChange={(e)=>{
+        <input style={{border:"2px solid gray"}}  className='form-control' type='number' id='width' maxLength ="3" minlength="1" placeholder= "height:" onChange={(e)=>{
         setRequest({...request,height:e.target.value})
         }} />
     </MDBInputGroup>
     </div>}
     <MDBInputGroup className='mb-3' textBefore='Description:'>
-    <textarea   className='l1' onChange={(e)=>{
+    <textarea  style={{border:"2px solid gray"}}   className='l1' onChange={(e)=>{
         setRequest({...request,description:e.target.value})
         }}></textarea>
     </MDBInputGroup>
-    <button className='btn btn-success btn-primary' onClick={(event)=>{
+    <button className='btn  ' style={{backgroundColor:"#F3B811"}} onClick={(event)=>{
             event.preventDefault()
         setRequest({...request,order_id:8})
         setRequest({...request,category_id_id:8})
         createRequest()}
     }>Create Request</button>
+    <p>{message}</p>
+    </div>
+    <hr style={{color:"#ffffff", backgroundColor:"#ffffff", width:"1%"}}/>
+    <div className='footer'>
+        <p className="price" style={{fontSize:"1.5rem" ,color:"#0E1D40"}}>Instractions:</p>
+    <ul class="space-y-2" style={{backgroundColor:"transparent" ,color:"#ffffff", width:"70%",fontSize:"1.2rem"}}>
+    <li class="flex items-center"><span style={{backgroundColor:"#F3B811",color:"#FFFFFF"}} class="text-green-500">✔</span> <span class="ml-2">Make sure the waste are dry </span></li>
+    <li class="flex items-center"><span style={{backgroundColor:"#F3B811",color:"#FFFFFF"}} class="text-green-500">✔</span> <span class="ml-2">But them in their container</span></li>
+    <li class="flex items-center"><span style={{backgroundColor:"#F3B811",color:"#FFFFFF"}} class="text-green-500">✔</span> <span class="ml-2">Check out their measurement carefully</span></li>
+    <li class="flex items-center"><span style={{backgroundColor:"#F3B811",color:"#FFFFFF"}} class="text-green-500">✔</span> <span class="ml-2">then create your request </span></li>
+    <li class="flex items-center"><span style={{backgroundColor:"#F3B811",color:"#FFFFFF"}} class="text-green-500">✔</span> <span class="ml-2">Notes that there is a price that will show your own cash </span></li>
+    <li class="flex items-center"><span style={{backgroundColor:"#F3B811",color:"#FFFFFF"}} class="text-green-500">✔</span> <span class="ml-2">Check out the next process in your card</span></li>
+</ul>
+<p className="price">total Price: {
+    request.weight&&request.weight*category_.
+        price_per_kg /* request.length*request.height*request.width*category_.price_per_dimensions */
+
+}
+{request.length &&request.width&&request.height&&request.length*request.height*request.width*category_.price_per_dimensions}</p>
+
+
+    </div>
     </div>
         
     {/*  {categoryNameInKg.includes(categoryName)&&
