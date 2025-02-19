@@ -113,7 +113,6 @@ const Auth = () => {
           >
             <h1
               style={{ alignSelf: "center", color: "#3A9E1E" }}
-              className="text-success"
             >
               <br />
               <span>
@@ -174,7 +173,7 @@ const Auth = () => {
                   size="sm"
                   type="submit"
                   // color="success"
-                  style={{ fontSize: "20px",backgroundColor:"#3A9E1E" }}
+                  style={{ fontSize: "20px",backgroundColor:"#3A9E1E",border:"#3A9E1E" }}
                 >
                   {isLogin ? "Sign in" : "Sign up"}
                 </MDBBtn>
@@ -212,68 +211,17 @@ const Auth = () => {
                     console.log("failed");
                   }}
                 />
-                {/* <MDBBtn
-                  tag="a"
-                  color="none"
-                  className="mx-3"
-                  style={{ color: "#1266f1" }}
-                >
-                  <MDBIcon
-                    fab
-                    icon="facebook-f"
-                    size="1x"
-                    className="text-success"
-                  />
-                </MDBBtn>
-                <MDBBtn
-                  tag="a"
-                  color="none"
-                  className="mx-3"
-                  style={{ color: "#1266f1" }}
-                >
-                  <MDBIcon
-                    fab
-                    icon="twitter"
-                    size="1x"
-                    className="text-success"
-                  />
-                </MDBBtn>
-                <MDBBtn
-                  tag="a"
-                  color="none"
-                  className="mx-3"
-                  style={{ color: "#1266f1" }}
-                >
-                  <MDBIcon
-                    fab
-                    icon="google"
-                    size="1x"
-                    className="text-success"
-                  />
-                </MDBBtn>
-                <MDBBtn
-                  tag="a"
-                  color="none"
-                  className="mx-3"
-                  style={{ color: "#1266f1" }}
-                >
-                  <MDBIcon
-                    fab
-                    icon="github"
-                    size="1x"
-                    className="text-success"
-                  />
-                </MDBBtn> */}
               </div>
               <p className="text-center mt-3" style={{ alignSelf: "center" }}>
                 {isLogin
                   ? "Don't have an account?"
                   : "Already have an account?"}{" "}
                 <span
-                  className="text-success"
+                  // className="text-success"
                   style={{
                     cursor: "pointer",
                     fontWeight: "bold",
+                    color:"#3A9E1E",
                     textDecoration: "underline",
                   }}
                   onClick={() => {
