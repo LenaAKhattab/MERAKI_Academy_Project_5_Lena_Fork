@@ -6,6 +6,7 @@ import ChooseUs from "../ChooseUs";
 import WasteRecyclingProcess from "../wasteProcess";
 import BecomeOurCustomer from "../BecomeOurCustomer";
 import Footerr from "../Footerr";
+import Counter from "../Counter";
 // i have used this website for animations https://motion.dev/
 // https://res.cloudinary.com/dozr5pfwt/video/upload/v1739656810/itxkazzvp1vu71zgnllz.mp4
 const UserHomePage = () => {
@@ -147,7 +148,9 @@ const UserHomePage = () => {
       <div>
         <ChooseUs />
       </div>
-
+<div>
+  <Counter/>
+</div>
       <div className="process">
       <WasteRecyclingProcess/>
       <div>
