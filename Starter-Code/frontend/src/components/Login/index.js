@@ -75,7 +75,7 @@ const Auth = () => {
       className="p-4"
       style={{
         backgroundImage:
-          "url(https://res.cloudinary.com/dozr5pfwt/image/upload/v1739665841/ovos8qh0uddpfj5q2xdz.png)",
+          "url(https://res.cloudinary.com/dozr5pfwt/image/upload/v1739918651/givckbkkgyrhc6xvho29.png)",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
@@ -112,7 +112,7 @@ const Auth = () => {
             }}
           >
             <h1
-              style={{ alignSelf: "center", color: "#14A44D" }}
+              style={{ alignSelf: "center", color: "#3A9E1E" }}
               className="text-success"
             >
               <br />
@@ -173,8 +173,8 @@ const Auth = () => {
                   className="w-100 mb-4"
                   size="sm"
                   type="submit"
-                  color="success"
-                  style={{ fontSize: "20px" }}
+                  // color="success"
+                  style={{ fontSize: "20px",backgroundColor:"#3A9E1E" }}
                 >
                   {isLogin ? "Sign in" : "Sign up"}
                 </MDBBtn>

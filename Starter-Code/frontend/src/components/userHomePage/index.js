@@ -152,6 +152,10 @@ const UserHomePage = () => {
       <div>
         {/* <BecomeOurCustomer/> */}
       </div>
+
+      <div className="process"></div>
+      <WasteRecyclingProcess />
+      <div>{/* <BecomeOurCustomer/> */}</div>
     </div>
   );
 };
