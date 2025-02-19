@@ -22,7 +22,9 @@
 .leftBtn:hover {
   background-color: #3a9e1e;
 }
-
+.leftBtn:visited {
+  background-color: #3a9e1e;
+}
 .rightBtn {
   margin-left: 10px;
   font-family: "Poppins", sans-serif;

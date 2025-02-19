@@ -7,17 +7,7 @@ import AdminCategory from "./components/AdminCategory";
 import UserCategory from "./components/UserCategory/UserCategory";
 import Navbar from "./components/NavBar/index";
 import GetOrder from "./components/GetAllOrder/GetOrder";
-
-
-
-// import UserHomePage from './components/userHomePage'
-
-
 import Glasses from "./components/CategorySections/Glasses";
-
-
-// import Navbar from "./components/NavBar";
-
 import UserHomePage from "./components/userHomePage";
 import OrderCreate from "./components/createOrder";
 import CollectorsDash from "./components/CollectorsDash";
@@ -31,7 +21,7 @@ import Food from "./components/CategorySections/Food";
 import Iron from "./components/CategorySections/Iron";
 import Furniture from "./components/CategorySections/Furniture";
 import Wood from "./components/CategorySections/Wood";
-import Footerr from "./components/Footerr";
+// import Footerr from "./components/Footerr";
 
 
 
@@ -61,7 +51,7 @@ const App = () => {
         <Route path="/getOrder" element={<GetOrder/>}/>
         {/* <Route path="/getAllOrderById" element={<GetOrder />} /> */}
       </Routes>
-      <Footerr/>
+      {/* <Footerr/> */}
     </>
   );
 };

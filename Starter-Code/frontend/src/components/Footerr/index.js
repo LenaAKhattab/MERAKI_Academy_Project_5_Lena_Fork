@@ -9,8 +9,9 @@ import {
 import "./style.css"
 const Footer = () => {
   return (
-    <MDBFooter bgColor="white" className="text-center text-lg-start text-muted footerr">
-      <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+    <div className="fd">
+    <MDBFooter className="text-center text-lg-start text-muted footerr sr">
+      <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom sr">
         <div className="me-5 d-none d-lg-block">
           <span>Get connected with us on social networks:</span>
         </div>
@@ -37,9 +38,9 @@ const Footer = () => {
         </div>
       </section>
 
-      <section className="">
-        <MDBContainer className="text-center text-md-start mt-5">
-          <MDBRow  className="mt-3">
+      <section className="sr">
+        <MDBContainer className="text-center text-md-start mt-5" >
+          <MDBRow className="mt-3 customRow" >
             <MDBCol md="3" lg="4" xl="3" className="mx-auto mb-4">
               <h6 className="text-uppercase fw-bold mb-4">
                 <MDBIcon icon="gem" className="me-3" />
@@ -109,7 +110,7 @@ const Footer = () => {
               </p>
               <p>
                 <MDBIcon icon="envelope" className="me-3" />
-                info@TrashTocash.com
+                info@TrashToCash.com
               </p>
               <p>
                 <MDBIcon icon="phone" className="me-3" /> + 962 745625846
@@ -123,7 +124,7 @@ const Footer = () => {
       </section>
 
       <div
-        className="text-center p-4"
+        className="text-center p-4 sr"
         style={{ backgroundColor: "rgba(0, 0, 0, 0.05)" }}
       >
         © 2025 Copyright:
@@ -132,6 +133,7 @@ const Footer = () => {
         </a>
       </div>
     </MDBFooter>
+    </div>
   );
 };
 
