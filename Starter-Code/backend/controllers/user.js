@@ -384,10 +384,10 @@ const cancelOrderById = (req, res) => {
 };
 const getALLOrdersById = (req, res) => {
   //user
-  console.log(11111);
+  
 
-  const user_id = req.token.userId;
-  console.log(user_id);
+  const user_id =req.token.userId;
+  console.log("cc",user_id,req.token);
 
   pool
     .query(`SELECT * FROM orders WHERE user_id ='${user_id}'`)

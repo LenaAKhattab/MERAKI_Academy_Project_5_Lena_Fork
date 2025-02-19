@@ -40,9 +40,8 @@ useEffect(()=>{
 
 return (
 
-    <div className='categoryPage'>
-       
-        <div className='categorySection '>
+    <div className='categoryPage' >
+        <div className='categorySection ' >
         {allCategories.map((ele,i)=>{
             console.log(ele);
             

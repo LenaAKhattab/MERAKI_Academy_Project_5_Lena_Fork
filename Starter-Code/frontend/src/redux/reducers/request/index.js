@@ -2,7 +2,8 @@ import{createSlice} from "@reduxjs/toolkit";
 const requestSlice = createSlice({
     name:"request",
     initialState:{
-        requests:[]
+        requests:[],
+        orders:[]
     },
     reducers:{
         setRequests :(state,action)=>{
@@ -11,6 +12,16 @@ const requestSlice = createSlice({
             state.requests = action.payload
             console.log("nnnn",state.requests,action.payload);
             
+        },
+        setOrder:(state,action)=>{
+            state.orders = action.payload;
+        },
+        deleteOrder:(state,action)=>{
+            const index = action.payload
+            console.log(index);
+            
+            state.orders.splice(index,1) 
+
         },
         //{id:2,"key":"width","value":3}
         updateRequests:(state,action)=>{
@@ -31,5 +42,5 @@ const requestSlice = createSlice({
         }
     }
 })
-export const {setRequests,updateRequests,deleteRequest}= requestSlice.actions;
+export const {setRequests,updateRequests,deleteRequest,deleteOrder, setOrder}= requestSlice.actions;
 export default requestSlice.reducer

@@ -24,7 +24,6 @@ const GetAllRequest = () => {
     
 const updateRequest=(id,category_id)=>{
 
-   
     console.log(id);
     
     axios.put(`http://localhost:5000/user/updateRequestById/${id}`,{
@@ -72,16 +71,12 @@ const updateRequest=(id,category_id)=>{
 
     }
     useEffect(()=>{
-        axios.get("http://localhost:5000/user/getRequestByuserId", {headers: {
+        axios.get("http://localhost:5000/user/getRequestByuserId", {headers:{
         Authorization: `Bearer ${token}`
         }})
         .then((result)=>{
             console.log(result.data);
             Dispatch(setRequests(result.data.result))
-           
-            
-          
-            
         })
         .catch((error)=>{
             console.log(error);
@@ -94,10 +89,10 @@ const updateRequest=(id,category_id)=>{
 return (
     <div>
         <DataGrid
-  columnGroupingModel={[
+columnGroupingModel={[
     {
-      groupId: 'internal data',
-      children: [{ field: 'id' }],
+    groupId: 'internal data',
+    children: [{ field: 'id' }],
     },
     {
       groupId: 'character',
@@ -142,15 +137,13 @@ return (
                     console.log(ele.category_id);
                     
                     updateRequest(ele.id,ele.category_id)
-                     Dispatch(updateRequests({value:updatedValue.length,key:"length",index:i}))
+                    Dispatch(updateRequests({value:updatedValue.length,key:"length",index:i}))
                     setIsUpdateLength(false)
                     setIsUpdate(true)
 
                 }}>save</button></>} </p><button onClick = {()=>{
                         /* setIsUpdate(true) */
                         setIsUpdateLength(true)
-                       
-                    
                         
                     }} >Update</button> </div>
                 <div><p>width:{!isUpdateWidth?ele.width:<><input onChange={(e)=>{

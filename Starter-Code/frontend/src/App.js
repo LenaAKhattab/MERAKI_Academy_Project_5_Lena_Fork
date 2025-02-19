@@ -19,9 +19,6 @@ import Glasses from "./components/CategorySections/Glasses";
 // import Navbar from "./components/NavBar";
 
 import UserHomePage from "./components/userHomePage";
-
-
-
 import OrderCreate from "./components/createOrder";
 import CollectorsDash from "./components/CollectorsDash";
 import CurrentCategory from "./components/UserCategory/CurrentCategory";
@@ -37,10 +34,11 @@ import Wood from "./components/CategorySections/Wood";
 import Footerr from "./components/Footerr";
 
 
+
 const App = () => {
   return (
     <>
-      <Navbar />
+      <Navbar/>
       <Routes>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
@@ -60,6 +58,7 @@ const App = () => {
         <Route path="/category/Wood" element={<Wood />} />
         <Route path="/sideNav" element={<SideNav />} />
         <Route path="/" element={<UserHomePage />} />
+        <Route path="/getOrder" element={<GetOrder/>}/>
         {/* <Route path="/getAllOrderById" element={<GetOrder />} /> */}
       </Routes>
       <Footerr/>
