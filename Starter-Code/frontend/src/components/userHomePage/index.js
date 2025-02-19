@@ -156,6 +156,7 @@ const UserHomePage = () => {
       <div className="process"></div>
       <WasteRecyclingProcess />
       <div>{/* <BecomeOurCustomer/> */}</div>
+      </div>
     </div>
   );
 };
