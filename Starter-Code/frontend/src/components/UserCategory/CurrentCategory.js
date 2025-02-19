@@ -56,14 +56,14 @@ const CurrentCategory = () => {
         })
     }
 return (
-    <div className='Page' >
-         <MDBCard style={{ maxWidth: '80%',border:" transparent"}} className='card1'>
-      <MDBRow >
+    <div className='Page' style={{backgroundColor:"#F7FFEE"}} >
+        <MDBCard style={{ maxWidth: '80%',border:" transparent"}} className='card1'>
+    <MDBRow >
         <MDBCol md='4'>
-          <MDBCardImage style={{  border: "#3A9E1E solid 12px",padding:"12px",borderTopRightRadius:"14px"}} className='img2' src={category_.picture_details} alt='...'  />
+        <MDBCardImage style={{  padding:"12px",borderTopRightRadius:"14px"}} className='img2' src={category_.picture_details} alt='...'  />
         </MDBCol>
         <MDBCol md='8'>
-          <MDBCardBody>
+        <MDBCardBody>
             <MDBCardTitle><h3>{category_.category_name}</h3></MDBCardTitle>
             <MDBCardText style={{fontSize:"15px"}} className='p2'>
             {category_.detail}
