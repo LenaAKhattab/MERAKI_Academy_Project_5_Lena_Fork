@@ -22,9 +22,7 @@
 .leftBtn:hover {
   background-color: #3a9e1e;
 }
-.leftBtn:active{
-    background-color: #6f044f;
-}
+
 .rightBtn {
   margin-left: 10px;
   font-family: "Poppins", sans-serif;

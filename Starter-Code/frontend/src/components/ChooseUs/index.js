@@ -104,11 +104,11 @@ const ChooseUs = () => {
                 Tonnes of dry waste recycled and converted to raw materials
               </p>
             </div>
-            <img
+            {/* <img
               src="https://res.cloudinary.com/dozr5pfwt/image/upload/v1739848084/vs23xsmoel19z4r62asm.png"
               alt="Pulsing Decoration"
               className="pulsing-image"
-            />
+            /> */}
 
             <div className="choose-us-image-wrapper">
               <img
