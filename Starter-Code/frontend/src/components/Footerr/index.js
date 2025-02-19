@@ -109,7 +109,7 @@ const Footer = () => {
               </p>
               <p>
                 <MDBIcon icon="envelope" className="me-3" />
-                info@TrashTocash.com
+                info@TrashToCash.com
               </p>
               <p>
                 <MDBIcon icon="phone" className="me-3" /> + 962 745625846

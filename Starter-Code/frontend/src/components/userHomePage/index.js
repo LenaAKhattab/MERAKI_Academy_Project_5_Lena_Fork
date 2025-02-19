@@ -5,6 +5,7 @@ import "./style.css";
 import ChooseUs from "../ChooseUs";
 import WasteRecyclingProcess from "../wasteProcess";
 import BecomeOurCustomer from "../BecomeOurCustomer";
+import Footerr from "../Footerr";
 // i have used this website for animations https://motion.dev/
 // https://res.cloudinary.com/dozr5pfwt/video/upload/v1739656810/itxkazzvp1vu71zgnllz.mp4
 const UserHomePage = () => {
@@ -155,6 +156,7 @@ const UserHomePage = () => {
 
       <div><BecomeOurCustomer/></div>
       </div>
+      <Footerr/>
     </div>
   );
 };
