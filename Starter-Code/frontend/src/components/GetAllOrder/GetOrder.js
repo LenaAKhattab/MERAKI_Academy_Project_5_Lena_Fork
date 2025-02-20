@@ -22,7 +22,6 @@ const GetOrder = () => {
       }
       setMessage(result.data.message)
       /* if(message == "") */
-     
     })
     .catch((error)=>{
       console.log( error);

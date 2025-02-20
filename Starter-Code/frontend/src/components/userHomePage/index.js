@@ -11,6 +11,7 @@ import Navbar from "../NavBar/index";
 import Footerr from "../Footerr";
 
 import Counter from "../Counter";
+import FAQ from "../FAQ";
 // i have used this website for animations https://motion.dev/
 // https://res.cloudinary.com/dozr5pfwt/video/upload/v1739656810/itxkazzvp1vu71zgnllz.mp4
 const UserHomePage = () => {
@@ -158,9 +159,9 @@ const UserHomePage = () => {
 </div>
       <div className="process">
       <WasteRecyclingProcess/>
-      <div>
-        {/* <BecomeOurCustomer/> */}
-      </div>
+      {/* <div>
+        <FAQ/>
+      </div> */}
 
       <div><BecomeOurCustomer/></div>
       </div>
