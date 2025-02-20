@@ -26,20 +26,17 @@ const Navbar = () => {
             >
               <ul className="navbar-nav text-center  pb-1">
                 <li className="nav-item px-3" style={{color:"black"}}>
-                  <a  style={{color:"black"}}
+                  <Link  style={{color:"black"}}
                     className="nav-link"
-                    href="#"
-                    onClick={() => {
-                      navigate("/");
-                    }}
+                    to="/"
                   >
                     Home
-                  </a>
+                  </Link>
                 </li>
                 <li className="nav-item px-3">
-                  <a  style={{color:"black"}} className="nav-link" href="#">
+                  <Link  style={{color:"black"}} className="nav-link" >
                     About Us
-                  </a>
+                  </Link>
                 </li>
                 <li className="nav-item px-3">
                   <Link  style={{color:"black"}} className="nav-link" to="/categoriesPage" >
@@ -47,14 +44,14 @@ const Navbar = () => {
                 </Link>
                 </li>
                 <li className="nav-item px-3">
-                  <a   style={{color:"black"}} className="nav-link" href="#">
-                    Our Story
-                  </a>
+                  <Link  to="/getOrder" style={{color:"black"}} className="nav-link">
+                    My Orders
+                  </Link>
                 </li>
                 <li className="nav-item px-3">
-                  <a className="nav-link" href="#" style={{color:"black"}}>
+                  <Link className="nav-link" to="" style={{color:"black"}}>
                     Contact Us
-                  </a>
+                  </Link>
                 </li>
                 {isLoggedIn ? (
                   <li className="nav-item px-3">
@@ -70,15 +67,15 @@ const Navbar = () => {
                   </li>
                 ) : (
                   <li className="nav-item px-3">
-                    <a style={{color:"black"}}
+                    <Link style={{color:"black"}}
                       className="nav-link"
-                      href="#"
+                    to="/login"
                       onClick={() => {
                         navigate("/login");
                       }}
                     >
                       Login
-                    </a>
+                    </Link>
                   </li>
                 )}
               </ul>
