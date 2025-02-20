@@ -16,20 +16,25 @@
   text-align: center;
   color: black;
   padding: 20px;
+  font-size: 30px;
+
 }
 
 .categories {
   display: flex;
   flex-wrap: wrap; 
   justify-content: center;
-  font-family: 'Ramus Light', sans-serif;
+  font-family: 'Poppins', sans-serif;
+  height:600px ;
+
 }
 
 #CategoryTitle {
   justify-self: center;
-  font-size: 50px;
+  font-size: 60px;
   font-weight: bold;
-  margin-top: 150px;
+  /* margin-top: 1px; */
+  font-family:'Fraunces', serif;
   margin-bottom: 50px;
 }
 
@@ -40,6 +45,8 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  /* font-size: 50px; */
+
 }
 
 .categories .category:nth-child(n+6) {
@@ -71,4 +78,16 @@
 .background-video{
   border-right:1px solid #f7ffee;
   border-bottom: 1px solid #14A44D;
+}
+.categ{
+  font-size: 25px !important;
+}
+.recycling-subtitle{
+  color: #3a9e1e;
+  font-size: 30px;
+  /* font-weight: 600; */
+  text-transform: uppercase;
+  /* margin-bottom: 0.5rem; */
+  font-family: 'Poppins', sans-serif;
+
 }
