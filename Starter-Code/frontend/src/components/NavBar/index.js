@@ -42,7 +42,9 @@ const Navbar = () => {
                   </a>
                 </li>
                 <li className="nav-item px-3">
-                  <a className="nav-link" href="#">
+                  <a className="nav-link" href="#" onClick={()=>{
+                    navigate("/categoriesPage")
+                  }}>
                     Categories
                   </a>
                 </li>

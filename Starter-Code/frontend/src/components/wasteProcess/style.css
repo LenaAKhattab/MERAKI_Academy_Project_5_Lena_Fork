@@ -1,6 +1,6 @@
 .recycling-container {
     width: 100%;
-    background: url('../../assets/bg.png') no-repeat center/cover;
+    /* background: url('../../assets/bg.png') no-repeat center/cover; */
     padding: 4rem 1rem;
     text-align: center;
     font-family: 'Poppins', sans-serif;
@@ -53,6 +53,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    border:3px solid #3a9e1e !important;
   }
   
   .icon-video {
