@@ -8,10 +8,12 @@ const ChooseUs = () => {
   return (
     <div className="choose-us-container">
       <div>
+      <h3 className="recycling-subtitle">Why Choose Us</h3>
+
         <h2
           className="choose-us-title"
           style={{
-            marginTop: "70px",
+            marginTop: "10px",
             fontFamily: "'Fraunces', serif",
             fontSize: "60px",
             fontWeight: "bold",

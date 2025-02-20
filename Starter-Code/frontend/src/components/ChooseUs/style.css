@@ -116,3 +116,12 @@
 }
 
 
+.recycling-subtitle{
+    color: #3a9e1e;
+    font-size: 30px;
+    /* font-weight: 600; */
+    text-transform: uppercase;
+    /* margin-bottom: 0.5rem; */
+    font-family: 'Poppins', sans-serif;
+
+}

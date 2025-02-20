@@ -1,8 +1,9 @@
 .recycling-container {
     width: 100%;
-    background: url('../../assets/bg.png') no-repeat center/cover;
+    /* background: url('../../assets/bg.png') no-repeat center/cover; */
     padding: 4rem 1rem;
     text-align: center;
+    font-family: 'Poppins', sans-serif;
   }
   
   .recycling-header {
@@ -18,9 +19,10 @@
   }
   
   .recycling-title {
-    font-size: 2rem;
+    font-size: 50px;
     font-weight: 700;
-    color: #0e1d40;
+    /* color: #0e1d40; */
+    font-family: 'Fraunces', serif;
   }
   
   .recycling-steps-desktop {
@@ -51,6 +53,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    border:3px solid #3a9e1e !important;
   }
   
   .icon-video {
