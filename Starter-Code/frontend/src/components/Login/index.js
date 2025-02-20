@@ -17,7 +17,7 @@ import {
 } from "mdb-react-ui-kit";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setLogin, setUserId, setLogout } from "../../redux/reducers/auth";
+import { setLogin, setUserId, setLogout, setFirstName } from "../../redux/reducers/auth";
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [firstName, setFirstName] = useState("");
@@ -39,7 +39,7 @@ const Auth = () => {
       setStatus(true);
       setMessage(response.data.message);
       dispatch(
-        setLogin({ token: response.data.token, roleId: response.data.roleId })
+        setLogin({ token: response.data.token, roleId: response.data.roleId, firstName: response.data.firstName })
       );
       dispatch(setUserId(response.data.userId));
       if (response.data.roleId == 1 || response.data.roleId == 3) {

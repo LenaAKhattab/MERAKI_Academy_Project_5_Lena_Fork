@@ -6,6 +6,7 @@ const authSlice = createSlice({
     token: localStorage.getItem("token") || null,
     userId: localStorage.getItem("userId") || null,
     roleId: localStorage.getItem("roleId") || null,
+    firstName: localStorage.getItem("firstName") || null,  
     isLoggedIn: localStorage.getItem("token") ? true : false,
   },
   reducers: {
@@ -16,16 +17,24 @@ const authSlice = createSlice({
       state.roleId = action.payload.roleId; 
       localStorage.setItem("roleId", action.payload.roleId);
 
+      state.firstName = action.payload.firstName;  
+      localStorage.setItem("firstName", action.payload.firstName); 
+
       state.isLoggedIn = true;
     },
     setUserId: (state, action) => {
       state.userId = action.payload;
       localStorage.setItem("userId", action.payload);
     },
+    setName: (state, action) => {
+      state.firstName = action.payload;
+      localStorage.setItem("firstName", action.payload);
+    },
     setLogout: (state) => {
       state.token = null;
       state.userId = null;
       state.roleId = null; 
+      state.firstName = null; 
       state.isLoggedIn = false;
       localStorage.clear(); 
     },

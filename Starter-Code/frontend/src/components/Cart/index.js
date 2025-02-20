@@ -1,17 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import {
+  Box,
   Typography,
   TextField,
   Button,
   Alert,
   CircularProgress,
-  Box,
-  Grid,
   Paper,
+  Grid,
+  Divider,
+  Stepper,
+  Step,
+  StepLabel,
+  Dialog,
+  DialogContent,
+  Container,
+  Card,
+  CardContent,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import { Recycling } from "@mui/icons-material";
+import {
+  Recycling,
+  LocationOn,
+  ShoppingCart,
+  Payments,
+  CheckCircle,
+  MyLocation,
+  Info,
+} from "@mui/icons-material";
+import { useLoadScript, GoogleMap, Marker, Autocomplete } from "@react-google-maps/api";
 import {
   fetchDraftRequestsStart,
   fetchDraftRequestsSuccess,
@@ -21,71 +43,64 @@ import {
   createOrderFailure,
 } from "../../redux/reducers/OrderCreate/index";
 
+// Default coordinates for Jordan
+const DEFAULT_CENTER = { lat: 31.963158, lng: 35.930359 };
+
+const COLORS = {
+  primary: "#0E1D40",    // Dark blue
+  secondary: "#3A9E1E",  // Green
+  accent: "#F3B811",     // Yellow
+  background: "#ffffff", // White background 
+  lightGray: "#f5f5f5",  // Light gray 
+};
+
+
 const Cart = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [location, setLocation] = useState("");
-  const [autoLocation, setAutoLocation] = useState(false);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [orderSuccess, setOrderSuccess] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const [successDialog, setSuccessDialog] = useState(false);
+  const autocompleteRef = useRef(null);
+  const mapRef = useRef(null);
 
-  const { token, isLoggedIn } = useSelector((state) => state.authReducer);
-  const { draftRequests = [], loading, error, success } = useSelector(
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: "AIzaSyDvBk1nXO5XZP_N9fw-S9_EMTKFy1VA0Fw",
+    libraries: ["places"],
+  });
+
+  const { token, isLoggedIn,firstName } = useSelector((state) => state.authReducer);
+
+  const { draftRequests = [], loading, error } = useSelector(
     (state) => state.orders
   );
+  
+  
+  const steps = ['Confirm Location', 'Schedule Pickup'];
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      return;
-    }
+    if (!isLoggedIn) return;
+    
+    const fetchDraftRequests = async () => {
+      try {
+        dispatch(fetchDraftRequestsStart());
+        const response = await axios.get("http://localhost:5000/user/getRequestByuserId", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        
+        const results = Array.isArray(response.data.result) ? response.data.result : [];
+        dispatch(fetchDraftRequestsSuccess(results));
+      } catch (err) {
+        dispatch(fetchDraftRequestsFailure(err.message || "Failed to fetch draft requests"));
+      }
+    };
 
-    dispatch(fetchDraftRequestsStart());
-    axios
-      .get("http://localhost:5000/user/getRequestByuserId", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        dispatch(fetchDraftRequestsSuccess(response.data.result));
-      })
-      .catch((err) => {
-        dispatch(fetchDraftRequestsFailure(err.message));
-      });
+    fetchDraftRequests();
   }, [dispatch, token, isLoggedIn]);
-
-  useEffect(() => {
-    if (draftRequests.length === 0) return;
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setLatitude(latitude);
-          setLongitude(longitude);
-
-          axios
-            .get(
-              `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyDvBk1nXO5XZP_N9fw-S9_EMTKFy1VA0Fw`
-            )
-            .then((response) => {
-              if (response.data.results[0]) {
-                setLocation(response.data.results[0].formatted_address);
-                setAutoLocation(true);
-              }
-            })
-            .catch((err) => {
-              console.error("Error fetching address from coordinates:", err);
-            });
-        },
-        (error) => {
-          console.error("Error fetching geolocation:", error);
-        }
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-    }
-  }, [draftRequests]);
 
   const handleCreateOrder = () => {
     if (!location.trim()) {
@@ -94,7 +109,7 @@ const Cart = () => {
     }
 
     if (!latitude || !longitude) {
-      dispatch(createOrderFailure("Location data (latitude/longitude) is missing"));
+      dispatch(createOrderFailure("Please select a location from the map or suggestions"));
       return;
     }
 
@@ -103,191 +118,518 @@ const Cart = () => {
       .post(
         "http://localhost:5000/user/createOrders",
         { location, latitude, longitude },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       )
       .then((response) => {
         dispatch(createOrderSuccess(response.data.order));
         setLocation("");
         setLatitude(null);
         setLongitude(null);
-        setOrderSuccess(true);
-        setTimeout(() => setOrderSuccess(false), 4000);
+        setSuccessDialog(true);
       })
-      .catch(() => {
-        dispatch(createOrderFailure("Failed to create order"));
+      .catch((error) => {
+        const errorMessage = error.response?.data?.message || "Failed to create order";
+        dispatch(createOrderFailure(errorMessage));
       });
   };
 
-  const totalPredictedPrice = draftRequests.reduce(
-    (sum, request) => sum + Number(request.predicted_price),
-    0
+  const handleMapClick = (e) => {
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+    setLatitude(lat);
+    setLongitude(lng);
+    
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+      if (status === "OK" && results[0]) {
+        setLocation(results[0].formatted_address);
+      }
+    });
+  };
+
+  const handleUseCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLatitude(latitude);
+          setLongitude(longitude);
+          
+          if (mapRef.current) {
+            mapRef.current.panTo({ lat: latitude, lng: longitude });
+            mapRef.current.setZoom(15);
+          }
+          
+          const geocoder = new window.google.maps.Geocoder();
+          geocoder.geocode(
+            { location: { lat: latitude, lng: longitude } },
+            (results, status) => {
+              if (status === "OK" && results[0]) {
+                setLocation(results[0].formatted_address);
+              }
+            }
+          );
+        },
+        (error) => {
+          dispatch(createOrderFailure("Unable to retrieve your location"));
+        }
+      );
+    } else {
+      dispatch(createOrderFailure("Geolocation not supported"));
+    }
+  };
+
+  const totalPredictedPrice = draftRequests && draftRequests.length > 0 
+    ? draftRequests.reduce((sum, request) => sum + Number(request.predicted_price || 0), 0)
+    : 0;
+
+  if (!isLoaded) return (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', bgcolor: COLORS.background }}>
+      <CircularProgress sx={{ color: COLORS.secondary }} />
+    </Box>
   );
 
-  return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: { xs: "column", md: "row" },
-        bgcolor: "#f5f5f5",
-      }}
-    >
-      <Box
-        sx={{
-          flex: 1,
-          p: 4,
-          bgcolor: "#ffffff",
-          borderRight: { md: "1px solid #e0e0e0" },
-        }}
+  const SuccessAnimation = () => {
+    const displayName = firstName || "Recycler";
+    
+    const handleReturnHome = () => {
+      setSuccessDialog(false);
+      navigate("/");
+    };
+    
+    return (
+      <Dialog 
+        open={successDialog}
+        fullWidth
+        maxWidth="sm"
       >
-        <Typography
-          variant="h3"
-          sx={{ fontWeight: "bold", mb: 4, display: "flex", alignItems: "center" }}
-        >
-          <Recycling sx={{ mr: 2, color: "#4caf50", fontSize: "2.5rem" }} />
-          Your Recycling Cart
-        </Typography>
-
-        {error && (
-          <Alert severity="error" sx={{ mb: 3, fontSize: "1.2rem" }}>
-            <strong>Error:</strong> {error}
-          </Alert>
-        )}
-
-        {orderSuccess && (
-          <Alert severity="success" sx={{ mb: 3, fontSize: "1.2rem" }}>
-            <strong>Success:</strong> Order created successfully!
-          </Alert>
-        )}
-
-        {draftRequests.length === 0 ? (
-          <Typography variant="body1" align="center" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
-            Your recycling cart is empty
-          </Typography>
-        ) : (
-          <Grid container spacing={3}>
-            {draftRequests.map((request, index) => (
-              <Grid item xs={12} key={request.id}>
-                <Paper
+        <DialogContent sx={{ bgcolor: COLORS.background }}>
+          <Box sx={{ textAlign: 'center', py: 4 }}>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1, rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 0.5 }}
+            >
+              <CheckCircle sx={{ fontSize: 100, color: COLORS.secondary }} />
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <Typography variant="h4" sx={{ mt: 3, mb: 1, color: COLORS.primary }}>
+                Thank you, {displayName}!
+              </Typography>
+              
+              <Typography variant="h6" color="text.secondary" gutterBottom>
+                Your recycling pickup has been scheduled
+              </Typography>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+            >
+              <Typography variant="body1" sx={{ my: 3 }}>
+                You're helping our planet ,
+                Together we can make a difference! 🌍
+              </Typography>
+              
+              <Box sx={{ mt: 3 }}>
+                <Button 
+                  variant="contained" 
+                  onClick={handleReturnHome}
                   sx={{
-                    p: 3,
-                    borderRadius: 2,
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                    bgcolor: COLORS.accent,
+                    color: COLORS.primary,
+                    fontWeight: "bold",
+                    "&:hover": {
+                      bgcolor: "#e1a800",
+                    }
                   }}
                 >
-                  <Typography variant="h5" gutterBottom sx={{ fontSize: "1.8rem" }}>
-                    Recycling Request #{index + 1}
-                  </Typography>
+                  Return to Homepage
+                </Button>
+              </Box>
+            </motion.div>
+          </Box>
+        </DialogContent>
+      </Dialog>
+    );
+  };
 
-                  {request.category_name && (
-                    <Typography variant="body1" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
-                      Material: {request.category_name}
+  return (
+    <Box sx={{ 
+      minHeight: "100vh", 
+      width: "100%", 
+      bgcolor: COLORS.background,
+      pt: 0, 
+      pb: 4 
+    }}>
+      <SuccessAnimation />
+      
+      <Container maxWidth="lg" sx={{ py: 3 }}>
+        <Card elevation={3} sx={{ mb: 3, borderRadius: 2, overflow: 'hidden' }}>
+          <CardContent sx={{ 
+            background: `linear-gradient(to right, ${COLORS.primary}, #172b5f)`,
+            p: 4
+          }}>
+            <Typography variant="h3" sx={{ 
+              mb: 2, 
+              display: "flex", 
+              alignItems: "center",
+              color: "white",
+              fontWeight: "500"
+            }}>
+              <Recycling sx={{ mr: 2, color: COLORS.accent, fontSize: 40 }} />
+              RECYCLING COLLECTION
+            </Typography>
+
+            <Box sx={{ mb: 0 }}>
+              <Alert
+                icon={false}
+                sx={{
+                  bgcolor: COLORS.accent,
+                  color: COLORS.primary,
+                  fontWeight: "bold",
+                  borderRadius: 4,
+                  py: 1,
+                  px: 3,
+                  display: "inline-flex",
+                }}
+              >
+                {draftRequests.length} ITEMS READY FOR PICKUP
+              </Alert>
+            </Box>
+          </CardContent>
+        </Card>
+
+        {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
+
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Card elevation={2} sx={{ mb: 3, borderRadius: 2 }}>
+              <CardContent sx={{ p: 3 }}>
+                <Typography variant="h5" sx={{ 
+                  mb: 3, 
+                  display: "flex", 
+                  alignItems: "center",
+                  color: COLORS.primary,
+                  borderBottom: `2px solid ${COLORS.accent}`,
+                  pb: 1
+                }}>
+                  <ShoppingCart sx={{ mr: 1, color: COLORS.secondary }} /> Your Recycling Materials
+                </Typography>
+
+                {draftRequests.length === 0 ? (
+                  <Box sx={{ 
+                    display: "flex", 
+                    flexDirection: "column", 
+                    alignItems: "center",
+                    justifyContent: "center",
+                    py: 4,
+                    bgcolor: COLORS.lightGray,
+                    borderRadius: 2
+                  }}>
+                    <Info sx={{ fontSize: 60, color: "#9e9e9e", mb: 2 }} />
+                    <Typography variant="h6" color="text.secondary" align="center">
+                      No items in recycling cart
                     </Typography>
-                  )}
-
-                  {request.description && (
-                    <Typography variant="body1" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
-                      Details: {request.description}
+                    <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 1 }}>
+                      Start adding recyclable items to schedule a pickup
                     </Typography>
-                  )}
-
-                  {request.weight && (
-                    <Typography variant="body1" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
-                      Weight: {request.weight} kg
-                    </Typography>
-                  )}
-
-                  <Typography
-                    variant="h5"
-                    color="primary"
-                    sx={{ mt: 2, color: "#4caf50", fontSize: "1.8rem" }}
-                  >
-                    ${Number(request.predicted_price).toFixed(2)}
-                  </Typography>
-                </Paper>
-              </Grid>
-            ))}
+                  </Box>
+                ) : (
+                  <Grid container spacing={2}>
+                    {draftRequests.map((request, index) => (
+                      <Grid item xs={12} sm={6} lg={4} key={request.id || `request-${index}`}>
+                        <Card 
+                          elevation={1}
+                          sx={{ 
+                            borderRadius: 2,
+                            transition: "transform 0.2s",
+                            height: "100%",
+                            "&:hover": {
+                              transform: "translateY(-4px)",
+                              boxShadow: 3
+                            }
+                          }}
+                        >
+                          <CardContent sx={{ p: 2 }}>
+                            <Grid container alignItems="center" spacing={1}>
+                              <Grid item xs={12}>
+                                <Typography variant="h6" sx={{ fontWeight: 500, mb: 1 }}>
+                                  {request.category_name || 'Recyclable Item'}
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={6}>
+                                <Typography variant="body2" color="text.secondary">
+                                  Weight: <strong>{request.weight || 0} kg</strong>
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={6} sx={{ textAlign: "right" }}>
+                                <Typography 
+                                  variant="h6" 
+                                  sx={{ fontWeight: "bold", color: COLORS.secondary }}
+                                >
+                                  ${request.predicted_price || 0}
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
+                  </Grid>
+                )}
+              </CardContent>
+            </Card>
           </Grid>
-        )}
-      </Box>
+          
+          <Grid item xs={12} md={7}>
+            <Card elevation={2} sx={{ mb: { xs: 3, md: 0 }, borderRadius: 2 }}>
+              <CardContent sx={{ p: 3 }}>
+                <Typography variant="h5" sx={{ 
+                  mb: 3, 
+                  display: "flex", 
+                  alignItems: "center", 
+                  color: COLORS.primary,
+                  borderBottom: `2px solid ${COLORS.accent}`,
+                  pb: 1
+                }}>
+                  <LocationOn sx={{ mr: 1, color: COLORS.secondary }} /> Pickup Location
+                </Typography>
 
-      <Box
-        sx={{
-          width: { xs: "100%", md: "400px" },
-          p: 4,
-          bgcolor: "#ffffff",
-          boxShadow: { xs: "0 -2px 8px rgba(0, 0, 0, 0.1)", md: "none" },
-          position: { xs: "sticky", md: "static" },
-          bottom: 0,
-        }}
-      >
-        <Typography variant="h4" sx={{ fontWeight: "bold", mb: 3, fontSize: "2rem" }}>
-          Payment & Location
-        </Typography>
+                <Box sx={{ mb: 2 }}>
+                  <Autocomplete
+                    onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+                    onPlaceChanged={() => {
+                      const place = autocompleteRef.current.getPlace();
+                      if (place.geometry) {
+                        setLocation(place.formatted_address);
+                        setLatitude(place.geometry.location.lat());
+                        setLongitude(place.geometry.location.lng());
+                        
+                        if (mapRef.current) {
+                          mapRef.current.panTo({
+                            lat: place.geometry.location.lat(),
+                            lng: place.geometry.location.lng()
+                          });
+                          mapRef.current.setZoom(15);
+                        }
+                      }
+                    }}
+                  >
+                    <TextField
+                      fullWidth
+                      label="Search location in Jordan"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      InputProps={{
+                        startAdornment: <LocationOn color="action" sx={{ mr: 1 }} />,
+                      }}
+                      variant="outlined"
+                      sx={{ bgcolor: "white" }}
+                    />
+                  </Autocomplete>
+                </Box>
 
-        <TextField
-          fullWidth
-          label="Enter pickup location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          variant="outlined"
-          sx={{ mb: 3, fontSize: "1.4rem" }}
-          InputProps={{ style: { fontSize: "1.4rem" } }}
-          InputLabelProps={{ style: { fontSize: "1.4rem" } }}
-        />
+                <Button
+                  onClick={handleUseCurrentLocation}
+                  sx={{ 
+                    mb: 3,
+                    bgcolor: COLORS.accent,
+                    color: COLORS.primary,
+                    "&:hover": {
+                      bgcolor: "#e1a800",
+                    },
+                    px: 2,
+                    fontWeight: "bold"
+                  }}
+                  variant="contained"
+                  startIcon={<MyLocation />}
+                  fullWidth
+                >
+                  DETECT MY LOCATION
+                </Button>
 
-        {autoLocation && (
-          <Typography variant="body2" sx={{ mb: 2, color: "green" }}>
-            Location autofilled from your current position
-          </Typography>
-        )}
+                <Box sx={{ 
+                  mb: 3, 
+                  height: 350,
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  border: "1px solid #e0e0e0"
+                }}>
+                  <GoogleMap
+                    mapContainerStyle={{ height: "100%", width: "100%" }}
+                    center={latitude && longitude ? { lat: latitude, lng: longitude } : DEFAULT_CENTER}
+                    zoom={12}
+                    onClick={handleMapClick}
+                    onLoad={map => {
+                      mapRef.current = map;
+                    }}
+                    options={{
+                      zoomControl: true,
+                      mapTypeControl: false,
+                      streetViewControl: false,
+                      fullscreenControl: false,
+                    }}
+                  >
+                    {latitude && longitude && (
+                      <Marker 
+                        position={{ lat: latitude, lng: longitude }} 
+                        icon={{
+                          url: "https://maps.google.com/mapfiles/ms/icons/green-dot.png"
+                        }}
+                      />
+                    )}
+                  </GoogleMap>
+                </Box>
 
-        <Typography variant="h4" sx={{ fontWeight: "bold", mb: 2, fontSize: "2rem" }}>
-          Order Summary
-        </Typography>
+                <Box sx={{ display: { xs: 'block', md: 'none' }, mb: 2 }}>
+                  <Stepper activeStep={activeStep} alternativeLabel>
+                    {steps.map((label, index) => (
+                      <Step key={label} sx={{
+                        '& .MuiStepLabel-root .Mui-completed': {
+                          color: COLORS.secondary,
+                        },
+                        '& .MuiStepLabel-root .Mui-active': {
+                          color: COLORS.accent,
+                        },
+                      }}>
+                        <StepLabel>{label}</StepLabel>
+                      </Step>
+                    ))}
+                  </Stepper>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
 
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="body1" sx={{ fontSize: "1.6rem" }}>
-            Subtotal: ${totalPredictedPrice.toFixed(2)}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
-            Free Delivery
-          </Typography>
-        </Box>
-
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-          onClick={handleCreateOrder}
-          disabled={loading || draftRequests.length === 0}
-          sx={{
-            py: 1.5,
-            borderRadius: 2,
-            bgcolor: "#4caf50",
-            "&:hover": { bgcolor: "#388e3c" },
-            fontSize: "1.6rem",
-          }}
-        >
-          {loading ? <CircularProgress size={24} color="inherit" /> : "Schedule Pickup"}
-        </Button>
-
-        <Box sx={{ mt: 2, textAlign: "center" }}>
-          <Typography variant="body2" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
-          ◦ Pickup will be scheduled within 24 hours.
-          </Typography>
-          <Typography variant="body2" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
-          ◦ We will process your order as fast as possible.
-          </Typography>
-          <Typography variant="body2" color="textSecondary" sx={{ fontSize: "1.4rem" }}>
-          ◦ The price given is an estimate and subject to change.
-          </Typography>
-        </Box>
-      </Box>
+          <Grid item xs={12} md={5}>
+            <Card elevation={2} sx={{ height: '100%', borderRadius: 2 }}>
+              <CardContent sx={{ p: 3, display: 'flex', flexDirection: 'column', height: '100%' }}>
+                <Typography variant="h5" sx={{ 
+                  mb: 3, 
+                  display: "flex", 
+                  alignItems: "center",
+                  color: COLORS.primary,
+                  borderBottom: `2px solid ${COLORS.accent}`,
+                  pb: 1
+                }}>
+                  <Payments sx={{ mr: 1, color: COLORS.secondary }} /> Payment Summary
+                </Typography>
+                
+                <Box sx={{ 
+                  flex: '1 0 auto',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
+                }}>
+                  <Card elevation={0} sx={{ 
+                    p: 3, 
+                    borderRadius: 2, 
+                    border: "1px solid #e0e0e0", 
+                    bgcolor: COLORS.lightGray,
+                    mb: 4
+                  }}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={8}>
+                        <Typography variant="body1" fontWeight="medium">
+                          Subtotal ({draftRequests.length} items):
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={4} sx={{ textAlign: "right" }}>
+                        <Typography variant="body1" fontWeight="medium">
+                          ${totalPredictedPrice.toFixed(2)}
+                        </Typography>
+                      </Grid>
+                      
+                      <Grid item xs={8}>
+                        <Typography variant="body1" fontWeight="medium">
+                          Service Fee:
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={4} sx={{ textAlign: "right" }}>
+                        <Typography variant="body1" sx={{ color: COLORS.secondary, fontWeight: "bold" }}>
+                          FREE
+                        </Typography>
+                      </Grid>
+                      
+                      <Grid item xs={12}>
+                        <Divider sx={{ my: 2 }} />
+                      </Grid>
+                      
+                      <Grid item xs={6}>
+                        <Typography variant="h6" fontWeight="bold">
+                          Total Earnings:
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={6} sx={{ textAlign: "right" }}>
+                        <Typography variant="h5" sx={{ color: COLORS.secondary, fontWeight: "bold" }}>
+                          ${totalPredictedPrice.toFixed(2)}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Card>
+                  
+                  <Box sx={{ display: { xs: 'none', md: 'block' }, mb: 3 }}>
+                    <Stepper activeStep={activeStep} alternativeLabel>
+                      {steps.map((label, index) => (
+                        <Step key={label} sx={{
+                          '& .MuiStepLabel-root .Mui-completed': {
+                            color: COLORS.secondary,
+                          },
+                          '& .MuiStepLabel-root .Mui-active': {
+                            color: COLORS.accent,
+                          },
+                        }}>
+                          <StepLabel>{label}</StepLabel>
+                        </Step>
+                      ))}
+                    </Stepper>
+                  </Box>
+                  
+                  <Box>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      size="large"
+                      onClick={handleCreateOrder}
+                      disabled={loading || !location || !latitude || !longitude || draftRequests.length === 0}
+                      sx={{ 
+                        py: 2,
+                        bgcolor: COLORS.secondary,
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: "1rem",
+                        "&:hover": {
+                          bgcolor: "#2b7b16",
+                        },
+                        "&.Mui-disabled": {
+                          bgcolor: "#e0e0e0",
+                        }
+                      }}
+                    >
+                      {loading ? (
+                        <CircularProgress size={24} color="inherit" />
+                      ) : (
+                        "CONFIRM & SCHEDULE PICKUP"
+                      )}
+                    </Button>
+                    
+                    <Typography variant="caption" textAlign="center" display="block" sx={{ mt: 2 }}>
+                      By confirming, you agree to our recycling terms and conditions
+                    </Typography>
+                  </Box>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Container>
     </Box>
   );
 };

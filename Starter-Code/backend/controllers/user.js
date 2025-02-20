@@ -100,6 +100,8 @@ const login = (req, res) => {
           token: token,
           userId: result.rows[0].id,
           roleId: result.rows[0].role_id,
+          firstName: result.rows[0].first_name
+
         });
       }
 
