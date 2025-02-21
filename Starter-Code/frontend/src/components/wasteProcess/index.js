@@ -62,7 +62,7 @@ const WasteRecyclingProcess = () => {
   ];
 
   return (
-    <div className="recycling-container">
+    <div id="process" className="recycling-container">
       <div className="recycling-header">
         <h3 className="recycling-subtitle">Our Process</h3>
         <h2 className="recycling-title">Waste Recycling Process</h2>

@@ -72,19 +72,26 @@ const AdminCategory = () => {
   const handleUpdateCategory = () => {
     if (!editedCategory) return;
 
+    const updatedData = {
+      category_name: editedCategory.category_name,
+      description: editedCategory.description,
+      price_per_kg: editedCategory.price_per_kg,
+      price_per_dimensions: editedCategory.price_per_dimensions,
+      points_per_kg: editedCategory.points_per_kg,
+      image: editedCategory.image,
+    };
+
     axios
-      .put(
-        `http://localhost:5000/category/${editedCategory.id}`,
-        editedCategory
-      )
+      .put(`http://localhost:5000/category/${editedCategory.id}`, updatedData)
       .then((response) => {
-        dispatch(updateCategory(editedCategory));
+        dispatch(updateCategory({ id: editedCategory.id, updatedData }));
         cancelEdit();
       })
       .catch((error) => {
         console.error("Error updating category:", error);
       });
   };
+
   // ======================================================
   const uploadHandler = (file) => {
     const data = new FormData();
@@ -92,11 +99,13 @@ const AdminCategory = () => {
     data.append("upload_preset", "xyz123");
     axios
       .post("https://api.cloudinary.com/v1_1/dozr5pfwt/upload", data)
-      .then((res) =>{ setNewCategory({ ...newCategory, image: res.data.url })
-      handleEditChange("image", res.data.url)})
+      .then((res) => {
+        setNewCategory({ ...newCategory, image: res.data.url });
+        handleEditChange("image", res.data.url);
+      })
       .catch((err) => console.log(err.response?.data));
   };
-// ==============================================================================
+  // ==============================================================================
   const handleViewDetails = (category) => {
     //skip this
     setSelectedCategory(category);
@@ -124,19 +133,19 @@ const AdminCategory = () => {
     if (!category) return null;
     const isEditing = editingId === category.id;
     // ================================
-   
+
     return (
       <tr key={category.id || index} className="table-row">
         <td className="table-cell">
           {isEditing ? (
-           <label className="btn btn-upload">
-           Upload Image
-           <input
-             type="file"
-             hidden
-             onChange={(e) => uploadHandler(e.target.files[0])}
-           />
-         </label>
+            <label className="btn btn-upload" style={{ width: "200px" }}>
+              Upload Image
+              <input
+                type="file"
+                hidden
+                onChange={(e) => uploadHandler(e.target.files[0])}
+              />
+            </label>
           ) : (
             <>
               {category.image ? (
@@ -255,10 +264,10 @@ const AdminCategory = () => {
   return (
     <div className="admin-container">
       <div className="modal-header">
-        <h2 className="modal-title">Categories Management</h2>
+        {/* <h2 className="modal-title">Categories Management</h2> */}
       </div>
 
-      <div className="table-scroll">
+      <div >
         <table className="admin-table">
           <thead>
             <tr>
@@ -293,7 +302,8 @@ const AdminCategory = () => {
 
       <button
         onClick={() => setShowAddCategoryForm(!showAddCategoryForm)}
-        className="btn btn-green"
+        className={`btn ${showAddCategoryForm ? "btn-red" : "btn-green"}`}
+        style={{width:"300px",marginTop:"15px"}}
       >
         {showAddCategoryForm ? "Cancel" : "Add New Category"}
       </button>
@@ -323,21 +333,6 @@ const AdminCategory = () => {
               }
               className="form-input"
             />
-            {/* <input
-              type="text"
-              placeholder="Image URL"
-              value={newCategory.image}
-              onChange={(e) => setNewCategory({ ...newCategory, image: e.target.value })}
-              className="form-input"
-            /> */}
-           <label className="btn btn-upload">
-  Upload Image
-  <input
-    type="file"
-    hidden
-    onChange={(e) => uploadHandler(e.target.files[0])}
-  />
-</label>
             <input
               type="number"
               placeholder="Price per KG"
@@ -371,11 +366,21 @@ const AdminCategory = () => {
               }
               className="form-input"
             />
+             <label className="btn btn-upload" style={{width:"100%",border:" 1px solid #e5e7eb",backgroundColor:"aliceblue"}}>
+              Upload Image
+              <input
+                type="file"
+                hidden
+                onChange={(e) => uploadHandler(e.target.files[0])}
+              />
+            </label>
           </div>
+         
+            <br/>
           <button
             onClick={handleAddCategory}
             className="btn btn-green"
-            style={{ marginTop: "16px" }}
+            style={{ marginTop: "16px" ,backgroundColor:"green",color:"white",marginLeft:"300px"}}
           >
             Add Category
           </button>
