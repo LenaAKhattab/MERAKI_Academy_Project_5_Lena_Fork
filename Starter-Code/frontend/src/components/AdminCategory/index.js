@@ -23,7 +23,7 @@ const AdminCategory = () => {
     image: "",
     price_per_kg: "",
     price_per_dimensions: "",
-    points_per_kg: "",
+    price_type: "kg", // Default price type
   });
   const [showAddCategoryForm, setShowAddCategoryForm] = useState(false);
 
@@ -39,17 +39,26 @@ const AdminCategory = () => {
   }, [dispatch]);
 
   const handleAddCategory = () => {
+    // Prepare the data based on price type selection
+    const categoryData = {
+      category_name: newCategory.category_name,
+      description: newCategory.description,
+      image: newCategory.image,
+      price_per_kg: newCategory.price_type === "kg" ? newCategory.price_per_kg : "0",
+      price_per_dimensions: newCategory.price_type === "dimensions" ? newCategory.price_per_dimensions : "0",
+    };
+
     axios
-      .post("http://localhost:5000/category/addCategory", newCategory)
+      .post("http://localhost:5000/category/addCategory", categoryData)
       .then((response) => {
-        dispatch(addCategory(newCategory));
+        dispatch(addCategory(categoryData));
         setNewCategory({
           category_name: "",
           description: "",
           image: "",
           price_per_kg: "",
           price_per_dimensions: "",
-          points_per_kg: "",
+          price_type: "kg",
         });
         setShowAddCategoryForm(false);
       })
@@ -77,7 +86,6 @@ const AdminCategory = () => {
       description: editedCategory.description,
       price_per_kg: editedCategory.price_per_kg,
       price_per_dimensions: editedCategory.price_per_dimensions,
-      points_per_kg: editedCategory.points_per_kg,
       image: editedCategory.image,
     };
 
@@ -92,7 +100,6 @@ const AdminCategory = () => {
       });
   };
 
-  // ======================================================
   const uploadHandler = (file) => {
     const data = new FormData();
     data.append("file", file);
@@ -100,14 +107,16 @@ const AdminCategory = () => {
     axios
       .post("https://api.cloudinary.com/v1_1/dozr5pfwt/upload", data)
       .then((res) => {
-        setNewCategory({ ...newCategory, image: res.data.url });
-        handleEditChange("image", res.data.url);
+        if (editedCategory) {
+          handleEditChange("image", res.data.url);
+        } else {
+          setNewCategory({ ...newCategory, image: res.data.url });
+        }
       })
       .catch((err) => console.log(err.response?.data));
   };
-  // ==============================================================================
+
   const handleViewDetails = (category) => {
-    //skip this
     setSelectedCategory(category);
     setShowModal(true);
   };
@@ -132,7 +141,6 @@ const AdminCategory = () => {
   const renderTableRow = (category, index) => {
     if (!category) return null;
     const isEditing = editingId === category.id;
-    // ================================
 
     return (
       <tr key={category.id || index} className="table-row">
@@ -213,20 +221,6 @@ const AdminCategory = () => {
           )}
         </td>
         <td className="table-cell">
-          {isEditing ? (
-            <input
-              type="number"
-              value={editedCategory.points_per_kg}
-              onChange={(e) =>
-                handleEditChange("points_per_kg", e.target.value)
-              }
-              className="form-input"
-            />
-          ) : (
-            category.points_per_kg
-          )}
-        </td>
-        <td className="table-cell">
           <div className="action-buttons">
             {isEditing ? (
               <>
@@ -267,7 +261,7 @@ const AdminCategory = () => {
         {/* <h2 className="modal-title">Categories Management</h2> */}
       </div>
 
-      <div >
+      <div>
         <table className="admin-table">
           <thead>
             <tr>
@@ -276,7 +270,6 @@ const AdminCategory = () => {
               <th className="table-header">Description</th>
               <th className="table-header">Price/KG</th>
               <th className="table-header">Price/Dim</th>
-              <th className="table-header">Points/KG</th>
               <th className="table-header">Actions</th>
             </tr>
           </thead>
@@ -288,7 +281,7 @@ const AdminCategory = () => {
             ) : (
               <tr>
                 <td
-                  colSpan="7"
+                  colSpan="6"
                   className="table-cell"
                   style={{ textAlign: "center" }}
                 >
@@ -303,89 +296,134 @@ const AdminCategory = () => {
       <button
         onClick={() => setShowAddCategoryForm(!showAddCategoryForm)}
         className={`btn ${showAddCategoryForm ? "btn-red" : "btn-green"}`}
-        style={{width:"300px",marginTop:"15px"}}
+        style={{ width: "300px", marginTop: "15px" }}
       >
         {showAddCategoryForm ? "Cancel" : "Add New Category"}
       </button>
 
       {showAddCategoryForm && (
-        <div className="form-container">
-          <h3 className="form-title">Add New Category</h3>
-          <div className="form-grid">
-            <input
-              type="text"
-              placeholder="Category Name"
-              value={newCategory.category_name}
-              onChange={(e) =>
-                setNewCategory({
-                  ...newCategory,
-                  category_name: e.target.value,
-                })
-              }
-              className="form-input"
-            />
-            <input
-              type="text"
-              placeholder="Description"
-              value={newCategory.description}
-              onChange={(e) =>
-                setNewCategory({ ...newCategory, description: e.target.value })
-              }
-              className="form-input"
-            />
-            <input
-              type="number"
-              placeholder="Price per KG"
-              value={newCategory.price_per_kg}
-              onChange={(e) =>
-                setNewCategory({ ...newCategory, price_per_kg: e.target.value })
-              }
-              className="form-input"
-            />
-            <input
-              type="number"
-              placeholder="Price per Dimensions"
-              value={newCategory.price_per_dimensions}
-              onChange={(e) =>
-                setNewCategory({
-                  ...newCategory,
-                  price_per_dimensions: e.target.value,
-                })
-              }
-              className="form-input"
-            />
-            <input
-              type="number"
-              placeholder="Points per KG"
-              value={newCategory.points_per_kg}
-              onChange={(e) =>
-                setNewCategory({
-                  ...newCategory,
-                  points_per_kg: e.target.value,
-                })
-              }
-              className="form-input"
-            />
-             <label className="btn btn-upload" style={{width:"100%",border:" 1px solid #e5e7eb",backgroundColor:"aliceblue"}}>
-              Upload Image
+  <div className="add-category-form" style={{marginTop:"30px"}}>
+    <h3 className="form-title">Add New Category</h3>
+
+    <div className="form-section">
+      <div className="form-row">
+        <div className="form-group">
+          <label htmlFor="categoryName">Category Name</label>
+          <input
+            id="categoryName"
+            type="text"
+            value={newCategory.category_name}
+            onChange={(e) =>
+              setNewCategory({
+                ...newCategory,
+                category_name: e.target.value,
+              })
+            }
+            className="form-input"
+            placeholder="Enter category name"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="categoryDesc">Description</label>
+          <input
+            id="categoryDesc"
+            type="text"
+            value={newCategory.description}
+            onChange={(e) =>
+              setNewCategory({ ...newCategory, description: e.target.value })
+            }
+            className="form-input"
+            placeholder="Enter description"
+          />
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label>Price Type</label>
+          <div className="price-selection">
+            <label className="price-option">
               <input
-                type="file"
-                hidden
-                onChange={(e) => uploadHandler(e.target.files[0])}
+                type="radio"
+                name="priceType"
+                value="kg"
+                checked={newCategory.price_type === "kg"}
+                onChange={() => setNewCategory({ ...newCategory, price_type: "kg" })}
               />
+              <span>Price per KG</span>
+            </label>
+            <label className="price-option">
+              <input
+                type="radio"
+                name="priceType"
+                value="dimensions"
+                checked={newCategory.price_type === "dimensions"}
+                onChange={() => setNewCategory({ ...newCategory, price_type: "dimensions" })}
+              />
+              <span>Price per Dimensions</span>
             </label>
           </div>
-         
-            <br/>
-          <button
-            onClick={handleAddCategory}
-            className="btn btn-green"
-            style={{ marginTop: "16px" ,backgroundColor:"green",color:"white",marginLeft:"300px"}}
-          >
-            Add Category
-          </button>
         </div>
-      )}
+
+        <div className="form-group">
+          <label htmlFor="priceValue">
+            {newCategory.price_type === "kg" ? "Price per KG ($)" : "Price per Dimensions ($)"}
+          </label>
+          <input
+            id="priceValue"
+            type="number"
+            value={newCategory.price_type === "kg" ? newCategory.price_per_kg : newCategory.price_per_dimensions}
+            onChange={(e) =>
+              setNewCategory({
+                ...newCategory,
+                [newCategory.price_type === "kg" ? "price_per_kg" : "price_per_dimensions"]: e.target.value,
+              })
+            }
+            className="form-input"
+            placeholder={`Enter price per ${newCategory.price_type === "kg" ? "KG" : "dimensions"}`}
+          />
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group upload-group">
+          <label>Category Image</label>
+          <label className="image-upload-btn">
+            <span className="upload-icon">📁</span>
+            <span>Upload Image</span>
+            <input
+              type="file"
+              hidden
+              onChange={(e) => uploadHandler(e.target.files[0])}
+            />
+          </label>
+          {newCategory.image && (
+            <div className="image-preview">
+              <img src={newCategory.image} alt="Category preview" />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <div className="form-actions">
+      <button
+        onClick={() => setShowAddCategoryForm(false)}
+        className="btn btn-cancel" style={{backgroundColor:"white"}}
+      >
+        Cancel
+      </button>
+      <button
+        onClick={handleAddCategory}
+        className="btn btn-submit" style={{backgroundColor:"green", color:"white"}}
+        disabled={!newCategory.category_name || 
+          (!newCategory.price_per_kg && !newCategory.price_per_dimensions)}
+      >
+        Add Category
+      </button>
+    </div>
+  </div>
+)}
 
       {showModal && selectedCategory && (
         <div className="modal-overlay">
@@ -409,16 +447,16 @@ const AdminCategory = () => {
             )}
             <div style={{ marginTop: "16px" }}>
               <p>{selectedCategory.description}</p>
-              <p>
-                <strong>Price per KG:</strong> ${selectedCategory.price_per_kg}
-              </p>
-              <p>
-                <strong>Price per Dimensions:</strong> $
-                {selectedCategory.price_per_dimensions}
-              </p>
-              <p>
-                <strong>Points per KG:</strong> {selectedCategory.points_per_kg}
-              </p>
+              {selectedCategory.price_per_kg > 0 && (
+                <p>
+                  <strong>Price per KG:</strong> ${selectedCategory.price_per_kg}
+                </p>
+              )}
+              {selectedCategory.price_per_dimensions > 0 && (
+                <p>
+                  <strong>Price per Dimensions:</strong> ${selectedCategory.price_per_dimensions}
+                </p>
+              )}
             </div>
           </div>
         </div>
