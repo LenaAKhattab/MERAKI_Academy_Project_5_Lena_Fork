@@ -17,7 +17,7 @@ const adminOrdersSlice = createSlice({
         if (order.order_id === updatedOrder.id) {
           return {
             ...order,
-            collector_id: updatedOrder.collector_id,
+            collector_id:Number( updatedOrder.collector_id),
           };
         }
         return order;

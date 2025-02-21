@@ -89,11 +89,7 @@ export default function DashboardLayoutBasic(props) {
 
   const history = useNavigate();
   const NAVIGATION1 = [
-    {
-      segment: "dashboard",
-      title: "Dashboard",
-      icon: <DashboardIcon />,
-    },
+  
     {
       segment: "categories",
       title: "Categories",
@@ -177,6 +173,10 @@ export default function DashboardLayoutBasic(props) {
     }
     if (roleId == 3) {
       getAssignedOrdersById();
+    }
+    const element = document.querySelector('.MuiTypography-root.MuiTypography-h6');
+    if (element) {
+      element.textContent = 'Trash2Cash';
     }
   }, []);
 
