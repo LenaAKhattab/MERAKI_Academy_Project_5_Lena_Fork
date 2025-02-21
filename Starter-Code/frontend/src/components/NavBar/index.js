@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { setLogout } from "../../redux/reducers/auth";
 import { FaUser, FaShoppingCart } from "react-icons/fa";
 import Logo from "../../assets/logo.png";
-
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
@@ -13,58 +12,53 @@ const Navbar = () => {
   const isLoggedIn = useSelector((reducer) => reducer.authReducer.isLoggedIn);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
   return (
     <>
       <div className="upper-nav text-white d-flex justify-content-center align-items-center">
         <span>Recycling isn't just good for the planet—it can also put money in your pocket!</span>
       </div>
-
       {roleId !== 1 && (
         <nav className="navbar navbar-expand-lg bg-white shadow-sm" style={{ height: "100px" }}>
           <div className="container d-flex align-items-center">
-            <Link 
-              to="/" 
-              style={{ 
-                textDecoration: 'none', 
-                display: 'flex', 
-                alignItems: 'center' 
+            <Link
+              to="/"
+              style={{
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center'
               }}
             >
-              <img 
-                src={Logo} 
-                alt="Logo" 
-                style={{ 
-                  height: "100px", 
-                  marginRight: "10px"  
-                }} 
+              <img
+                src={Logo}
+                alt="Logo"
+                style={{
+                  height: "100px",
+                  marginRight: "10px"
+                }}
               />
-              <h1 
-                className="m-0" 
-                style={{ 
-                  fontSize: "2.5rem", 
+              <h1
+                className="m-0"
+                style={{
+                  fontSize: "2.5rem",
                   fontWeight: "bold",
                   color: "#0E1D40",
-                  lineHeight: "1"  
+                  lineHeight: "1"
                 }}
               >
                 Trash2Cash
               </h1>
             </Link>
-
             <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
               <ul className="navbar-nav text-center nav-menu">
                 <li className="nav-item px-3">
@@ -86,87 +80,9 @@ const Navbar = () => {
                 )}
                 <li className="nav-item px-3">
                   <Link className="nav-link nav-hover" to="/contact">
-
-  return (
-    <div>
-      {(roleId !== 1 && roleId!==3)&& (
-        <nav
-          className="navbar navbar-expand-lg bg-white shadow-sm fffnav"
-          style={{ height: "120px" }}
-        >
-          <div className="container d-flex align-items-center">
-            <img
-              src={Logo}
-              alt="Logo"
-              style={{ height: "100px", marginRight: "20px" }}
-            />
-            <div
-              className="collapse navbar-collapse justify-content-center"
-              id="navbarNav"
-              style={{ fontSize: "35px", color: "red" }}
-            >
-              <ul className="navbar-nav text-center pb-1">
-                <li className="nav-item px-3" style={{ color: "black" }}>
-                  <Link style={{ color: "black" }} className="nav-link" to="/">
-                    Home
-                  </Link>
-                </li>
-                {/* <li className="nav-item px-3">
-                  <Link style={{ color: "black" }} className="nav-link">
-                    About Us
-                  </Link>
-                </li> */}
-                <li className="nav-item px-3">
-                  <a
-                    style={{ color: "black" }}
-                    className="nav-link"
-                    href="#process"
-                  >
-                    How It Works
-                  </a>
-                </li>
-                <li className="nav-item px-3">
-                  <Link
-                    style={{ color: "black" }}
-                    className="nav-link"
-                    to="/categoriesPage"
-                  >
-                    Categories
-                  </Link>
-                </li>
-                {isLoggedIn && (
-                  <>
-                    <li className="nav-item px-3">
-                      <Link
-                        to="/getOrder"
-                        style={{ color: "black" }}
-                        className="nav-link"
-                      >
-                        My Orders
-                      </Link>
-                    </li>
-                    <li className="nav-item px-3">
-                      <Link
-                        to="/cart"
-                        style={{ color: "black" }}
-                        className="nav-link"
-                      >
-                        My Cart
-                      </Link>
-                    </li>
-                  </>
-                )}
-
-                <li className="nav-item px-3">
-                  <a
-                    className="nav-link"
-                    href="#footer"
-                    style={{ color: "black" }}
-                  >
                     Contact Us
-                  </a>
+                  </Link>
                 </li>
-
                 {isLoggedIn ? (
                   <>
                     <li className="nav-item px-3">
@@ -210,28 +126,6 @@ const Navbar = () => {
                 ) : (
                   <li className="nav-item px-3">
                     <Link className="nav-link nav-hover" to="/login">
-
-                  <li className="nav-item px-3">
-                    <a
-                      style={{ color: "black" }}
-                      className="nav-link"
-                      href="#"
-                      onClick={() => {
-                        dispatch(setLogout());
-                        navigate("/");
-                      }}
-                    >
-                      Logout
-                    </a>
-                  </li>
-                ) : (
-                  <li className="nav-item px-3">
-                    <Link
-                      style={{ color: "black" }}
-                      className="nav-link"
-                      to="/login"
-                      onClick={() => navigate("/login")}
-                    >
                       Login
                     </Link>
                   </li>
@@ -241,7 +135,6 @@ const Navbar = () => {
           </div>
         </nav>
       )}
-
       <style>{`
         .nav-hover {
           color: #0E1D40;
@@ -280,7 +173,7 @@ const Navbar = () => {
           gap: 10px;
         }
         .dropdown-item:hover {
-          background-color: #f8f9fa;
+          background-color: #F8F9FA;
           color: #3A9E1E;
         }
         .dropdown-menu.show {
@@ -293,5 +186,4 @@ const Navbar = () => {
     </>
   );
 };
-
 export default Navbar;
