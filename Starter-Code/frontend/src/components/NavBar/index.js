@@ -28,7 +28,7 @@ const Navbar = () => {
       <div className="upper-nav text-white d-flex justify-content-center align-items-center">
         <span>Recycling isn't just good for the planet—it can also put money in your pocket!</span>
       </div>
-      {roleId !== 1 && (
+      {(roleId !== 1 || roleId!==3) && (
         <nav className="navbar navbar-expand-lg bg-white shadow-sm" style={{ height: "100px" }}>
           <div className="container d-flex align-items-center">
             <Link
@@ -67,9 +67,9 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li className="nav-item px-3">
-                  <Link className="nav-link nav-hover" to="/about">
+                  <a className="nav-link nav-hover"href="#process">
                    Process
-                  </Link>
+                  </a>
                 </li>
                 {isLoggedIn && (
                   <li className="nav-item px-3">
@@ -79,9 +79,9 @@ const Navbar = () => {
                   </li>
                 )}
                 <li className="nav-item px-3">
-                  <Link className="nav-link nav-hover" to="/contact">
+                  <a className="nav-link nav-hover" href="#footer">
                     Contact Us
-                  </Link>
+                  </a>
                 </li>
                 {isLoggedIn ? (
                   <>
