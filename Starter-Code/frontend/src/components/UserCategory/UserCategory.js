@@ -28,7 +28,7 @@ const UserCategory = () => {
   }, []);
 
   return (
-    <div className="categoryPage">
+    <div className="categoryPage" >
       <div className="categorySection ">
         {allCategories.map((ele, i) => {
           console.log(ele);

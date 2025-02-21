@@ -8,7 +8,9 @@
 
 .categoryPage{
     width:100%;
-    max-height: 100vh;
+    /* min-height: 1500px; */
+    height: 1700px;
+
     
 }
 
@@ -158,4 +160,9 @@ input{
     color: #d2d1cf;
     font-size: 1rem;
     initial-letter: .5rem;
+}
+/* ********************** */
+.p2{
+    font-family: 'Poppins', sans-serif;
+
 }
