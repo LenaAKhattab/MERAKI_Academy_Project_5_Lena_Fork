@@ -86,8 +86,85 @@ const Navbar = () => {
                 )}
                 <li className="nav-item px-3">
                   <Link className="nav-link nav-hover" to="/contact">
-                    Contact Us
+
+  return (
+    <div>
+      {(roleId !== 1 && roleId!==3)&& (
+        <nav
+          className="navbar navbar-expand-lg bg-white shadow-sm fffnav"
+          style={{ height: "120px" }}
+        >
+          <div className="container d-flex align-items-center">
+            <img
+              src={Logo}
+              alt="Logo"
+              style={{ height: "100px", marginRight: "20px" }}
+            />
+            <div
+              className="collapse navbar-collapse justify-content-center"
+              id="navbarNav"
+              style={{ fontSize: "35px", color: "red" }}
+            >
+              <ul className="navbar-nav text-center pb-1">
+                <li className="nav-item px-3" style={{ color: "black" }}>
+                  <Link style={{ color: "black" }} className="nav-link" to="/">
+                    Home
                   </Link>
+                </li>
+                {/* <li className="nav-item px-3">
+                  <Link style={{ color: "black" }} className="nav-link">
+                    About Us
+                  </Link>
+                </li> */}
+                <li className="nav-item px-3">
+                  <a
+                    style={{ color: "black" }}
+                    className="nav-link"
+                    href="#process"
+                  >
+                    How It Works
+                  </a>
+                </li>
+                <li className="nav-item px-3">
+                  <Link
+                    style={{ color: "black" }}
+                    className="nav-link"
+                    to="/categoriesPage"
+                  >
+                    Categories
+                  </Link>
+                </li>
+                {isLoggedIn && (
+                  <>
+                    <li className="nav-item px-3">
+                      <Link
+                        to="/getOrder"
+                        style={{ color: "black" }}
+                        className="nav-link"
+                      >
+                        My Orders
+                      </Link>
+                    </li>
+                    <li className="nav-item px-3">
+                      <Link
+                        to="/cart"
+                        style={{ color: "black" }}
+                        className="nav-link"
+                      >
+                        My Cart
+                      </Link>
+                    </li>
+                  </>
+                )}
+
+                <li className="nav-item px-3">
+                  <a
+                    className="nav-link"
+                    href="#footer"
+                    style={{ color: "black" }}
+                  >
+                    Contact Us
+                  </a>
                 </li>
 
                 {isLoggedIn ? (
@@ -133,6 +210,28 @@ const Navbar = () => {
                 ) : (
                   <li className="nav-item px-3">
                     <Link className="nav-link nav-hover" to="/login">
+
+                  <li className="nav-item px-3">
+                    <a
+                      style={{ color: "black" }}
+                      className="nav-link"
+                      href="#"
+                      onClick={() => {
+                        dispatch(setLogout());
+                        navigate("/");
+                      }}
+                    >
+                      Logout
+                    </a>
+                  </li>
+                ) : (
+                  <li className="nav-item px-3">
+                    <Link
+                      style={{ color: "black" }}
+                      className="nav-link"
+                      to="/login"
+                      onClick={() => navigate("/login")}
+                    >
                       Login
                     </Link>
                   </li>

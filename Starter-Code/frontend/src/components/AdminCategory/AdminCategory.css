@@ -80,12 +80,14 @@
 }
 
 .btn-green {
-  background: #10b981;
+  background: green;
   color: white;
 }
 
 .btn-green:hover {
-  background: #059669;
+  background: green;
+  color: white;
+
 }
 
 .form-container {
@@ -242,3 +244,12 @@
   font-size: 18px !important;
   /* width: 100vw; */
 }
+.btn-red {
+  background-color: rgb(242, 101, 101) !important;
+  color: white !important
+}
+
+/* .btn-green {
+  background-color: green !important;
+  color: white;
+} */
