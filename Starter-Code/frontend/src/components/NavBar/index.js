@@ -13,7 +13,7 @@ const Navbar = () => {
 
   return (
     <div>
-      {roleId !== 1 && (
+      {(roleId !== 1 && roleId!==3)&& (
         <nav
           className="navbar navbar-expand-lg bg-white shadow-sm fffnav"
           style={{ height: "120px" }}
@@ -40,14 +40,14 @@ const Navbar = () => {
                     About Us
                   </Link>
                 </li> */}
-                 <li className="nav-item px-3">
-                  <Link
+                <li className="nav-item px-3">
+                  <a
                     style={{ color: "black" }}
                     className="nav-link"
-                    to="/categoriesPage"
+                    href="#process"
                   >
                     How It Works
-                  </Link>
+                  </a>
                 </li>
                 <li className="nav-item px-3">
                   <Link
@@ -58,20 +58,37 @@ const Navbar = () => {
                     Categories
                   </Link>
                 </li>
-                {isLoggedIn&& <li className="nav-item px-3">
-                  <Link
-                    to="/getOrder"
-                    style={{ color: "black" }}
-                    className="nav-link"
-                  >
-                    My Orders
-                  </Link>
-                </li>}
-               
+                {isLoggedIn && (
+                  <>
+                    <li className="nav-item px-3">
+                      <Link
+                        to="/getOrder"
+                        style={{ color: "black" }}
+                        className="nav-link"
+                      >
+                        My Orders
+                      </Link>
+                    </li>
+                    <li className="nav-item px-3">
+                      <Link
+                        to="/cart"
+                        style={{ color: "black" }}
+                        className="nav-link"
+                      >
+                        My Cart
+                      </Link>
+                    </li>
+                  </>
+                )}
+
                 <li className="nav-item px-3">
-                  <Link className="nav-link" to="" style={{ color: "black" }}>
+                  <a
+                    className="nav-link"
+                    href="#footer"
+                    style={{ color: "black" }}
+                  >
                     Contact Us
-                  </Link>
+                  </a>
                 </li>
                 {isLoggedIn ? (
                   <li className="nav-item px-3">
@@ -79,8 +96,9 @@ const Navbar = () => {
                       style={{ color: "black" }}
                       className="nav-link"
                       href="#"
-                      onClick={() => {dispatch(setLogout())
-                        navigate("/")
+                      onClick={() => {
+                        dispatch(setLogout());
+                        navigate("/");
                       }}
                     >
                       Logout

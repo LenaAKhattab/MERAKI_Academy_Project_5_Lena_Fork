@@ -9,7 +9,7 @@ import {
 import "./style.css"
 const Footer = () => {
   return (
-    <div className="fd">
+    <div id="footer" className="fd">
     <MDBFooter className="text-center text-lg-start text-muted footerr sr">
       <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom sr">
         <div className="me-5 d-none d-lg-block">
