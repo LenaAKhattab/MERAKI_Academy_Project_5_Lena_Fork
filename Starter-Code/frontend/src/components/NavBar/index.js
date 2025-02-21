@@ -29,7 +29,7 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li className="nav-item px-3">
-                  <Link style={{ color: "black" }} className="nav-link">
+                  <Link style={{ color: "black" }} className="nav-link" to="/about">
                     About Us
                   </Link>
                 </li>
@@ -44,10 +44,16 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li className="nav-item px-3">
-                  <Link className="nav-link" to="" style={{ color: "black" }}>
+                  <Link className="nav-link" to="/our-story" style={{ color: "black" }}>
+                    Our Story
+                  </Link>
+                </li>
+                <li className="nav-item px-3">
+                  <Link className="nav-link" to="/contact" style={{ color: "black" }}>
                     Contact Us
                   </Link>
                 </li>
+
                 {isLoggedIn ? (
                   <li className="nav-item px-3">
                     <a style={{ color: "black" }} className="nav-link" href="#" onClick={() => dispatch(setLogout())}>
