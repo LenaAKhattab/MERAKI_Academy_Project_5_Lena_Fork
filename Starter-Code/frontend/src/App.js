@@ -49,7 +49,6 @@ const App = () => {
         <Route path="/sideNav" element={<SideNav />} />
         <Route path="/" element={<UserHomePage />} />
         <Route path="/getOrder" element={<GetOrder/>}/>
-        {/* <Route path="/getAllOrderById" element={<GetOrder />} /> */}
       </Routes>
       {/* <Footerr/> */}
     </>
