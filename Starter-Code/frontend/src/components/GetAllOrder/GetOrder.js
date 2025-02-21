@@ -33,6 +33,7 @@ const OrderManagementPage = () => {
   const [sortOrder, setSortOrder] = useState("newest");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   
   const state = useSelector(state => state);
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ const OrderManagementPage = () => {
 
   const cancelOrder = (id, index) => {
     setIsModalOpen(false);
+    setShowConfirmation(false);
     axios.put(`http://localhost:5000/user/cancelOrderById/${id}`, null, {
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -144,7 +146,10 @@ const OrderManagementPage = () => {
           boxShadow: "0 8px 24px rgba(0, 0, 0, 0.2)"
         }}>
           <button 
-            onClick={() => setIsModalOpen(false)}
+            onClick={() => {
+              setIsModalOpen(false);
+              setShowConfirmation(false);
+            }}
             style={{
               position: "absolute",
               top: "1rem",
@@ -245,7 +250,7 @@ const OrderManagementPage = () => {
             </div>
           </div>
           
-          {order.status === 'pending' && (
+          {order.status === 'pending' && !showConfirmation && (
             <div style={{ padding: "1.5rem", borderTop: "1px solid #eee", textAlign: "right" }}>
               <button 
                 style={{
@@ -257,15 +262,68 @@ const OrderManagementPage = () => {
                   fontWeight: "600",
                   cursor: "pointer"
                 }}
-                onClick={() => {
-                  if (window.confirm("Are you sure you want to cancel this order?")) {
-                    const index = orders.findIndex(o => o.id === order.id);
-                    cancelOrder(order.id, index);
-                  }
-                }}
+                onClick={() => setShowConfirmation(true)}
               >
                 Cancel Order
               </button>
+            </div>
+          )}
+          
+          {showConfirmation && (
+            <div style={{ 
+              padding: "1.5rem", 
+              borderTop: "1px solid #eee",
+              backgroundColor: "rgba(229, 57, 53, 0.05)"
+            }}>
+              <h3 style={{ 
+                color: COLORS.danger, 
+                margin: "0 0 1rem 0"
+              }}>
+                Confirm Cancellation
+              </h3>
+              <p style={{ 
+                margin: "0 0 1.5rem 0",
+                color: COLORS.textPrimary
+              }}>
+                Are you sure you want to cancel this order? This action cannot be undone.
+              </p>
+              <div style={{ 
+                display: "flex", 
+                justifyContent: "flex-end", 
+                gap: "1rem" 
+              }}>
+                <button
+                  style={{
+                    backgroundColor: "transparent",
+                    color: COLORS.textSecondary,
+                    border: "1px solid #ddd",
+                    padding: "0.75rem 1.5rem",
+                    borderRadius: "8px",
+                    fontWeight: "600",
+                    cursor: "pointer"
+                  }}
+                  onClick={() => setShowConfirmation(false)}
+                >
+                  No, Keep Order
+                </button>
+                <button
+                  style={{
+                    backgroundColor: COLORS.danger,
+                    color: "white",
+                    border: "none",
+                    padding: "0.75rem 1.5rem",
+                    borderRadius: "8px",
+                    fontWeight: "600",
+                    cursor: "pointer"
+                  }}
+                  onClick={() => {
+                    const index = orders.findIndex(o => o.id === order.id);
+                    cancelOrder(order.id, index);
+                  }}
+                >
+                  Yes, Cancel Order
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -275,7 +333,6 @@ const OrderManagementPage = () => {
 
   return (
     <div style={{ backgroundColor: COLORS.background, minHeight: "100vh" }}>
-      {/* Header */}
       <div style={{
         backgroundColor: COLORS.primary,
         padding: "2rem",
@@ -288,7 +345,6 @@ const OrderManagementPage = () => {
         </p>
       </div>
 
-      {/* Message Banner */}
       {message && (
         <div style={{
           backgroundColor: messageType === 'error' ? COLORS.danger : 
@@ -315,7 +371,6 @@ const OrderManagementPage = () => {
         </div>
       )}
 
-      {/* Control Bar */}
       <div style={{
         padding: "1.5rem 2rem",
         display: "flex",
@@ -403,7 +458,6 @@ const OrderManagementPage = () => {
         </div>
       </div>
 
-      {/* Order Cards Section */}
       <div style={{ padding: "2rem" }}>
         {filteredOrders.length === 0 ? (
           <div style={{
@@ -466,6 +520,7 @@ const OrderManagementPage = () => {
               onClick={() => {
                 setSelectedOrder(order);
                 setIsModalOpen(true);
+                setShowConfirmation(false);
               }}
               onMouseOver={(e) => {
                 e.currentTarget.style.transform = "translateY(-5px)";
@@ -475,7 +530,6 @@ const OrderManagementPage = () => {
                 e.currentTarget.style.transform = "translateY(0)";
                 e.currentTarget.style.boxShadow = "0 4px 6px rgba(0, 0, 0, 0.05)";
               }}>
-                {/* Order Header */}
                 <div style={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -546,7 +600,6 @@ const OrderManagementPage = () => {
                     </div>
                   </div>
 
-                  {/* Action Footer */}
                   <div style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -574,6 +627,7 @@ const OrderManagementPage = () => {
                       e.stopPropagation();
                       setSelectedOrder(order);
                       setIsModalOpen(true);
+                      setShowConfirmation(false);
                     }}>
                       View Details
                     </button>
@@ -585,7 +639,6 @@ const OrderManagementPage = () => {
         )}
       </div>
 
-      {/* Order Summary Stats */}
       <div style={{
         backgroundColor: "white",
         padding: "2rem",
@@ -629,7 +682,6 @@ const OrderManagementPage = () => {
         </div>
       </div>
 
-      {/* Order Detail Modal */}
       {isModalOpen && renderOrderDetails(selectedOrder)}
     </div>
   );
